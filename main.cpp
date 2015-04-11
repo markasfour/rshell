@@ -9,16 +9,22 @@ using namespace boost;
 
 int main(int argc, char **argv)
 {
-	for(int i = 0; i < argc; i++)
-	{
-		cout << "argv[" << i << "] = " << argv[i] << endl;
-	}
+	string command;
+	cout << "$ "; //ready prompt
+	cin >> command; //take in command from user
+
+	char_separator<char> delim(" ||");
+    	tokenizer< char_separator<char> > mytok(command, delim);	
+
+	for(tokenizer<char_separator<char> >::iterator it = mytok.begin(); it != mytok.end(); ++it)
+       		cout << *it << endl;
+	
 	cout << "listed the arguements" << endl;
-	for(int i = 1; i < argc; i++)
-	{
-		if(-1 == execvp(argv[i], argv))
-       			perror("There was an error in execvp. ");
-		execvp(argv[i], argv);
-	}
+//	for(int i = 1; i < argc; i++)
+//	{
+//		if(-1 == execvp(argv[i], argv))
+//      			perror("There was an error in execvp. ");
+//		execvp(argv[i], argv);
+//	}
 	return 0;
 }
