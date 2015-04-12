@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 //	cout << command << endl;
 
 	//tokenizer init
-	char_separator<char> delim(" ","", keep_empty_tokens);
+	char_separator<char> delim(" ;&|#",";&|#", keep_empty_tokens);
     	tokenizer< char_separator<char> > mytok(command, delim);	
 	
 	//token check
@@ -37,12 +37,21 @@ int main(int argc, char **argv)
 	//command list formatting
 	for(tokenizer<char_separator<char> >::iterator it = mytok.begin(); it != mytok.end(); it++)
 	{
-		if(*it == ";")
+		//cout << "; = " << semicolon << ", & = " << ampersand << ", | =" << pipe << endl;
+		//cout << *it << endl;
+		if(*it == "#")
+		{
+			break;
+		}
+		
+		else if(*it == ""); //do nothing
+		
+		else if(*it == ";")
 		{
 			semicolon++;
 			if(semicolon > 1)
 			{
-				cout << "syntax error";
+				cout << "syntax error 1";
 				return -1;
 			}
 			else if(semicolon == 1)
@@ -54,7 +63,7 @@ int main(int argc, char **argv)
 				}
 				else
 				{
-					cout << "syntax error";
+					cout << "syntax error 5";
 					return -1;
 				}
 			}
@@ -65,19 +74,19 @@ int main(int argc, char **argv)
 			ampersand++;
 			if(ampersand > 2)
 			{
-				cout << "syntax error";
+				cout << "syntax error 2";
 				return -1;
 			}
 			else if(ampersand == 2)
 			{
-				if(semicolon = 0 && pipe == 0)
+				if(semicolon == 0 && pipe == 0)
 				{
 					commands.push_back("&&");
 					ampersand = 0;
 				}
 				else
 				{
-					cout << "syntax error";
+					cout << "syntax error 6";
 					return -1;
 				}
 			}
@@ -88,19 +97,19 @@ int main(int argc, char **argv)
 			pipe++;
 			if(pipe > 2)
 			{
-				cout << "syntax error";
+				cout << "syntax error 3";
 				return -1;
 			}
 			else if(pipe == 2)
 			{
-				if(semicolon = 0 && ampersand == 0)
+				if(semicolon == 0 && ampersand == 0)
 				{
 					commands.push_back("||");
 					pipe = 0;
 				}
 				else
 				{
-					cout << "syntax error";
+					cout << "syntax error 7";
 					return -1;
 				}
 			}
@@ -110,7 +119,8 @@ int main(int argc, char **argv)
 		{
 			if(semicolon != 0 || ampersand != 0 || pipe != 0)
 			{
-				cout << "syntax error";
+				cout << "syntax error 4";
+				cout << semicolon << " " << ampersand << " " << pipe << endl;
 				return -1;
 			}
 			else
@@ -125,16 +135,9 @@ int main(int argc, char **argv)
 	}
 	cout << "combined arguements into groups" << endl;
 	
-	argc = argc + commands.size() - 1;	
-	cout << argc << endl;	
 	//add commands to command line arguements
-	int j = 0;
-//	for(int i = 0; i< commands.size(); i++)
-//	{
-//		argv[j] = commands.at(i);
-//		j++;
-//	}
-
+	
+	
 	//exec commands
 //	for(int i = 0; i < commands.size(); i++)
 //	{
