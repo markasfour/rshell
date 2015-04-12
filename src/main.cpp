@@ -16,9 +16,17 @@ int main(int argc, char **argv)
 	int pipe = 0;
 	string command = "";
 	vector <string> commands;
+
+	//login name and host info prompt
+	string login = getlogin();
+	cout << login << "@";
+	char hostarray[64];
+	gethostname(hostarray, 64);
+	cout << hostarray;
 	
 	//ready prompt
 	cout << "$ ";
+
 	//take in command from user
 	getline(cin, command);
 //	cout << command << endl;
