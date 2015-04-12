@@ -11,7 +11,9 @@ using namespace boost;
 int main(int argc, char **argv)
 {
 	bool finish = false;
-	int empty = 0;
+	int semicolon= 0;
+	int ampersand = 0;
+	int pipe = 0;
 	string command = "";
 	vector <string> commands;
 	
@@ -22,7 +24,7 @@ int main(int argc, char **argv)
 //	cout << command << endl;
 
 	//tokenizer init
-	char_separator<char> delim(" |;&","", keep_empty_tokens);
+	char_separator<char> delim(" ","", keep_empty_tokens);
     	tokenizer< char_separator<char> > mytok(command, delim);	
 	
 	//token check
@@ -33,26 +35,100 @@ int main(int argc, char **argv)
 	cout << "listed the arguements" << endl;
 
 	//command list formatting
-	string temp = "";
 	for(tokenizer<char_separator<char> >::iterator it = mytok.begin(); it != mytok.end(); it++)
 	{
-		if(*it == "")
+		if(*it == ";")
 		{
-			empty++;
-			if(temp != "")
-				commands.push_back(temp);
-			temp = "";
-			if(empty > 3)
+			semicolon++;
+			if(semicolon > 1)
+			{
 				cout << "syntax error";
+				return -1;
+			}
+			else if(semicolon == 1)
+			{
+				if(ampersand == 0 && pipe == 0)
+				{
+					commands.push_back(";");
+					semicolon = 0;
+				}
+				else
+				{
+					cout << "syntax error";
+					return -1;
+				}
+			}
+			
 		}
-		temp += *it;
-		temp += " ";
+		else if(*it == "&")
+		{
+			ampersand++;
+			if(ampersand > 2)
+			{
+				cout << "syntax error";
+				return -1;
+			}
+			else if(ampersand == 2)
+			{
+				if(semicolon = 0 && pipe == 0)
+				{
+					commands.push_back("&&");
+					ampersand = 0;
+				}
+				else
+				{
+					cout << "syntax error";
+					return -1;
+				}
+			}
+			
+		}
+		else if(*it == "|")	
+		{
+			pipe++;
+			if(pipe > 2)
+			{
+				cout << "syntax error";
+				return -1;
+			}
+			else if(pipe == 2)
+			{
+				if(semicolon = 0 && ampersand == 0)
+				{
+					commands.push_back("||");
+					pipe = 0;
+				}
+				else
+				{
+					cout << "syntax error";
+					return -1;
+				}
+			}
+			
+		}		
+		else
+		{
+			if(semicolon != 0 || ampersand != 0 || pipe != 0)
+			{
+				cout << "syntax error";
+				return -1;
+			}
+			else
+				commands.push_back(*it);
+		}
 	}
-	if(temp != "")
-		commands.push_back(temp);
 	
+	//check commands
+	for(int i = 0; i < commands.size(); i++)
+	{
+		cout << "(" << commands.at(i) << ") ";
+	}
+	cout << "combined arguements into groups" << endl;
+	
+	argc = argc + commands.size() - 1;	
+	cout << argc << endl;	
 	//add commands to command line arguements
-//	int j = 0;
+	int j = 0;
 //	for(int i = 0; i< commands.size(); i++)
 //	{
 //		argv[j] = commands.at(i);
@@ -60,17 +136,17 @@ int main(int argc, char **argv)
 //	}
 
 	//exec commands
-	for(int i = 0; i < commands.size(); i++)
-	{
-		if(commands.at(i) == "exit ");
-		{
-			finish = true;
-			cout << "ending session...";
-			break;
-		}
-		command = commands.at(i);
-		execvp(command, argv);
-	}
+//	for(int i = 0; i < commands.size(); i++)
+//	{
+//		if(commands.at(i) == "exit ");
+//		{
+//			finish = true;
+//			cout << "ending session...";
+//			break;
+//		}
+//		command = commands.at(i);
+//		execvp(command, argv);
+//	}
 
 	//shell termination
 	if(finish)
