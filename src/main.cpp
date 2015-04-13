@@ -3,6 +3,7 @@
 #include <unistd.h> 
 #include <stdio.h>
 #include <errno.h>
+#include <sys/wait.h>
 #include <vector>
 #include <boost/tokenizer.hpp>
 using namespace std;
@@ -167,14 +168,33 @@ int main(int argc, char **argv)
 		//exec commands
 		for(int i = 0; i < com.size(); i++)
 		{
+			//check for exit command. use strncmp because of char * type
 			if(strncmp(com[i], "exit", 4) == 0)
 			{
 				finish = true;
 				cout << "ending session...";
 				break;
 			}
-	//		command = commands.at(i);
-	//		execvp(command, argv);
+			cout << com[i] << endl;
+			//execute command. based off of in-lecture notes
+			int pid = fork();
+			if(pid == -1)
+			{
+				perror("There was an error with fork(). ");
+				exit(1);
+			}
+			else if(pid == 0) //in child
+			{
+				if(-1 == execvp(com[i], &com[i]))
+					perror("There was an error in execvp.");
+				exit(1);
+			}
+			else if(pid > 0) //in parent
+			{
+				if(-1 == wait(0)) //wait for child to finish
+					perror("There was an error with wait().");
+			}
+
 		}
 
 		//shell termination
