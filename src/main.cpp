@@ -12,6 +12,16 @@ using namespace boost;
 int main(int argc, char **argv)
 {
 	bool finish = false;
+	string login = getlogin();
+	if(getlogin() == NULL)
+	{
+		login = "";
+		perror("get login failed");
+	}
+	char hostarray[64];
+	gethostname(hostarray, 64);
+	if(gethostname(hostarray, 64) == -1)
+		perror("get host name failed");
 	
 	//rshell loop
 	while(!finish)
@@ -26,11 +36,8 @@ int main(int argc, char **argv)
 		vector <char *> com;
 
 		//login name and host info prompt
-		string login = getlogin();
-		cout << login << "@";
-		char hostarray[64];
-		gethostname(hostarray, 64);
-		cout << hostarray;
+		if(getlogin() != NULL)
+			cout << login << "@" << hostarray;
 		
 		//ready prompt
 		cout << "$ ";
