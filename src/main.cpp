@@ -46,6 +46,13 @@ int main(int argc, char **argv)
 		getline(cin, command);
 	//	cout << command << endl;
 
+		//account for #
+		if(command.find("#") != string::npos)
+		{
+			command = command.substr(0, command.find("#"));
+			cout << command << endl;
+		}
+
 		//tokenizer init
 		char_separator<char> delim(" ;&|#",";&|#", keep_empty_tokens);
 		tokenizer< char_separator<char> > mytok(command, delim);	
