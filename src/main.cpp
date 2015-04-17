@@ -31,9 +31,6 @@ int main(int argc, char **argv)
 		int pipe = 0;
 		string command = "";
 		vector <string> commands;
-		vector <char *> args;
-		vector <vector <char *> > execArgs;
-		vector <char *> com;
 
 		//login name and host info prompt
 		if(getlogin() != NULL)
@@ -63,84 +60,103 @@ int main(int argc, char **argv)
 			cout << "(" << *it << ")" << " ";
 		}
 		cout << "listed the arguements" << endl;
+		
 
+		string temp;
 		//command list formatting
 		for(tokenizer<char_separator<char> >::iterator it = mytok.begin(); it != mytok.end(); it++)
 		{
 			//cout << "; = " << semicolon << ", & = " << ampersand << ", | =" << pipe << endl;
 			//cout << *it << endl;
-			if(*it == "#")
-			{
-				break;
-			}
 			
-			else if(*it == ""); //do nothing
+			if(*it == ""); //do nothing
 			
-			else if(*it == ";")
+			else if(*it == ";") //semicolon handling
 			{
 				semicolon++;
 				if(semicolon > 1)
 				{
-					cout << "syntax error 1";
-					return -1;
+					perror("Syntax error. Too many ; characters.");
+					exit(1);
 				}
 				else if(semicolon == 1)
 				{
 					if(ampersand == 0 && pipe == 0)
 					{
+						if(temp == "")
+						{
+							perror("No arguments before connector");
+							exit(1);
+						}
+						commands.push_back(temp);
+						temp = "";
 						commands.push_back(";");
 						semicolon = 0;
 					}
 					else
 					{
-						cout << "syntax error 5";
-						return -1;
+						perror("Syntax error. Improper use of connectors.");
+						exit(1);
 					}
 				}
 				
 			}
-			else if(*it == "&")
+			else if(*it == "&") //ampersand handling
 			{
 				ampersand++;
 				if(ampersand > 2)
 				{
-					cout << "syntax error 2";
-					return -1;
+					perror("Syntax error. Too many & characters");
+					exit(1);
 				}
 				else if(ampersand == 2)
 				{
 					if(semicolon == 0 && pipe == 0)
 					{
+						if(temp == "")
+						{
+							perror("No arguments before connector");
+							exit(1);
+						}
+						commands.push_back(temp);
+						temp = "";
 						commands.push_back("&&");
 						ampersand = 0;
 					}
 					else
 					{
-						cout << "syntax error 6";
-						return -1;
+						perror("Syntax error. Improper use of connectors.");
+						exit(1);
 					}
 				}
 				
 			}
-			else if(*it == "|")	
+			else if(*it == "|") //pipe handling
 			{
 				pipe++;
 				if(pipe > 2)
 				{
-					cout << "syntax error 3";
-					return -1;
+					perror("Syntax error. Too many | characters.");
+					exit(1);
 				}
 				else if(pipe == 2)
 				{
 					if(semicolon == 0 && ampersand == 0)
 					{
+						if(temp == "")
+						{
+							perror("No arguments before connector");
+							exit(1);
+						}
+						commands.push_back(temp);
+						temp = "";
 						commands.push_back("||");
 						pipe = 0;
 					}
 					else
 					{
-						cout << "syntax error 7";
-						return -1;
+						perror("Syntax error. Improper use of connectors.");
+						exit(1);
 					}
 				}
 				
@@ -149,14 +165,18 @@ int main(int argc, char **argv)
 			{
 				if(semicolon != 0 || ampersand != 0 || pipe != 0)
 				{
-					cout << "syntax error 4";
-					cout << semicolon << " " << ampersand << " " << pipe << endl;
+					perror("Syntax error. Improper use of connectors.");
+					//cout << semicolon << " " << ampersand << " " << pipe << endl;
 					return -1;
 				}
-				else
-					commands.push_back(*it);
+				if(temp != "")
+					temp += ' ';
+				temp += *it;
 			}
 		}
+		commands.push_back(temp.c_str());
+		temp = "";
+
 		
 		//check commands
 		for(int i = 0; i < commands.size(); i++)
@@ -165,31 +185,29 @@ int main(int argc, char **argv)
 		}
 		cout << "combined arguements into groups" << endl;
 
-		
-		//add commands to command line arguements
+		char *input[999];	
+		//exec commands
 		for(int i = 0; i < commands.size(); i++)
 		{
-			args.push_back(const_cast<char*>(commands.at(i).c_str()));
-			execArgs.push_back(args);
-			args.clear();
-		}		
-		for(int i = 0; i < execArgs.size(); i++)
-		{
-			com = execArgs.at(i);
-		}
-
-
-		//exec commands
-		for(int i = 0; i < com.size(); i++)
-		{
-			//check for exit command. use strncmp because of char * type
-			if(strncmp(com[i], "exit", 4) == 0)
+			const char *arg = commands.at(i).c_str();
+		
+			input[i] = new char[commands.at(i).size() + 1];
+			strcpy(input[i], commands.at(i).c_str() + '\0');
+			cout << commands.at(i).size() << endl;
+			for(int j = 0; j < commands.at(i).size() + 1; j++)
+			{
+				cout << j << " " << input[i][j] << endl;
+				if(input[i][j] == 0)
+					cout << "NULL!" << endl;
+			}
+	
+			if(commands.at(i) ==  "exit")
 			{
 				finish = true;
 				cout << "ending session...";
 				break;
 			}
-			cout << com[i] << endl;
+			cout << "commands = " << commands.at(i) << " arg = " << arg << endl;
 			//execute command. based off of in-lecture notes
 			int pid = fork();
 			if(pid == -1)
@@ -199,7 +217,9 @@ int main(int argc, char **argv)
 			}
 			else if(pid == 0) //in child
 			{
-				if(-1 == execvp(com[i], &com[i]))
+				cout << "CHILD IS RUNNING :D" << endl;
+				cout << input << endl;
+				if(-1 == execvp(input[0], input))
 					perror("There was an error in execvp.");
 				exit(1);
 			}
