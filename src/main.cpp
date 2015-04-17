@@ -185,21 +185,32 @@ int main(int argc, char **argv)
 		}
 		cout << "combined arguements into groups" << endl;
 
-		char *input[999];	
+		char *input[999];
 		//exec commands
 		for(int i = 0; i < commands.size(); i++)
 		{
-			const char *arg = commands.at(i).c_str();
-		
-			input[i] = new char[commands.at(i).size() + 1];
-			strcpy(input[i], commands.at(i).c_str() + '\0');
-			cout << commands.at(i).size() << endl;
-			for(int j = 0; j < commands.at(i).size() + 1; j++)
+			string current = "";
+			string word = "";
+			int k = 0;
+			for(int j = 0; j < commands.at(i).size(); j++) //itterate through letters
 			{
-				cout << j << " " << input[i][j] << endl;
-				if(input[i][j] == 0)
-					cout << "NULL!" << endl;
-			}
+				current = commands.at(i);
+				if(current[j] == ' ')
+				{
+					input[k] = new char[word.size() + 1];
+					strcpy(input[k], word.c_str());
+					k++;
+					word = "";
+				}
+				else
+					word += current[j]; //add letter		
+			}	
+			input[k] = new char[word.size() + 1];
+			strcpy(input[k], word.c_str());
+			k++;
+
+			input[k] = new char[1];
+			input[k] = NULL;
 	
 			if(commands.at(i) ==  "exit")
 			{
@@ -207,7 +218,6 @@ int main(int argc, char **argv)
 				cout << "ending session...";
 				break;
 			}
-			cout << "commands = " << commands.at(i) << " arg = " << arg << endl;
 			//execute command. based off of in-lecture notes
 			int pid = fork();
 			if(pid == -1)
@@ -217,8 +227,8 @@ int main(int argc, char **argv)
 			}
 			else if(pid == 0) //in child
 			{
-				cout << "CHILD IS RUNNING :D" << endl;
-				cout << input << endl;
+				//cout << "CHILD IS RUNNING :D" << endl;
+				//cout << input << endl;
 				if(-1 == execvp(input[0], input))
 					perror("There was an error in execvp.");
 				exit(1);
