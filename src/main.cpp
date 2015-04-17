@@ -209,7 +209,7 @@ int main(int argc, char **argv)
 			strcpy(input[k], word.c_str());
 			k++;
 
-			input[k] = new char[1];
+			input[k] = new char[1]; //add the NULL char *
 			input[k] = NULL;
 	
 			if(commands.at(i) ==  "exit")
