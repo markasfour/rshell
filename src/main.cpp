@@ -9,6 +9,10 @@
 using namespace std;
 using namespace boost;
 
+
+int status;
+
+
 int main(int argc, char **argv)
 {
 	bool finish = false;
@@ -55,11 +59,11 @@ int main(int argc, char **argv)
 		tokenizer< char_separator<char> > mytok(command, delim);	
 		
 		//token check
-		for(tokenizer<char_separator<char> >::iterator it = mytok.begin(); it != mytok.end(); it++)
-		{
-			cout << "(" << *it << ")" << " ";
-		}
-		cout << "listed the arguements" << endl;
+		//for(tokenizer<char_separator<char> >::iterator it = mytok.begin(); it != mytok.end(); it++)
+		//{
+		//	cout << "(" << *it << ")" << " ";
+		//}
+		//cout << "listed the arguements" << endl;
 		
 
 		string temp;
@@ -189,9 +193,6 @@ int main(int argc, char **argv)
 		//exec commands
 		for(int i = 0; i < commands.size(); i++)
 		{
-			int *status;
-			int statusvalue = 1;
-			status = &statusvalue;
 			string current = "";
 			string word = "";
 			int k = 0;
@@ -227,9 +228,9 @@ int main(int argc, char **argv)
 				continue;
 			}
 
-			else if(commands.at(i) == "&&") //ampersand case
+			else if(commands.at(i) == "||") //pipe case
 			{
-				if(*status)
+				if(status)
 					continue;
 				else
 				{
@@ -238,9 +239,9 @@ int main(int argc, char **argv)
 				}
 			}
 
-			else if(commands.at(i) == "||") //pipe case
+			else if(commands.at(i) == "&&") //ampersand case
 			{
-				if(*status == 0)
+				if(status == 0)
 					continue;
 				else
 				{
@@ -260,17 +261,9 @@ int main(int argc, char **argv)
 			{
 				//cout << "CHILD IS RUNNING :D" << endl;
 				//cout << input << endl;
-				statusvalue = 1;
-				cout << "statusvalue = " << statusvalue << endl;
-				cout << "status = " << *status << endl;
-				cout << "status address = " << status << endl;
-				if(-1 == execvp(input[0], input))
+				status = execvp(input[0], input);
+				if(-1 == status) 
 				{
-					statusvalue = 0;
-					cout << "statusvalue = " << statusvalue << endl;
-					cout << "status = " << *status << endl;
-					cout << "status address = " << status << endl;
-
 					perror("There was an error in execvp.");
 					
 				}
@@ -278,10 +271,8 @@ int main(int argc, char **argv)
 			}
 			else if(pid > 0) //in parent
 			{
-				if(-1 == wait(0)) //wait for child to finish
+				if(-1 == waitpid(pid, &status, 0)) //wait for child to finish
 					perror("There was an error with wait().");
-				cout << *status << endl;
-				cout << "status address = " << status << endl;
 
 			}
 
