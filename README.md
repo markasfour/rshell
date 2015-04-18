@@ -7,7 +7,7 @@ This program is a custom terminal that can run general bash commands.
 To install and run rshell, enter the following into a terminal: 
 
 '''
-1. git clone http://www.github.com/kchan049/rshell.git
+1. git clone http://www.github.com/markasfour/rshell.git
 2. cd rshell
 3. git checkout hw0
 4. make
