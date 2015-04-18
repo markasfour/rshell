@@ -30,6 +30,7 @@ int main(int argc, char **argv)
 	//rshell loop
 	while(!finish)
 	{
+		bool syntaxerror = false;
 		int semicolon= 0;
 		int ampersand = 0;
 		int pipe = 0;
@@ -81,7 +82,8 @@ int main(int argc, char **argv)
 				if(semicolon > 1)
 				{
 					perror("Syntax error. Too many ; characters.");
-					exit(1);
+					syntaxerror = true;
+					break;
 				}
 				else if(semicolon == 1)
 				{
@@ -90,7 +92,8 @@ int main(int argc, char **argv)
 						if(temp == "")
 						{
 							perror("No arguments before connector");
-							exit(1);
+							syntaxerror = true;
+							break;
 						}
 						commands.push_back(temp);
 						temp = "";
@@ -100,7 +103,8 @@ int main(int argc, char **argv)
 					else
 					{
 						perror("Syntax error. Improper use of connectors.");
-						exit(1);
+						syntaxerror = true;
+						break;
 					}
 				}
 				
@@ -111,7 +115,8 @@ int main(int argc, char **argv)
 				if(ampersand > 2)
 				{
 					perror("Syntax error. Too many & characters");
-					exit(1);
+					syntaxerror = true;
+					break;
 				}
 				else if(ampersand == 2)
 				{
@@ -120,7 +125,7 @@ int main(int argc, char **argv)
 						if(temp == "")
 						{
 							perror("No arguments before connector");
-							exit(1);
+							syntaxerror = true;
 						}
 						commands.push_back(temp);
 						temp = "";
@@ -130,7 +135,8 @@ int main(int argc, char **argv)
 					else
 					{
 						perror("Syntax error. Improper use of connectors.");
-						exit(1);
+						syntaxerror = true;
+						break;
 					}
 				}
 				
@@ -141,7 +147,8 @@ int main(int argc, char **argv)
 				if(pipe > 2)
 				{
 					perror("Syntax error. Too many | characters.");
-					exit(1);
+					syntaxerror = true;
+					break;
 				}
 				else if(pipe == 2)
 				{
@@ -150,7 +157,8 @@ int main(int argc, char **argv)
 						if(temp == "")
 						{
 							perror("No arguments before connector");
-							exit(1);
+							syntaxerror = true;
+							break;
 						}
 						commands.push_back(temp);
 						temp = "";
@@ -160,7 +168,8 @@ int main(int argc, char **argv)
 					else
 					{
 						perror("Syntax error. Improper use of connectors.");
-						exit(1);
+						syntaxerror = true;
+						break;
 					}
 				}
 				
@@ -171,7 +180,8 @@ int main(int argc, char **argv)
 				{
 					perror("Syntax error. Improper use of connectors.");
 					//cout << semicolon << " " << ampersand << " " << pipe << endl;
-					return -1;
+					syntaxerror = true;
+					break;
 				}
 				if(temp != "")
 					temp += ' ';
@@ -181,108 +191,110 @@ int main(int argc, char **argv)
 		commands.push_back(temp.c_str());
 		temp = "";
 
-		
+
 		//check commands
 		//for(int i = 0; i < commands.size(); i++)
 		//{
 		//	cout << "(" << commands.at(i) << ") ";
 		//}
 		//cout << "combined arguements into groups" << endl;
-
-		char *input[999];
-		//exec commands
-		for(int i = 0; i < commands.size(); i++)
+		if(!syntaxerror)
 		{
-			string current = "";
-			string word = "";
-			int k = 0;
-			for(int j = 0; j < commands.at(i).size(); j++) //itterate through letters
+			char *input[999];
+			//exec commands
+			for(int i = 0; i < commands.size(); i++)
 			{
-				current = commands.at(i);
-				if(current[j] == ' ')
+				string current = "";
+				string word = "";
+				int k = 0;
+				for(int j = 0; j < commands.at(i).size(); j++) //itterate through letters
 				{
-					input[k] = new char[word.size() + 1];
-					strcpy(input[k], word.c_str());
-					k++;
-					word = "";
-				}
-				else
-					word += current[j]; //add letter		
-			}	
-			input[k] = new char[word.size() + 1];
-			strcpy(input[k], word.c_str());
-			k++;
+					current = commands.at(i);
+					if(current[j] == ' ')
+					{
+						input[k] = new char[word.size() + 1];
+						strcpy(input[k], word.c_str());
+						k++;
+						word = "";
+					}
+					else
+						word += current[j]; //add letter		
+				}	
+				input[k] = new char[word.size() + 1];
+				strcpy(input[k], word.c_str());
+				k++;
 
-			input[k] = new char[1]; //add the NULL char *
-			input[k] = NULL;
-	
-			if(commands.at(i) ==  "exit") //exit command
+				input[k] = new char[1]; //add the NULL char *
+				input[k] = NULL;
+		
+				if(commands.at(i) ==  "exit") //exit command
+				{
+					finish = true;
+					cout << "ending session...";
+					break;
+				}
+				
+				else if(commands.at(i) == ";") //semicolon case
+				{
+					continue;
+				}
+
+				else if(commands.at(i) == "||") //pipe case
+				{
+					if(status)
+						continue;
+					else
+					{
+						i++;
+						continue;
+					}
+				}
+
+				else if(commands.at(i) == "&&") //ampersand case
+				{
+					if(status == 0)
+						continue;
+					else
+					{
+						i++;
+						continue;
+					}
+				}
+
+				//execute command. based off of in-lecture notes
+				int pid = fork();
+				if(pid == -1)
+				{
+					perror("There was an error with fork(). ");
+					exit(1);
+				}
+				else if(pid == 0) //in child
+				{
+					//cout << "CHILD IS RUNNING :D" << endl;
+					//cout << input << endl;
+					status = execvp(input[0], input);
+					if(-1 == status) 
+					{
+						perror("There was an error in execvp.");
+						
+					}
+					exit(1);
+				}
+				else if(pid > 0) //in parent
+				{
+					if(-1 == waitpid(pid, &status, 0)) //wait for child to finish
+						perror("There was an error with wait().");
+
+				}
+
+			}
+
+			//shell termination
+			if(finish)
 			{
-				finish = true;
-				cout << "ending session...";
+				cout << "good-bye!" << endl;
 				break;
 			}
-			
-			else if(commands.at(i) == ";") //semicolon case
-			{
-				continue;
-			}
-
-			else if(commands.at(i) == "||") //pipe case
-			{
-				if(status)
-					continue;
-				else
-				{
-					i++;
-					continue;
-				}
-			}
-
-			else if(commands.at(i) == "&&") //ampersand case
-			{
-				if(status == 0)
-					continue;
-				else
-				{
-					i++;
-					continue;
-				}
-			}
-
-			//execute command. based off of in-lecture notes
-			int pid = fork();
-			if(pid == -1)
-			{
-				perror("There was an error with fork(). ");
-				exit(1);
-			}
-			else if(pid == 0) //in child
-			{
-				//cout << "CHILD IS RUNNING :D" << endl;
-				//cout << input << endl;
-				status = execvp(input[0], input);
-				if(-1 == status) 
-				{
-					perror("There was an error in execvp.");
-					
-				}
-				exit(1);
-			}
-			else if(pid > 0) //in parent
-			{
-				if(-1 == waitpid(pid, &status, 0)) //wait for child to finish
-					perror("There was an error with wait().");
-
-			}
-
-		}
-
-		//shell termination
-		if(finish)
-		{
-			cout << "good-bye!" << endl;
-			break;
 		}
 	}
 	return 0;
