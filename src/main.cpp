@@ -179,16 +179,19 @@ int main(int argc, char **argv)
 
 		
 		//check commands
-		for(int i = 0; i < commands.size(); i++)
-		{
-			cout << "(" << commands.at(i) << ") ";
-		}
-		cout << "combined arguements into groups" << endl;
+		//for(int i = 0; i < commands.size(); i++)
+		//{
+		//	cout << "(" << commands.at(i) << ") ";
+		//}
+		//cout << "combined arguements into groups" << endl;
 
 		char *input[999];
 		//exec commands
 		for(int i = 0; i < commands.size(); i++)
 		{
+			int *status;
+			int statusvalue = 1;
+			status = &statusvalue;
 			string current = "";
 			string word = "";
 			int k = 0;
@@ -212,12 +215,40 @@ int main(int argc, char **argv)
 			input[k] = new char[1]; //add the NULL char *
 			input[k] = NULL;
 	
-			if(commands.at(i) ==  "exit")
+			if(commands.at(i) ==  "exit") //exit command
 			{
 				finish = true;
 				cout << "ending session...";
 				break;
 			}
+			
+			else if(commands.at(i) == ";") //semicolon case
+			{
+				continue;
+			}
+
+			else if(commands.at(i) == "&&") //ampersand case
+			{
+				if(*status)
+					continue;
+				else
+				{
+					i++;
+					continue;
+				}
+			}
+
+			else if(commands.at(i) == "||") //pipe case
+			{
+				if(*status == 0)
+					continue;
+				else
+				{
+					i++;
+					continue;
+				}
+			}
+
 			//execute command. based off of in-lecture notes
 			int pid = fork();
 			if(pid == -1)
@@ -229,14 +260,29 @@ int main(int argc, char **argv)
 			{
 				//cout << "CHILD IS RUNNING :D" << endl;
 				//cout << input << endl;
+				statusvalue = 1;
+				cout << "statusvalue = " << statusvalue << endl;
+				cout << "status = " << *status << endl;
+				cout << "status address = " << status << endl;
 				if(-1 == execvp(input[0], input))
+				{
+					statusvalue = 0;
+					cout << "statusvalue = " << statusvalue << endl;
+					cout << "status = " << *status << endl;
+					cout << "status address = " << status << endl;
+
 					perror("There was an error in execvp.");
+					
+				}
 				exit(1);
 			}
 			else if(pid > 0) //in parent
 			{
 				if(-1 == wait(0)) //wait for child to finish
 					perror("There was an error with wait().");
+				cout << *status << endl;
+				cout << "status address = " << status << endl;
+
 			}
 
 		}
