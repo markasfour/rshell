@@ -52,8 +52,12 @@ int main(int argc, char **argv)
 		if(command.find("#") != string::npos)
 		{
 			command = command.substr(0, command.find("#"));
-			cout << command << endl;
+		//	cout << command << endl;
 		}
+
+		//account for empty command
+		if(command == "")
+			continue;
 
 		//tokenizer init
 		char_separator<char> delim(" ;&|#",";&|#", keep_empty_tokens);
@@ -202,12 +206,12 @@ int main(int argc, char **argv)
 		{
 			char *input[999];
 			//exec commands
-			for(int i = 0; i < commands.size(); i++)
+			for(unsigned int i = 0; i < commands.size(); i++)
 			{
 				string current = "";
 				string word = "";
 				int k = 0;
-				for(int j = 0; j < commands.at(i).size(); j++) //itterate through letters
+				for(unsigned int j = 0; j < commands.at(i).size(); j++) //itterate through letters
 				{
 					current = commands.at(i);
 					if(current[j] == ' ')
