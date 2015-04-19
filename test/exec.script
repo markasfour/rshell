@@ -1,87 +1,51 @@
-Script started on Fri 17 Apr 2015 11:06:47 PM PDT
+Script started on Sat 18 Apr 2015 11:53:37 PM PDT
 ~
 masfo001@hammer $ cd cs100
 ~/cs100
-masfo001@hammer $ cs100
-[0;91m
-===============================================================================
-|                                                                             |
-| You have enabled settings specific for cs100.  Everything you do is being   |
-| recorded to measure your progress in the class.                             |
-|                                                                             |
-| Important commands for the class:                                           |
-|   * calcgrade.sh          displays a detailed breakdown of your grade       |
-|   * typespeed             practice typing unix commands                     |
-|                                                                             |
-| Important commands for general C++ programming:                             |
-|   * make                  don't call g++ manually; let make do the work!    |
-|   * gdb                   the GNU debugger                                  |
-|   * valgrind              get rid of your memory leaks                      |
-|   * cppcheck              static analysis tool                              |
-|   * man                   find help about any syscall / terminal command    |
-|                                                                             |
-===============================================================================
-[0m
-[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~[0;95m [0;36m$[0m cd cs100
-[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~/cs100[0;95m (master) [0;36m$[0m cd rshell
-[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~/cs100/rshell[0;95m (master) [0;36m$[0m make
+masfo001@hammer $ cd rshell
+~/cs100/rshell
+masfo001@hammer $ make
 mkdir bin
 g++ -Wall -Werror -ansi -pedantic src/main.cpp -o bin/rshell
-[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~/cs100/rshell[0;95m (master) [0;36m$[0m #Begin Testing
-[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~/cs100/rshell[0;95m (master) [0;36m$[0m #
-[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~/cs100/rshell[0;95m (master) [0;36m$[0m #
-[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~/cs100/rshell[0;95m (master) [0;36m$[0m bin/rshell
-masfo001@hammer.cs.ucr.edu$ #Test comments
-masfo001@hammer.cs.ucr.edu$ #hello              
-masfo001@hammer.cs.ucr.edu$ #yolo..............&&; ls || random exit ###
+~/cs100/rshell
+masfo001@hammer $ bin/rshell
+masfo001@hammer.cs.ucr.edu$ #Opened rshell
+masfo001@hammer.cs.ucr.edu$ #Testing commenting
+masfo001@hammer.cs.ucr.edu$ #
 masfo001@hammer.cs.ucr.edu$ ##
-masfo001@hammer.cs.ucr.edu$ ##########
-masfo001@hammer.cs.ucr.edu$ #Testing single commands
+masfo001@hammer.cs.ucr.edu$ # # #
+masfo001@hammer.cs.ucr.edu$ ########
+masfo001@hammer.cs.ucr.edu$ #Testing single commandss
 masfo001@hammer.cs.ucr.edu$ ls
 bin  LICENSE  makefile	README.md  src	test
 masfo001@hammer.cs.ucr.edu$ pwd
 /home/csmajs/masfo001/cs100/rshell
 masfo001@hammer.cs.ucr.edu$ ps
   PID TTY          TIME CMD
-37029 pts/62   00:00:00 bash
-37170 pts/62   00:00:00 rshell
-37283 pts/62   00:00:00 ps
-masfo001@hammer.cs.ucr.edu$ date
-Fri Apr 17 23:09:42 PDT 2015
-masfo001@hammer.cs.ucr.edu$ cal
-     April 2015     
-Su Mo Tu We Th Fr Sa
-          1  2  3  4
- 5  6  7  8  9 10 11
-12 13 14 15 16 [7m17[m 18
-19 20 21 22 23 24 25
-26 27 28 29 30
-
-masfo001@hammer.cs.ucr.edu$ #Testing single commands with spaces
-masfo001@hammer.cs.ucr.edu$                        ls
+ 7781 pts/40   00:00:00 bash
+ 7827 pts/40   00:00:00 rshell
+ 7927 pts/40   00:00:00 ps
+masfo001@hammer.cs.ucr.edu$ clear
+[H[2Jmasfo001@hammer.cs.ucr.edu$ #Testing single commands with spaces
+masfo001@hammer.cs.ucr.edu$        ls
 bin  LICENSE  makefile	README.md  src	test
-masfo001@hammer.cs.ucr.edu$                        pwd
+masfo001@hammer.cs.ucr.edu$                pwd
 /home/csmajs/masfo001/cs100/rshell
-masfo001@hammer.cs.ucr.edu$                        cal
-     April 2015     
-Su Mo Tu We Th Fr Sa
-          1  2  3  4
- 5  6  7  8  9 10 11
-12 13 14 15 16 [7m17[m 18
-19 20 21 22 23 24 25
-26 27 28 29 30
-
-masfo001@hammer.cs.ucr.edu$ #Testing single commands with flags or arguments
+masfo001@hammer.cs.ucr.edu$                            ps
+  PID TTY          TIME CMD
+ 7781 pts/40   00:00:00 bash
+ 7827 pts/40   00:00:00 rshell
+ 7989 pts/40   00:00:00 ps
+masfo001@hammer.cs.ucr.edu$ #Testing single commands with comments
+masfo001@hammer.cs.ucr.edu$ ls #hello
+bin  LICENSE  makefile	README.md  src	test
+masfo001@hammer.cs.ucr.edu$              pwd          #hello
+/home/csmajs/masfo001/cs100/rshell
+masfo001@hammer.cs.ucr.edu$ pwd ########exit
+/home/csmajs/masfo001/cs100/rshell
+masfo001@hammer.cs.ucr.edu$ #Testing single commands with flags/arguments
 masfo001@hammer.cs.ucr.edu$ ls -a
-.  ..  bin  .git  LICENSE  .main.cpp.swo  makefile  README.md  src  test
-masfo001@hammer.cs.ucr.edu$ ls -l
-total 20
-drwx------ 2 masfo001 csmajs 4096 Apr 17 23:01 bin
--rw------- 1 masfo001 csmajs 1068 Apr  9 21:24 LICENSE
--rw------- 1 masfo001 csmajs  116 Apr 17 22:44 makefile
--rw------- 1 masfo001 csmajs    9 Apr  9 21:24 README.md
-drwx------ 2 masfo001 csmajs 4096 Apr 17 22:58 src
-drwx------ 2 masfo001 csmajs 4096 Apr 17 23:01 test
+.  ..  bin  .git  LICENSE  makefile  README.md	src  test
 masfo001@hammer.cs.ucr.edu$ ls -R
 .:
 bin  LICENSE  makefile	README.md  src	test
@@ -90,800 +54,103 @@ bin  LICENSE  makefile	README.md  src	test
 rshell
 
 ./src:
-a.out  main.cpp
+main.cpp
 
 ./test:
 exec.script
-masfo001@hammer.cs.ucr.edu$ pwd -P
-/home/csmajs/masfo001/cs100/rshell
-masfo001@hammer.cs.ucr.edu$ w pwd -L
-/home/csmajs/masfo001/cs100/rshell
-masfo001@hammer.cs.ucr.edu$ #Testing single commands with l gla   flags or arguments with spaces
-masfo001@hammer.cs.ucr.edu$           ls             -a
-.  ..  bin  .git  LICENSE  .main.cpp.swo  makefile  README.md  src  test
-masfo001@hammer.cs.ucr.edu$                   pwd                                          -L
-/home/csmajs/masfo001/cs100/rshell
-masfo001@hammer.cs.ucr.edu$ ls                    -L l
-total 20
-drwx------ 2 masfo001 csmajs 4096 Apr 17 23:01 bin
--rw------- 1 masfo001 csmajs 1068 Apr  9 21:24 LICENSE
--rw------- 1 masfo001 csmajs  116 Apr 17 22:44 makefile
--rw------- 1 masfo001 csmajs    9 Apr  9 21:24 README.md
-drwx------ 2 masfo001 csmajs 4096 Apr 17 22:58 src
-drwx------ 2 masfo001 csmajs 4096 Apr 17 23:01 test
-masfo001@hammer.cs.ucr.edu$ #Testing single commands with multiple flags or arguments
-masfo001@hammer.cs.ucr.edu$ ls -a -l -R
-.:
-total 44
-drwx------ 6 masfo001 csmajs  4096 Apr 17 23:01 .
-drwx------ 4 masfo001 csmajs  4096 Apr  9 21:24 ..
-drwx------ 2 masfo001 csmajs  4096 Apr 17 23:01 bin
-drwx------ 8 masfo001 csmajs  4096 Apr 17 19:36 .git
--rw------- 1 masfo001 csmajs  1068 Apr  9 21:24 LICENSE
--rw------- 1 masfo001 csmajs 12288 Apr 11 00:05 .main.cpp.swo
--rw------- 1 masfo001 csmajs   116 Apr 17 22:44 makefile
--rw------- 1 masfo001 csmajs     9 Apr  9 21:24 README.md
-drwx------ 2 masfo001 csmajs  4096 Apr 17 22:58 src
-drwx------ 2 masfo001 csmajs  4096 Apr 17 23:01 test
-
-./bin:
-total 52
-drwx------ 2 masfo001 csmajs  4096 Apr 17 23:01 .
-drwx------ 6 masfo001 csmajs  4096 Apr 17 23:01 ..
--rwx------ 1 masfo001 csmajs 44879 Apr 17 23:01 rshell
-
-./.git:
-total 48
-drwx------  8 masfo001 csmajs 4096 Apr 17 19:36 .
-drwx------  6 masfo001 csmajs 4096 Apr 17 23:01 ..
-drwx------  2 masfo001 csmajs 4096 Apr  9 21:24 branches
--rw-------  1 masfo001 csmajs   30 Apr 17 19:36 COMMIT_EDITMSG
--rw-------  1 masfo001 csmajs  264 Apr  9 21:24 config
--rw-------  1 masfo001 csmajs   73 Apr  9 21:24 description
--rw-------  1 masfo001 csmajs   23 Apr  9 21:24 HEAD
-drwx------  2 masfo001 csmajs 4096 Apr  9 21:24 hooks
--rw-------  1 masfo001 csmajs  328 Apr 17 19:36 index
-drwx------  2 masfo001 csmajs 4096 Apr  9 21:24 info
-drwx------  3 masfo001 csmajs 4096 Apr  9 21:24 logs
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 objects
--rw-------  1 masfo001 csmajs  107 Apr  9 21:24 packed-refs
-drwx------  5 masfo001 csmajs 4096 Apr  9 21:24 refs
-
-./.git/branches:
-total 8
-drwx------ 2 masfo001 csmajs 4096 Apr  9 21:24 .
-drwx------ 8 masfo001 csmajs 4096 Apr 17 19:36 ..
-
-./.git/hooks:
-total 48
-drwx------ 2 masfo001 csmajs 4096 Apr  9 21:24 .
-drwx------ 8 masfo001 csmajs 4096 Apr 17 19:36 ..
--rwx------ 1 masfo001 csmajs  452 Apr  9 21:24 applypatch-msg.sample
--rwx------ 1 masfo001 csmajs  896 Apr  9 21:24 commit-msg.sample
--rwx------ 1 masfo001 csmajs  189 Apr  9 21:24 post-update.sample
--rwx------ 1 masfo001 csmajs  398 Apr  9 21:24 pre-applypatch.sample
--rwx------ 1 masfo001 csmajs 1635 Apr  9 21:24 pre-commit.sample
--rwx------ 1 masfo001 csmajs 1239 Apr  9 21:24 prepare-commit-msg.sample
--rwx------ 1 masfo001 csmajs 1348 Apr  9 21:24 pre-push.sample
--rwx------ 1 masfo001 csmajs 4951 Apr  9 21:24 pre-rebase.sample
--rwx------ 1 masfo001 csmajs 3611 Apr  9 21:24 update.sample
-
-./.git/info:
-total 12
-drwx------ 2 masfo001 csmajs 4096 Apr  9 21:24 .
-drwx------ 8 masfo001 csmajs 4096 Apr 17 19:36 ..
--rw------- 1 masfo001 csmajs  240 Apr  9 21:24 exclude
-
-./.git/logs:
-total 16
-drwx------ 3 masfo001 csmajs 4096 Apr  9 21:24 .
-drwx------ 8 masfo001 csmajs 4096 Apr 17 19:36 ..
--rw------- 1 masfo001 csmajs 3336 Apr 17 19:36 HEAD
-drwx------ 4 masfo001 csmajs 4096 Apr  9 21:24 refs
-
-./.git/logs/refs:
-total 16
-drwx------ 4 masfo001 csmajs 4096 Apr  9 21:24 .
-drwx------ 3 masfo001 csmajs 4096 Apr  9 21:24 ..
-drwx------ 2 masfo001 csmajs 4096 Apr  9 21:24 heads
-drwx------ 3 masfo001 csmajs 4096 Apr  9 21:24 remotes
-
-./.git/logs/refs/heads:
-total 12
-drwx------ 2 masfo001 csmajs 4096 Apr  9 21:24 .
-drwx------ 4 masfo001 csmajs 4096 Apr  9 21:24 ..
--rw------- 1 masfo001 csmajs 3336 Apr 17 19:36 master
-
-./.git/logs/refs/remotes:
-total 12
-drwx------ 3 masfo001 csmajs 4096 Apr  9 21:24 .
-drwx------ 4 masfo001 csmajs 4096 Apr  9 21:24 ..
-drwx------ 2 masfo001 csmajs 4096 Apr  9 21:24 origin
-
-./.git/logs/refs/remotes/origin:
-total 12
-drwx------ 2 masfo001 csmajs 4096 Apr  9 21:24 .
-drwx------ 3 masfo001 csmajs 4096 Apr  9 21:24 ..
--rw------- 1 masfo001 csmajs  192 Apr  9 21:24 HEAD
-
-./.git/objects:
-total 252
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 .
-drwx------  8 masfo001 csmajs 4096 Apr 17 19:36 ..
-drwx------  2 masfo001 csmajs 4096 Apr 16 22:38 03
-drwx------  2 masfo001 csmajs 4096 Apr 16 14:16 06
-drwx------  2 masfo001 csmajs 4096 Apr 16 14:16 14
-drwx------  2 masfo001 csmajs 4096 Apr 17 18:07 17
-drwx------  2 masfo001 csmajs 4096 Apr 12 01:23 1c
-drwx------  2 masfo001 csmajs 4096 Apr 17 17:18 20
-drwx------  2 masfo001 csmajs 4096 Apr 16 21:41 21
-drwx------  2 masfo001 csmajs 4096 Apr 17 17:18 24
-drwx------  2 masfo001 csmajs 4096 Apr 17 19:36 34
-drwx------  2 masfo001 csmajs 4096 Apr 16 23:45 35
-drwx------  2 masfo001 csmajs 4096 Apr 16 22:38 3a
-drwx------  2 masfo001 csmajs 4096 Apr 17 18:07 3c
-drwx------  2 masfo001 csmajs 4096 Apr 12 16:16 41
-drwx------  2 masfo001 csmajs 4096 Apr 12 01:23 43
-drwx------  2 masfo001 csmajs 4096 Apr 12 11:26 49
-drwx------  2 masfo001 csmajs 4096 Apr 12 14:41 4e
-drwx------  2 masfo001 csmajs 4096 Apr 11 12:18 51
-drwx------  2 masfo001 csmajs 4096 Apr 16 14:27 53
-drwx------  2 masfo001 csmajs 4096 Apr 11 12:18 56
-drwx------  2 masfo001 csmajs 4096 Apr 16 14:16 60
-drwx------  2 masfo001 csmajs 4096 Apr 12 11:26 62
-drwx------  2 masfo001 csmajs 4096 Apr 11 12:54 63
-drwx------  2 masfo001 csmajs 4096 Apr 12 14:41 65
-drwx------  2 masfo001 csmajs 4096 Apr 17 19:36 66
-drwx------  2 masfo001 csmajs 4096 Apr 16 21:41 69
-drwx------  2 masfo001 csmajs 4096 Apr 11 12:18 6d
-drwx------  2 masfo001 csmajs 4096 Apr 12 14:26 76
-drwx------  2 masfo001 csmajs 4096 Apr 12 16:16 79
-drwx------  2 masfo001 csmajs 4096 Apr 11 12:54 7b
-drwx------  2 masfo001 csmajs 4096 Apr 17 17:18 7c
-drwx------  2 masfo001 csmajs 4096 Apr 12 11:25 7d
-drwx------  2 masfo001 csmajs 4096 Apr 12 11:26 7f
-drwx------  2 masfo001 csmajs 4096 Apr 12 01:23 83
-drwx------  2 masfo001 csmajs 4096 Apr  9 21:33 87
-drwx------  2 masfo001 csmajs 4096 Apr 12 17:48 8f
-drwx------  2 masfo001 csmajs 4096 Apr 16 21:41 93
-drwx------  2 masfo001 csmajs 4096 Apr 16 23:45 95
-drwx------  2 masfo001 csmajs 4096 Apr 12 14:41 9a
-drwx------  2 masfo001 csmajs 4096 Apr 17 18:06 9f
-drwx------  2 masfo001 csmajs 4096 Apr 12 14:27 a2
-drwx------  2 masfo001 csmajs 4096 Apr 16 23:45 aa
-drwx------  2 masfo001 csmajs 4096 Apr 17 17:18 ac
-drwx------  2 masfo001 csmajs 4096 Apr 17 18:07 b0
-drwx------  2 masfo001 csmajs 4096 Apr 12 14:27 b4
-drwx------  2 masfo001 csmajs 4096 Apr 16 14:27 b5
-drwx------  2 masfo001 csmajs 4096 Apr  9 21:24 c2
-drwx------  2 masfo001 csmajs 4096 Apr 16 14:15 c3
-drwx------  2 masfo001 csmajs 4096 Apr  9 21:24 c7
-drwx------  2 masfo001 csmajs 4096 Apr 12 17:48 ca
-drwx------  2 masfo001 csmajs 4096 Apr 11 11:42 cb
-drwx------  2 masfo001 csmajs 4096 Apr 16 22:38 dc
-drwx------  2 masfo001 csmajs 4096 Apr 17 19:36 e1
-drwx------  2 masfo001 csmajs 4096 Apr 12 16:16 e4
-drwx------  2 masfo001 csmajs 4096 Apr 17 19:36 e8
-drwx------  2 masfo001 csmajs 4096 Apr 16 22:37 eb
-drwx------  2 masfo001 csmajs 4096 Apr 16 14:27 f1
-drwx------  2 masfo001 csmajs 4096 Apr 11 12:54 f8
-drwx------  2 masfo001 csmajs 4096 Apr 16 21:41 fe
-drwx------  2 masfo001 csmajs 4096 Apr 16 14:27 ff
-drwx------  2 masfo001 csmajs 4096 Apr  9 21:24 info
-drwx------  2 masfo001 csmajs 4096 Apr  9 21:24 pack
-
-./.git/objects/03:
-total 8
-drwx------  2 masfo001 csmajs 4096 Apr 16 22:38 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs   53 Apr 16 22:38 d403a06b1a32fd6ffe758880bb1b4d67223bc0
-
-./.git/objects/06:
-total 16
-drwx------  2 masfo001 csmajs 4096 Apr 16 14:16 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  148 Apr 12 14:27 4c4c97bcee356fe7f72880ed0833ec3231395f
--r--------  1 masfo001 csmajs  180 Apr 16 14:16 557339f3004c22f56de4741929c8cf920df8a7
-
-./.git/objects/14:
-total 16
-drwx------  2 masfo001 csmajs 4096 Apr 16 14:16 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  148 Apr 16 14:16 9d8e77a129a74b468c99f6bca55f165a6170ae
--r--------  1 masfo001 csmajs  188 Apr 11 11:41 e533949b8edd6c727d5365b76606e9732e2de9
-
-./.git/objects/17:
-total 16
-drwx------  2 masfo001 csmajs 4096 Apr 17 18:07 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  178 Apr 17 18:07 4224cc3ed64dd8ecbdd6489c6b9f33162a4f6e
--r--------  1 masfo001 csmajs 1740 Apr 16 23:44 538887e75071c0751821a26e3ae492e3f80d3e
-
-./.git/objects/1c:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 12 01:23 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  189 Apr 12 01:23 ae784627ec5e9ef6e49d2244a8d379e5e40c6c
-
-./.git/objects/20:
-total 20
-drwx------  2 masfo001 csmajs 4096 Apr 17 17:18 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  716 Apr 12 01:23 7b57ea1593787e8c436988d11c55f634d9079f
--r--------  1 masfo001 csmajs  183 Apr 17 17:18 aca1412d50b1b1da261b52beb0df7880f8d119
--r--------  1 masfo001 csmajs  653 Apr  9 21:24 efd1b3e9763444d06a2d5e47b6bf048d83e7f4
-
-./.git/objects/21:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 16 21:41 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  148 Apr 16 21:41 c624bc1f34cf6198fcec7413c0961503986bf3
-
-./.git/objects/24:
-total 8
-drwx------  2 masfo001 csmajs 4096 Apr 17 17:18 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs   53 Apr 17 17:18 b9c1679561384d8401270763dadc935dbca229
-
-./.git/objects/34:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 17 19:36 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  148 Apr 17 19:36 7aadff0520508108aab09d493ab09ad9311ce6
-
-./.git/objects/35:
-total 16
-drwx------  2 masfo001 csmajs 4096 Apr 16 23:45 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  148 Apr 16 23:45 834ce60dca1bca6220a15b42eec0e4786a9281
--r--------  1 masfo001 csmajs  118 Apr  9 21:34 97e5b02200569e0a549965b4432a5bddbcf170
-
-./.git/objects/3a:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 16 22:38 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs   52 Apr 12 16:16 1e29692f019bdff707bc681b12a8f70d095738
--r--------  1 masfo001 csmajs  179 Apr 16 22:38 6c64dcb93876ce253c6d93ec5feaa61fd341f9
-
-./.git/objects/3c:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 17 18:07 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  148 Apr 17 18:07 1a2ebb4dc3ea8eda5346fdb64540361857c0a2
-
-./.git/objects/41:
-total 16
-drwx------  2 masfo001 csmajs 4096 Apr 12 16:16 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  179 Apr 12 16:16 b19b1270f67cf5df4b7b18102bc450a373e095
--r--------  1 masfo001 csmajs  148 Apr 12 14:41 b4457ad12fc7c3c43d1cde03dfe6819fabb094
-
-./.git/objects/43:
-total 8
-drwx------  2 masfo001 csmajs 4096 Apr 12 01:23 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs   52 Apr 12 01:23 5834fe927013e1cc9b3943b8cdd4b91b52f4f1
-
-./.git/objects/49:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 12 11:26 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  183 Apr 12 11:26 c47e527e4229ba45969cb651d5833b98b73cd2
-
-./.git/objects/4e:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 12 14:41 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  118 Apr 11 11:42 22adca5394a53d32de79fe5fa4819a872e257c
--r--------  1 masfo001 csmajs   53 Apr 12 14:41 4096fdaf87d7c92f91908ab627eaefed8ef279
-
-./.git/objects/51:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 11 12:18 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  172 Apr 11 12:18 e0649ad06c78f2c9276172168b4f63d6977be4
-
-./.git/objects/53:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 16 14:27 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs   52 Apr 16 14:27 2a8ebf58a2b92179d124b88f7a4fabcfa60179
--r--------  1 masfo001 csmajs 1405 Apr 12 17:48 e296b9fe333b970a668c6fbee8d713bda39cd3
-
-./.git/objects/56:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 11 12:18 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  118 Apr 11 12:18 8e0650e27354bf81b464a129aed6f4c73f966a
-
-./.git/objects/60:
-total 8
-drwx------  2 masfo001 csmajs 4096 Apr 16 14:16 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs   53 Apr 16 14:16 b25bba6490b7396c60090a2a34b8b1b5bde2dc
-
-./.git/objects/62:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 12 11:26 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  148 Apr 12 11:26 b3f00a896268637d76a1ba120500285e6c1da7
-
-./.git/objects/63:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 11 12:54 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  118 Apr 11 12:54 4fb63250a089381e2329613c367787cf998606
-
-./.git/objects/65:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 12 14:41 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  174 Apr 12 14:41 85957dc77c4f6391b3d3b59131ccfb3cf26dbf
-
-./.git/objects/66:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 17 19:36 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  179 Apr 17 19:36 36519b8369001e324a4df5112133b3b91bb57a
-
-./.git/objects/69:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 16 21:41 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  169 Apr 16 21:41 27cefd7c0664d8789a41f7732c60216ac71cea
-
-./.git/objects/6d:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 11 12:18 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  282 Apr 11 12:18 fcb663731ca7bc3b71a0407b847b5a1c06c2d9
-
-./.git/objects/76:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 12 14:26 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs 1006 Apr 12 14:26 fce5c0675ff69be386fa277564766f3fd94977
-
-./.git/objects/79:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 12 16:16 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs 1212 Apr 12 16:16 9330792132d6886a823805616c7904409884e0
-
-./.git/objects/7b:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 11 12:54 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  403 Apr 11 12:54 cfa462aa2ca359f7add943cff47d5f7587aeee
-
-./.git/objects/7c:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 17 17:18 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs 1963 Apr 17 17:18 1ee9a0d0b423b4757e07dd33d097073849ed74
-
-./.git/objects/7d:
-total 16
-drwx------  2 masfo001 csmajs 4096 Apr 12 11:25 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  953 Apr 12 11:25 5249cd823549ddcbed47ae62830b0abecc3dec
--r--------  1 masfo001 csmajs  131 Apr  9 21:24 8ac75e27079617f98671b1ac4c230bb79db38d
-
-./.git/objects/7f:
-total 8
-drwx------  2 masfo001 csmajs 4096 Apr 12 11:26 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs   53 Apr 12 11:26 fdfb0c7b2652c3a8243d82bbc6f10af9f28eb8
-
-./.git/objects/83:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 12 01:23 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  148 Apr 12 01:23 44e287a18cf2eecd2596f3d34b5621f43d1d8d
-
-./.git/objects/87:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr  9 21:33 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  151 Apr  9 21:33 16b93e0e4cc664b53bcf995e19afc6c5e54e6c
-
-./.git/objects/8f:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 12 17:48 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  168 Apr 12 17:48 28f8d9c7c27b81e7212853aa603ca6fe9e5342
-
-./.git/objects/93:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 16 21:41 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs 1698 Apr 16 21:41 6016c5d373db404e6513b53358cf4ec6b6aa11
-
-./.git/objects/95:
-total 8
-drwx------  2 masfo001 csmajs 4096 Apr 16 23:45 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs   53 Apr 16 23:45 f58a98aa470d11e00666fa15978d09d50934c1
-
-./.git/objects/9a:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 12 14:41 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs 1073 Apr 12 14:41 de624dbc3b5a24ce91bc2c3fe69e02c09fb925
-
-./.git/objects/9f:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 17 18:06 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs 1873 Apr 17 18:06 231d9a631c9511a3feb46e642cd7486cf50f89
-
-./.git/objects/a2:
-total 8
-drwx------  2 masfo001 csmajs 4096 Apr 12 14:27 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs   53 Apr 12 14:27 490278918482b8d6140c4dccf644e21dc7e3ba
-
-./.git/objects/aa:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 16 23:45 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  168 Apr 16 23:45 a05830e1db9fd3dc66d3425ea468f0d0e01d51
-
-./.git/objects/ac:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 17 17:18 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  148 Apr 17 17:18 4b4116024e30382052a654248ed7ba866a15c5
-
-./.git/objects/b0:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 17 18:07 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs   53 Apr 17 18:07 e52e403f158ccb4de565da494c2de699444f11
--r--------  1 masfo001 csmajs  167 Apr  9 21:34 e711d9d960c403a8886c6a45b80895a80d03e9
-
-./.git/objects/b4:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 12 14:27 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  170 Apr 12 14:27 b86d44bc5fde3272fa2c876ebacdbd9126e47a
-
-./.git/objects/b5:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 16 14:27 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  148 Apr 16 14:27 a324d43170b8b3c84c479c064443e8b95e00f0
-
-./.git/objects/c2:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr  9 21:24 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs   85 Apr  9 21:24 1cfdb00763baf835d0b821c7cd98132eb805d3
-
-./.git/objects/c3:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 16 14:15 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs 1465 Apr 16 14:15 d1e7fe5b5939ab76bb19f9c6cc8bdf490ca58e
-
-./.git/objects/c7:
-total 8
-drwx------  2 masfo001 csmajs 4096 Apr  9 21:24 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs   24 Apr  9 21:24 3b9803d4e5585a8cb370e25ecc156503a27ca8
-
-./.git/objects/ca:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 12 17:48 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  148 Apr 12 17:48 84d14779f804aee5af6059ef7e09c06f1ea15b
-
-./.git/objects/cb:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 11 11:42 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  165 Apr 11 11:42 c4e5d545020c4a43e83f49e1d9bcd63030a4b9
-
-./.git/objects/dc:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 16 22:38 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  148 Apr 16 22:38 1858c8987c6b538255fdb3caf18fb48e42753b
-
-./.git/objects/e1:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 17 19:36 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs 1912 Apr 17 19:36 d0350dc63032869e1e588ed7c7663605ed0c49
-
-./.git/objects/e4:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 12 16:16 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  148 Apr 12 16:16 18e486c11b89eb4a2c1754abec0cb11c021711
-
-./.git/objects/e8:
-total 8
-drwx------  2 masfo001 csmajs 4096 Apr 17 19:36 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs   53 Apr 17 19:36 d9e4a6d3d7e7775976b35e3a84e89639d37d95
-
-./.git/objects/eb:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 16 22:37 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs   53 Apr 12 17:48 337a09debde2482917245de062f5245396b4b6
--r--------  1 masfo001 csmajs 1731 Apr 16 22:37 57f54c380329301ec13bc6af82d72ac251feb0
-
-./.git/objects/f1:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 16 14:27 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs 1521 Apr 16 14:27 456b2a13752f7d710d79ca86ba3c10b1942e9e
-
-./.git/objects/f8:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 11 12:54 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  180 Apr 11 12:54 580909d404e26017259fd347478732dfb0068f
-
-./.git/objects/fe:
-total 8
-drwx------  2 masfo001 csmajs 4096 Apr 16 21:41 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs   53 Apr 16 21:41 eae7b84df9179388253df720b37d62ecb03aaf
-
-./.git/objects/ff:
-total 12
-drwx------  2 masfo001 csmajs 4096 Apr 16 14:27 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
--r--------  1 masfo001 csmajs  177 Apr 16 14:27 6158a870f7d8475fcaf0168a7db4142454948a
-
-./.git/objects/info:
-total 8
-drwx------  2 masfo001 csmajs 4096 Apr  9 21:24 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
-
-./.git/objects/pack:
-total 8
-drwx------  2 masfo001 csmajs 4096 Apr  9 21:24 .
-drwx------ 63 masfo001 csmajs 4096 Apr 17 19:36 ..
-
-./.git/refs:
-total 20
-drwx------ 5 masfo001 csmajs 4096 Apr  9 21:24 .
-drwx------ 8 masfo001 csmajs 4096 Apr 17 19:36 ..
-drwx------ 2 masfo001 csmajs 4096 Apr 17 19:36 heads
-drwx------ 3 masfo001 csmajs 4096 Apr  9 21:24 remotes
-drwx------ 2 masfo001 csmajs 4096 Apr  9 21:24 tags
-
-./.git/refs/heads:
-total 8
-drwx------ 2 masfo001 csmajs 4096 Apr 17 19:36 .
-drwx------ 5 masfo001 csmajs 4096 Apr  9 21:24 ..
--rw------- 1 masfo001 csmajs   41 Apr 17 19:36 master
-
-./.git/refs/remotes:
-total 12
-drwx------ 3 masfo001 csmajs 4096 Apr  9 21:24 .
-drwx------ 5 masfo001 csmajs 4096 Apr  9 21:24 ..
-drwx------ 2 masfo001 csmajs 4096 Apr  9 21:24 origin
-
-./.git/refs/remotes/origin:
-total 8
-drwx------ 2 masfo001 csmajs 4096 Apr  9 21:24 .
-drwx------ 3 masfo001 csmajs 4096 Apr  9 21:24 ..
--rw------- 1 masfo001 csmajs   32 Apr  9 21:24 HEAD
-
-./.git/refs/tags:
-total 8
-drwx------ 2 masfo001 csmajs 4096 Apr  9 21:24 .
-drwx------ 5 masfo001 csmajs 4096 Apr  9 21:24 ..
-
-./src:
-total 60
-drwx------ 2 masfo001 csmajs  4096 Apr 17 22:58 .
-drwx------ 6 masfo001 csmajs  4096 Apr 17 23:01 ..
--rwx------ 1 masfo001 csmajs 44879 Apr 17 19:13 a.out
--rw------- 1 masfo001 csmajs  6089 Apr 17 22:58 main.cpp
-
-./test:
-total 8
-drwx------ 2 masfo001 csmajs 4096 Apr 17 23:01 .
-drwx------ 6 masfo001 csmajs 4096 Apr 17 23:01 ..
--rw------- 1 masfo001 csmajs    0 Apr 17 23:01 exec.script
-masfo001@hammer.cs.ucr.edu$ pwd -L -P
-/home/csmajs/masfo001/cs100/rshell
-masfo001@hammer.cs.ucr.edu$ echo hello
-hello
 masfo001@hammer.cs.ucr.edu$ echo hello world
 hello world
-masfo001@hammer.cs.ucr.edu$ echo "hello      hello world! This is my shell
-hello world! This is my shell
-masfo001@hammer.cs.ucr.edu$ echo echo
-echo
-masfo001@hammer.cs.ucr.edu$ #TEST   esting single commands with multiple flags or agruments with spaces
-masfo001@hammer.cs.ucr.edu$ ls -a           -l
-total 44
-drwx------ 6 masfo001 csmajs  4096 Apr 17 23:01 .
-drwx------ 4 masfo001 csmajs  4096 Apr  9 21:24 ..
-drwx------ 2 masfo001 csmajs  4096 Apr 17 23:01 bin
-drwx------ 8 masfo001 csmajs  4096 Apr 17 19:36 .git
--rw------- 1 masfo001 csmajs  1068 Apr  9 21:24 LICENSE
--rw------- 1 masfo001 csmajs 12288 Apr 11 00:05 .main.cpp.swo
--rw------- 1 masfo001 csmajs   116 Apr 17 22:44 makefile
--rw------- 1 masfo001 csmajs     9 Apr  9 21:24 README.md
-drwx------ 2 masfo001 csmajs  4096 Apr 17 22:58 src
-drwx------ 2 masfo001 csmajs  4096 Apr 17 23:01 test
-masfo001@hammer.cs.ucr.edu$ pwd       -L                      -P
-/home/csmajs/masfo001/cs100/rshell
-masfo001@hammer.cs.ucr.edu$ #Testing commands with comments inside
-masfo001@hammer.cs.ucr.edu$ ls -a #-l
-.  ..  bin  .git  LICENSE  .main.cpp.swo  makefile  README.md  src  test
-masfo001@hammer.cs.ucr.edu$ ls -l #-a
-total 20
-drwx------ 2 masfo001 csmajs 4096 Apr 17 23:01 bin
+masfo001@hammer.cs.ucr.edu$ echo hello worll d, this is my shell
+hello world, this is my shell
+masfo001@hammer.cs.ucr.edu$ ls            -  a
+.  ..  bin  .git  LICENSE  makefile  README.md	src  test
+masfo001@hammer.cs.ucr.edu$      ls -l
+total 24
+drwx------ 2 masfo001 csmajs 4096 Apr 18 23:48 bin
 -rw------- 1 masfo001 csmajs 1068 Apr  9 21:24 LICENSE
--rw------- 1 masfo001 csmajs  116 Apr 17 22:44 makefile
--rw------- 1 masfo001 csmajs    9 Apr  9 21:24 README.md
-drwx------ 2 masfo001 csmajs 4096 Apr 17 22:58 src
-drwx------ 2 masfo001 csmajs 4096 Apr 17 23:01 test
-masfo001@hammer.cs.ucr.edu$ #Testing commands with connectors
-masfo001@hammer.cs.ucr.edu$ ls ; pwd ; echo sweet
+-rw------- 1 masfo001 csmajs  116 Apr 18 23:43 makefile
+-rw------- 1 masfo001 csmajs 1498 Apr 18 23:43 README.md
+drwx------ 2 masfo001 csmajs 4096 Apr 18 23:43 src
+drwx------ 2 masfo001 csmajs 4096 Apr 18 23:47 test
+masfo001@hammer.cs.ucr.edu$ echo good #job
+good
+masfo001@hammer.cs.ucr.edu$ #Testing connectors with core rect syntax
+masfo001@hammer.cs.ucr.edu$ ls ; pwd
 bin  LICENSE  makefile	README.md  src	test
 /home/csmajs/masfo001/cs100/rshell
-sweet
-masfo001@hammer.cs.ucr.edu$ echo yolo ; ls
-yolo
-bin  LICENSE  makefile	README.md  src	test
-masfo001@hammer.cs.ucr.edu$ pwd && ls &&c  cal
-/home/csmajs/masfo001/cs100/rshell
-bin  LICENSE  makefile	README.md  src	test
+masfo001@hammer.cs.ucr.edu$ date || cal
+Sat Apr 18 23:59:02 PDT 2015
+masfo001@hammer.cs.ucr.edu$ cal || date
      April 2015     
 Su Mo Tu We Th Fr Sa
           1  2  3  4
  5  6  7  8  9 10 11
-12 13 14 15 16 [7m17[m 18
+12 13 14 15 16 17 [7m18[m
 19 20 21 22 23 24 25
 26 27 28 29 30
 
-masfo001@hammer.cs.ucr.edu$ ls || exit
+masfo001@hammer.cs.ucr.edu$ ls -a && echo nicely done
+.  ..  bin  .git  LICENSE  makefile  README.md	src  test
+nicely done
+masfo001@hammer.cs.ucr.edu$ #Testing n multiple connectors with correct syntax
+masfo001@hammer.cs.ucr.edu$ ls ; ls -a ; pwd
 bin  LICENSE  makefile	README.md  src	test
-masfo001@hammer.cs.ucr.edu$ #Testing improper connector usage
-masfo001@hammer.cs.ucr.edu$ ;
-No arguments before connector: Success
-masfo001@hammer.cs.ucr.edu$ ;;;
-No arguments before connector: Success
-masfo001@hammer.cs.ucr.edu$ ls 
-bin  LICENSE  makefile	README.md  src	test
-masfo001@hammer.cs.ucr.edu$ 
-masfo001@hammer.cs.ucr.edu$ 
+.  ..  bin  .git  LICENSE  makefile  README.md	src  test
+/home/csmajs/masfo001/cs100/rshell
+masfo001@hammer.cs.ucr.edu$ hello || echo what && echo are && echo you && fail ; echo doing
+There was an error in execvp.: No such file or directory
+what
+are
+you
+There was an error in execvp.: No such file or directory
+doing
+masfo001@hammer.cs.ucr.edu$ #Testing to prove syntax error detection
 masfo001@hammer.cs.ucr.edu$ ls ;;;
 No arguments before connector: Success
-masfo001@hammer.cs.ucr.edu$ ls & ls
+masfo001@hammer.cs.ucr.edu$ ls &: ;|
 Syntax error. Improper use of connectors.: Success
-masfo001@hammer.cs.ucr.edu$ pwd | ls ; echo fail
+masfo001@hammer.cs.ucr.edu$ pwd |;&
 Syntax error. Improper use of connectors.: Success
-masfo001@hammer.cs.ucr.edu$ |
+masfo001@hammer.cs.ucr.edu$ pwd ||| ls
+Syntax error. Improper use of connectors.: Success
+masfo001@hammer.cs.ucr.edu$ hello && hello &&& echo nice
+Syntax error. Improper use of connectors.: Success
+masfo001@hammer.cs.ucr.edu$ fail ;
 There was an error in execvp.: No such file or directory
-masfo001@hammer.cs.ucr.edu$ #Testing connectors with spaces
-masfo001@hammer.cs.ucr.edu$ ls                 && echo testing                || ls ; echo done
+There was an error in execvp.: No such file or directory
+masfo001@hammer.cs.ucr.edu$ ls &      & ps
 bin  LICENSE  makefile	README.md  src	test
-testing
-done
-masfo001@hammer.cs.ucr.edu$ yolo || echo nice                    && t echo try          || exit
-There was an error in execvp.: No such file or directory
-nice
-try
-masfo001@hammer.cs.ucr.edu$ #Testing connectors with bad arguments
-masfo001@hammer.cs.ucr.edu$ hello world
-There was an error in execvp.: No such file or directory
-masfo001@hammer.cs.ucr.edu$ hello world ; ls; pwd
-There was an error in execvp.: No such file or directory
-bin  LICENSE  makefile	README.md  src	test
+  PID TTY          TIME CMD
+ 7781 pts/40   00:00:00 bash
+ 7827 pts/40   00:00:00 rshell
+ 9794 pts/40   00:00:00 ps
+masfo001@hammer.cs.ucr.edu$ pwd |      | ls
 /home/csmajs/masfo001/cs100/rshell
-masfo001@hammer.cs.ucr.edu$ yolo && swag && noice ; echo good
-There was an error in execvp.: No such file or directory
-good
-masfo001@hammer.cs.ucr.edu$ fail || fail2 || echo win
-There was an error in execvp.: No such file or directory
-There was an error in execvp.: No such file or directory
-win
-masfo001@hammer.cs.ucr.edu$ #Testing rshell running in rshell
+masfo001@hammer.cs.ucr.edu$ #Running rshell in rshell
 masfo001@hammer.cs.ucr.edu$ bin/rshell
-masfo001@hammer.cs.ucr.edu$ echo shellception
-shellception
-masfo001@hammer.cs.ucr.edu$ ls -a; ps
-.  ..  bin  .git  LICENSE  .main.cpp.swo  makefile  README.md  src  test
+masfo001@hammer.cs.ucr.edu$ echo im in another rshell
+im in another rshell
+masfo001@hammer.cs.ucr.edu$ ps
   PID TTY          TIME CMD
-37029 pts/62   00:00:00 bash
-37170 pts/62   00:00:00 rshell
-39718 pts/62   00:00:00 rshell
-39788 pts/62   00:00:00 ps
-masfo001@hammer.cs.ucr.edu$ #Testing exit (currently in rshell in rshell)
+ 7781 pts/40   00:00:00 bash
+ 7827 pts/40   00:00:00 rshell
+ 9853 pts/40   00:00:00 rshell
+ 9884 pts/40   00:00:00 ps
+masfo001@hammer.cs.ucr.edu$ echo notice 2 rshells
+notice 2 rshells
+masfo001@hammer.cs.ucr.edu$ this || echo thissss
+There was an error in execvp.: No such file or directory
+thissss
+masfo001@hammer.cs.ucr.edu$ #Exiting inner rshell
 masfo001@hammer.cs.ucr.edu$ exit
 ending session...good-bye!
-masfo001@hammer.cs.ucr.edu$ ps
-  PID TTY          TIME CMD
-37029 pts/62   00:00:00 bash
-37170 pts/62   00:00:00 rshell
-39953 pts/62   00:00:00 ps
-masfo001@hammer.cs.ucr.edu$ #T Exit in inner rshell succeeded
-masfo001@hammer.cs.ucr.edu$ #Testing exit in inner rshell with various commands
-masfo001@hammer.cs.ucr.edu$ bin/rshell
-masfo001@hammer.cs.ucr.edu$ ps
-  PID TTY          TIME CMD
-37029 pts/62   00:00:00 bash
-37170 pts/62   00:00:00 rshell
-40144 pts/62   00:00:00 rshell
-40167 pts/62   00:00:00 ps
-masfo001@hammer.cs.ucr.edu$ ls -a                 ; exit
-.  ..  bin  .git  LICENSE  .main.cpp.swo  makefile  README.md  src  test
-ending session...good-bye!
-masfo001@hammer.cs.ucr.edu$ ls
-bin  LICENSE  makefile	README.md  src	test
-masfo001@hammer.cs.ucr.edu$ bin/rshell
-masfo001@hammer.cs.ucr.edu$ cal &&                       exit ; exit
-     April 2015     
-Su Mo Tu We Th Fr Sa
-          1  2  3  4
- 5  6  7  8  9 10 11
-12 13 14 15 16 [7m17[m 18
-19 20 21 22 23 24 25
-26 27 28 29 30
-
-ending session...good-bye!
-masfo001@hammer.cs.ucr.edu$ ps
-  PID TTY          TIME CMD
-37029 pts/62   00:00:00 bash
-37170 pts/62   00:00:00 rshell
-41113 pts/62   00:00:00 ps
-masfo001@hammer.cs.ucr.edu$ #Miscellaneous command trials
-masfo001@hammer.cs.ucr.edu$ hommie && swag || echo hello world!             ; echo my name is Mark && bin/rshell
-There was an error in execvp.: No such file or directory
-hello world!
-my name is Mark
-masfo001@hammer.cs.ucr.edu$ ps
-  PID TTY          TIME CMD
-37029 pts/62   00:00:00 bash
-37170 pts/62   00:00:00 rshell
-41341 pts/62   00:00:00 rshell
-41387 pts/62   00:00:00 ps
+masfo001@hammer.cs.ucr.edu$ #Exiting main rshell
 masfo001@hammer.cs.ucr.edu$ exit
 ending session...good-bye!
-masfo001@hammer.cs.ucr.edu$ ;
-No arguments before connector: Success
-masfo001@hammer.cs.ucr.edu$ ls &
-bin  LICENSE  makefile	README.md  src	test
-masfo001@hammer.cs.ucr.edu$ ls &&&
-bin  LICENSE  makefile	README.md  src	test
-There was an error in execvp.: No such file or directory
-masfo001@hammer.cs.ucr.edu$ ls -a &&& ls -a
-Syntax error. Improper use of connectors.: Success
-masfo001@hammer.cs.ucr.edu$ pwd              &&&&&&&&&&         exit
-No arguments before connector: Success
-No arguments before connector: Success
-No arguments before connector: Success
-No arguments before connector: Success
-masfo001@hammer.cs.ucr.edu$ fail  ||           fail &&          fail ||       echo win;           fail
-There was an error in execvp.: No such file or directory
-There was an error in execvp.: No such file or directory
-win
-There was an error in execvp.: No such file or directory
-masfo001@hammer.cs.ucr.edu$ date           ;            #exit
-Fri Apr 17 23:35:00 PDT 2015
-There was an error in execvp.: No such file or directory
-masfo001@hammer.cs.ucr.edu$ /\/\/\
-There was an error in execvp.: No such file or directory
-masfo001@hammer.cs.ucr.edu$ #Exiting original rshell
-masfo001@hammer.cs.ucr.edu$ #e Ending testing
-masfo001@hammer.cs.ucr.edu$ echo thank you!; exit
-thank you!
-ending session...good-bye!
-[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~/cs100/rshell[0;95m (master) [0;36m$[0m exit
-exit
-~/cs100
+~/cs100/rshell
+masfo001@hammer $ #End of scri[K[Kpt
+~/cs100/rshell
 masfo001@hammer $ exit
 exit
 
-Script done on Fri 17 Apr 2015 11:37:25 PM PDT
+Script done on Sun 19 Apr 2015 12:05:28 AM PDT
