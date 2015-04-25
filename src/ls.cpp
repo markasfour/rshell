@@ -72,8 +72,28 @@ int main(int argc, char* argv[])
 		}
 	}
 	
-	if(aFlag && lFlag && RFlag)
+	if(aFlag || lFlag || RFlag)
 		cout << "yay" << endl;
 
+	//address directories first
+	if(directories.size() > 0)
+	{
+		//check if valid directory
+		struct stat name;
+		for(unsigned int i = 0; i < directories.size(); i++)
+		{
+			if(stat(directories.at(i).c_str(), &name) == -1)
+			{
+				perror("stat error");
+				continue;	
+			}
+			else
+				cout << "yay" << endl;
+		}
+	}
+	else
+	{
+		cout << "yolo" << endl;
+	}
 	return 0;
 }
