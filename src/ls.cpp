@@ -2,17 +2,44 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <vector>
+#include <deque>
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 using namespace std;
+
+
+void printme(string argument, struct stat name)
+{
+	if(argument.at(0) == '.') //argument is a hidden file
+	{
+		if(name.st_mode & S_IFDIR) //argument is a directory
+		{
+		}
+		else if(name.st_mode & S_IXUSR) //argument is a usr file
+		{
+		}
+		else //argument is a regular file
+		{
+		}
+	}
+	else if(name.st_mode & S_IFDIR) //argument is a directory
+	{
+	}
+	else if(name.st_mode & S_IXUSR) //argument is a usr file
+	{
+	}
+	else //argument is a regular file
+		cout << argument; 
+}
+
 
 int main(int argc, char* argv[])
 {
 
 	//cout << "argc = " << argc << endl;	
 
-	vector <string> arguments;
+	deque <string> arguments;
 	//put all passed in arguments into a vector
 	for(int i = 0; i < (argc - 1); i++)
 	{
@@ -25,8 +52,8 @@ int main(int argc, char* argv[])
 
 
 	//check for directory argument
-	vector <string> directories;
-	vector <string> flags;
+	deque <string> directories;
+	deque <string> flags;
 	for(unsigned int i = 0; i < arguments.size(); i++)
 	{
 		if(arguments.at(i).at(0) == '-') //if argument starts with a -, then it is a flag
@@ -88,7 +115,14 @@ int main(int argc, char* argv[])
 				continue;	
 			}
 			else
-				cout << "yay" << endl;
+			{
+				if(!(name.st_mode & S_IFDIR))
+				{
+					printme(directories.at(i), name);
+					continue;
+				}
+				//cout << directories.at(i) << ": " << endl;
+			}
 		}
 	}
 	else
