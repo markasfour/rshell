@@ -6,7 +6,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <dirent.h>
+#include <algorithm>
 using namespace std;
+
+
+void organize(deque <string> files)
+{
+	sort(files.begin(), files.end());
+}
 
 
 void printme(string argument, struct stat name)
@@ -38,6 +46,10 @@ int main(int argc, char* argv[])
 {
 
 	//cout << "argc = " << argc << endl;	
+	
+	bool aFlag = false;
+	bool lFlag = false;
+	bool RFlag = false;
 
 	deque <string> arguments;
 	//put all passed in arguments into a vector
@@ -74,9 +86,6 @@ int main(int argc, char* argv[])
 
 	
 	//flag checking
-	bool aFlag = false;
-	bool lFlag = false;
-	bool RFlag = false;
 	for(unsigned int i = 0; i < flags.size(); i++)
 	{
 		for(unsigned int j = 0; j < flags.at(i).size(); j++) //loop through each letter of the flag
@@ -102,13 +111,17 @@ int main(int argc, char* argv[])
 	if(aFlag || lFlag || RFlag)
 		cout << "yay" << endl;
 
-	//address directories first
+	//handle whatever is in directories deque
 	if(directories.size() > 0)
 	{
-		//check if valid directory
+		
 		struct stat name;
 		for(unsigned int i = 0; i < directories.size(); i++)
 		{
+			deque <string> files;
+			DIR *directory;
+			
+			//Check if argument is a file
 			if(stat(directories.at(i).c_str(), &name) == -1)
 			{
 				perror("stat error");
@@ -123,6 +136,46 @@ int main(int argc, char* argv[])
 				}
 				//cout << directories.at(i) << ": " << endl;
 			}
+			cout <<"hello" << endl;	
+			//transfer files in directory to files deque
+			if(!(directory = opendir(directories.at(i).c_str())))
+			{
+				perror("cannot open dir");
+				exit(1);
+			}
+		
+			dirent *dirp = readdir(directory); 
+			while(dirp == readdir(directory))
+			{
+				if(!(errno == 0))
+				{
+					perror("error in readdir");
+					exit(1);
+				}
+				files.push_back(dirp->d_name);
+			}
+
+			organize(files); //sort the files
+			cout << "hello1" << endl;
+			for(unsigned int k = 0; k < files.size(); k++)
+			{
+				cout << files.at(k) << endl;
+			}
+
+			//handle hidden files 
+			if(!aFlag)
+			{
+				for(unsigned int j = 0; j < files.size(); j++)
+				{
+					if(files.at(j).at(i) == '.')
+					{
+						files.erase(files.begin() + j);
+						j = j -1;
+					}
+				}
+			}
+
+
 		}
 	}
 	else
