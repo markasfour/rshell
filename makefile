@@ -1,8 +1,15 @@
-all: rshell
+FLAGS = -Wall -Werror -ansi -pedantic -o
 
-rshell:
-	mkdir bin
-	g++ -Wall -Werror -ansi -pedantic src/main.cpp -o bin/rshell
+all:
+	mkdir bin; \
+	g++ $(FLAGS) bin/rshell src/main.cpp; \
+	g++ $(FLAGS) bin/cp src/cp.cpp; \
+
+rshell: src/main.cpp
+	g++ $(FLAGS) bin/rshell src/main.cpp; \
+
+cp: src/cp.cpp src/Timer.h
+	g++ $(FLAGS) bin/cp src/cp.cpp; \
 	
 clean:
-	rm -rf bin/
+	rm -rf bin
