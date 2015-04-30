@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <pwd.h>
 #include <grp.h>
+#include <time.h>
 using namespace std;
 
 
@@ -61,8 +62,10 @@ void printlFlag(struct stat name)
 	
 	cout << name.st_size << " ";
 
-	
-	//need to add time	
+	string time = ctime(&name.st_mtime);
+	if(time.at(time.size() - 1) == '\n')
+		time.at(time.size() - 1) = '\0';
+	cout << time;
 }
 
 
@@ -200,7 +203,7 @@ int main(int argc, char* argv[])
 		cout << "Listed as dir: " << directories.at(i) << endl;
 
 
-	cout << filesonly << endl;
+	//cout << filesonly << endl;
 	//for(unsigned int i = 0; i < files.size(); i++)
 	//{
 	//	cout << "Tracked files: " << files.at(i) << endl;
@@ -230,6 +233,7 @@ int main(int argc, char* argv[])
 					perror("stat error");
 				
 				printlFlag(name);
+				cout << " " << files.at(i) << endl;
 			}
 			return 0; //end program
 		}
