@@ -11,7 +11,7 @@
 using namespace std;
 
 
-void organize(deque <string> files)
+void organize(deque <string> &files)
 {
 	sort(files.begin(), files.end());
 }
@@ -50,6 +50,7 @@ int main(int argc, char* argv[])
 	bool aFlag = false;
 	bool lFlag = false;
 	bool RFlag = false;
+	bool filesonly = false;
 
 	deque <string> arguments;
 	//put all passed in arguments into a vector
@@ -111,76 +112,90 @@ int main(int argc, char* argv[])
 	if(aFlag || lFlag || RFlag)
 		cout << "yay" << endl;
 
-	//handle whatever is in directories deque
+	
+	struct stat name;
+
+
+	//handle case if file names are passed in
+	deque <string> files;
 	if(directories.size() > 0)
 	{
-		
-		struct stat name;
 		for(unsigned int i = 0; i < directories.size(); i++)
 		{
-			deque <string> files;
-			DIR *directory;
+			//DIR *directory;
 			
 			//Check if argument is a file
 			if(stat(directories.at(i).c_str(), &name) == -1)
 			{
 				perror("stat error");
-				continue;	
+				directories.erase(directories.begin() + i);
+				i--;
 			}
 			else
 			{
 				if(!(name.st_mode & S_IFDIR))
 				{
-					printme(directories.at(i), name);
-					continue;
+					files.push_back(directories.at(i));
+					directories.erase(directories.begin() + i);
+					i--;
 				}
 				//cout << directories.at(i) << ": " << endl;
 			}
-			cout <<"hello" << endl;	
-			//transfer files in directory to files deque
-			if(!(directory = opendir(directories.at(i).c_str())))
-			{
-				perror("cannot open dir");
-				exit(1);
-			}
-		
-			dirent *dirp = readdir(directory); 
-			while(dirp == readdir(directory))
-			{
-				if(!(errno == 0))
-				{
-					perror("error in readdir");
-					exit(1);
-				}
-				files.push_back(dirp->d_name);
-			}
-
-			organize(files); //sort the files
-			cout << "hello1" << endl;
-			for(unsigned int k = 0; k < files.size(); k++)
-			{
-				cout << files.at(k) << endl;
-			}
-
-			//handle hidden files 
-			if(!aFlag)
-			{
-				for(unsigned int j = 0; j < files.size(); j++)
-				{
-					if(files.at(j).at(i) == '.')
-					{
-						files.erase(files.begin() + j);
-						j = j -1;
-					}
-				}
-			}
-
-
 		}
 	}
-	else
+	if(directories.size() == 0)
 	{
-		cout << "yolo" << endl;
+		filesonly = true;
 	}
+
+	cout << filesonly << endl;
+	//for(unsigned int i = 0; i < files.size(); i++)
+	//{
+	//	cout << "Tracked files: " << files.at(i) << endl;
+	//}
+
+	organize(files); //sort files alphabetically
+
+	//for(unsigned int i = 0; i < files.size(); i++)
+	//{
+	//	cout << "Sorted files: " << files.at(i) << endl;
+	//}
+
+	if(filesonly)
+	{
+		if(!lFlag) //print without -l descriptors
+		{
+			for(unsigned int i = 0; i < files.size(); i++)
+				cout << files.at(i) << "  ";
+			cout << endl;
+			return 0; //end program
+		}
+	}
+
+			//if(!(directory = opendir(directories.at(i).c_str())))
+			//{
+			//	perror("cannot open dir");
+			//	exit(1);
+			//}
+		
+			//dirent *dirp = readdir(directory); 
+			//while(dirp == readdir(directory))
+			//{
+			//	if(!(errno == 0))
+			//	{
+			//		perror("error in readdir");
+			//		exit(1);
+			//	}
+			//	files.push_back(dirp->d_name);
+			//}
+
+
+
+		//}
+	//}
+	//else //read files in current directory
+	//{
+	//	cout << "yolo" << endl;
+	//}
 	return 0;
 }
