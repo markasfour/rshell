@@ -8,12 +8,61 @@
 #include <errno.h>
 #include <dirent.h>
 #include <algorithm>
+#include <pwd.h>
+#include <grp.h>
 using namespace std;
 
 
 void organize(deque <string> &files)
 {
 	sort(files.begin(), files.end());
+}
+
+void printlFlag(struct stat name)
+{
+	if(name.st_mode & S_IFDIR)
+		cout << 'd';
+	else if(!(name.st_mode & S_IFLNK)) //! because prints otherwise 
+		cout << 'l';
+	else
+		cout << '-';
+	
+
+	cout << ((name.st_mode & S_IRUSR)? "r" : "-" );
+	cout << ((name.st_mode & S_IWUSR)? "w" : "-" );
+	cout << ((name.st_mode & S_IXUSR)? "x" : "-" );
+	cout << ((name.st_mode & S_IRGRP)? "r" : "-" );
+	cout << ((name.st_mode & S_IWGRP)? "w" : "-" );
+	cout << ((name.st_mode & S_IXGRP)? "x" : "-" );
+	cout << ((name.st_mode & S_IROTH)? "r" : "-" );
+	cout << ((name.st_mode & S_IWOTH)? "w" : "-" );
+	cout << ((name.st_mode & S_IXOTH)? "x" : "-" );
+	cout << " " << name.st_nlink << " ";
+
+	struct passwd* p;
+	if((p = getpwuid(name.st_uid)) == NULL)
+	{
+		perror("getpwuid error");
+		exit(1);
+	}
+	else
+		cout << p->pw_name << " ";
+	
+
+	struct group* g;
+	if((g = getgrgid(name.st_gid)) == NULL)
+	{
+		perror("getgrgid error");
+		exit(1);
+	}
+	else
+		cout << g->gr_name << " ";
+
+	
+	cout << name.st_size << " ";
+
+	
+	//need to add time	
 }
 
 
@@ -139,7 +188,6 @@ int main(int argc, char* argv[])
 					directories.erase(directories.begin() + i);
 					i--;
 				}
-				//cout << directories.at(i) << ": " << endl;
 			}
 		}
 	}
@@ -147,6 +195,10 @@ int main(int argc, char* argv[])
 	{
 		filesonly = true;
 	}
+
+	for(unsigned int i = 0; i < directories.size(); i++)
+		cout << "Listed as dir: " << directories.at(i) << endl;
+
 
 	cout << filesonly << endl;
 	//for(unsigned int i = 0; i < files.size(); i++)
@@ -168,6 +220,17 @@ int main(int argc, char* argv[])
 			for(unsigned int i = 0; i < files.size(); i++)
 				cout << files.at(i) << "  ";
 			cout << endl;
+			return 0; //end program
+		}
+		else //only l flag has effect when only file names a inputted
+		{
+			for(unsigned int i = 0; i < files.size(); i++)
+			{
+				if(stat(files.at(i).c_str(), &name) == -1)
+					perror("stat error");
+				
+				printlFlag(name);
+			}
 			return 0; //end program
 		}
 	}
