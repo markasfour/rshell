@@ -260,9 +260,20 @@ int main(int argc, char* argv[])
 
 		//}
 	//}
-	//else //read files in current directory
-	//{
-	//	cout << "yolo" << endl;
-	//}
+	else //read files in current directory
+	{
+		if(!aFlag && !lFlag && !RFlag)
+		{
+			for(unsigned int i = 0; i < files.size(); i++)
+				cout << files.at(i) << "  ";
+
+			cout << endl;
+
+			for(unsigned int i = 0; i < directories.size(); i++)
+			{
+				cout << directories.at(i) << ":" << endl;
+			}
+		}
+	}
 	return 0;
 }
