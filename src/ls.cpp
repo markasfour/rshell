@@ -14,6 +14,13 @@
 using namespace std;
 
 
+//Globalized flags
+bool aFlag = false;
+bool lFlag = false;
+bool RFlag = false;
+
+
+
 void organize(deque <string> &files)
 {
 	sort(files.begin(), files.end(), locale("en_US.UTF-8"));
@@ -70,14 +77,103 @@ void printlFlag(struct stat name)
 
 
 
+void lsDir(deque <string> files, deque <string> directories, struct stat name, bool otherOutput)
+{
+	deque <string> recurrence;
+
+	organize(directories);
+	for(unsigned int i = 0; i < directories.size(); i++)
+	{
+	
+		DIR* dp;
+		if((dp = opendir(directories.at(i).c_str()))==0)
+		{
+			perror("cannot open dir");
+			exit(1);
+		}
+		dirent* direntp;
+		while((direntp = readdir(dp)) != 0) //extract files from directory
+		{
+			files.push_back(direntp->d_name);
+
+
+			//for recurrence case
+			string path = directories.at(i) + "/" + direntp->d_name;
+			if(-1 == (stat(path.c_str(), &name)))
+			{
+				perror("stat error 1");
+				exit(1);
+			}
+			else if(name.st_mode & S_IFDIR) 
+				recurrence.push_back(direntp->d_name);
+		}
+		organize(files); //sort extracted files
+		organize(recurrence); //sort extracted directories
+		
+		if(!aFlag) //remove hidden files
+		{
+			for(unsigned int k = 0; k < files.size(); k++)
+			{
+				if(files.at(k).at(0) == '.')
+				{
+					files.erase(files.begin() + k); //erase hidden files
+					k--;
+				}
+			}
+		}
+
+
+		if(lFlag)
+		{
+			int total = 0;
+			for(unsigned int h = 0; h < files.size(); h++) //get total block size
+			{
+				string path = directories.at(i) + "/" + files.at(h);
+				if(-1 == (stat(path.c_str(), &name)))
+				{
+					perror("stat error 1");
+					exit(1);
+				}
+				else
+					total += name.st_blocks;
+
+				//cout << total << endl;
+			}
+			cout << "total " << total/2 << endl; //output total block size
+		}
+
+		if((directories.size() > 1) || otherOutput) //output directory currently working on
+			cout << directories.at(i) << ":" << endl;
+			
+
+
+		for(unsigned int j = 0; j < files.size(); j++)
+		{
+			if(lFlag)
+			{
+				string path = directories.at(i) + "/" + files.at(j);
+				if(stat(path.c_str(), &name) == -1)
+					perror("stat error 2");
+				
+				printlFlag(name);
+			}
+			cout << files.at(j) << "  ";
+			if(lFlag) 
+				cout << endl;
+		}
+		cout << endl << endl;
+		files.clear();
+	}
+
+}
+
+
+
 int main(int argc, char* argv[])
 {
 
 	//cout << "argc = " << argc << endl;	
 	
-	bool aFlag = false;
-	bool lFlag = false;
-	bool RFlag = false;
 	bool filesonly = false;
 
 	deque <string> arguments;
@@ -224,8 +320,7 @@ int main(int argc, char* argv[])
 	else //case with directories as args
 	{
 		bool otherOutput = false;
-		deque <string> recurrence;
-
+		
 		for(unsigned int i = 0; i < files.size(); i++)
 			cout << files.at(i) << "  "; //print out file arguments first
 
@@ -235,90 +330,8 @@ int main(int argc, char* argv[])
 			otherOutput = true;
 		}
 		files.clear();
-
-		organize(directories);
-		for(unsigned int i = 0; i < directories.size(); i++)
-		{
 		
-			DIR* dp;
-			if((dp = opendir(directories.at(i).c_str()))==0)
-			{
-				perror("cannot open dir");
-				exit(1);
-			}
-			dirent* direntp;
-			while((direntp = readdir(dp)) != 0) //extract files from directory
-			{
-				files.push_back(direntp->d_name);
-
-
-				//for recurrence case
-				string path = directories.at(i) + "/" + direntp->d_name;
-				if(-1 == (stat(path.c_str(), &name)))
-				{
-					perror("stat error 1");
-					exit(1);
-				}
-				else if(name.st_mode & S_IFDIR) 
-					recurrence.push_back(direntp->d_name);
-			}
-			organize(files); //sort extracted files
-			organize(recurrence); //sort extracted directories
-			
-			if(!aFlag) //remove hidden files
-			{
-				for(unsigned int k = 0; k < files.size(); k++)
-				{
-					if(files.at(k).at(0) == '.')
-					{
-						files.erase(files.begin() + k); //erase hidden files
-						k--;
-					}
-				}
-			}
-
-
-			if(lFlag)
-			{
-				int total = 0;
-				for(unsigned int h = 0; h < files.size(); h++) //get total block size
-				{
-					string path = directories.at(i) + "/" + files.at(h);
-					if(-1 == (stat(path.c_str(), &name)))
-					{
-						perror("stat error 1");
-						exit(1);
-					}
-					else
-						total += name.st_blocks;
-
-					//cout << total << endl;
-				}
-				cout << "total " << total/2 << endl; //output total block size
-			}
-
-			if((directories.size() > 1) || otherOutput) //output directory currently working on
-				cout << directories.at(i) << ":" << endl;
-				
-
-
-			for(unsigned int j = 0; j < files.size(); j++)
-			{
-				if(lFlag)
-				{
-					string path = directories.at(i) + "/" + files.at(j);
-					if(stat(path.c_str(), &name) == -1)
-						perror("stat error 2");
-					
-					printlFlag(name);
-				}
-				cout << files.at(j) << "  ";
-				if(lFlag) 
-					cout << endl;
-			}
-			cout << endl << endl;
-			files.clear();
-		}
+		lsDir(files, directories, name, otherOutput);
 	}
 	return 0;
 }
