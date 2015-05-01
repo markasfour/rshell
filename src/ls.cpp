@@ -85,8 +85,9 @@ void lsDir(deque <string> files, deque <string> directories, struct stat name, b
 	for(unsigned int i = 0; i < directories.size(); i++)
 	{
 	
+		cout << "curr dir: " << directories.at(i) << endl;
 		DIR* dp;
-		if((dp = opendir(directories.at(i).c_str()))==0)
+		if(!(dp = opendir(directories.at(i).c_str())))
 		{
 			perror("cannot open dir");
 			exit(1);
@@ -105,8 +106,15 @@ void lsDir(deque <string> files, deque <string> directories, struct stat name, b
 				exit(1);
 			}
 			else if(name.st_mode & S_IFDIR) 
+			{	
 				recurrence.push_back(direntp->d_name);
+			}
 		}
+		//for(unsigned int w = 0; w < recurrence.size(); w++)
+		//	cout << "r: " << recurrence.at(w) << endl;
+
+		
+		
 		organize(files); //sort extracted files
 		organize(recurrence); //sort extracted directories
 		
@@ -163,6 +171,35 @@ void lsDir(deque <string> files, deque <string> directories, struct stat name, b
 		}
 		cout << endl << endl;
 		files.clear();
+	}
+	if(RFlag) //recurrence flag
+	{
+		if(recurrence.size() > 0)
+		{
+			for(unsigned int k = 0; k < recurrence.size(); k++)
+			{
+				if(recurrence.at(k) == "." || recurrence.at(k) == "..")
+				{
+					recurrence.erase(recurrence.begin() + k); //erase current and previous dir
+					k--;
+				}
+			}
+			if(!aFlag) //remove hidden files
+			{
+				for(unsigned int k = 0; k < recurrence.size(); k++)
+				{
+					if(recurrence.at(k).at(0) == '.')
+					{
+						recurrence.erase(recurrence.begin() + k); //erase hidden files
+						k--;
+					}
+				}
+			}
+			for(unsigned int w = 0; w < recurrence.size(); w++)
+				cout << "r: " << recurrence.at(w) << endl;
+
+			lsDir(files, recurrence, name, otherOutput); //recurrence statement
+		}
 	}
 
 }
