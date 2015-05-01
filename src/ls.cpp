@@ -223,11 +223,15 @@ int main(int argc, char* argv[])
 
 	else //case with directories as args
 	{
+		bool otherOutput = false;
 		for(unsigned int i = 0; i < files.size(); i++)
 			cout << files.at(i) << "  "; //print out file arguments first
 
 		if(files.size() > 0)
-			cout << endl;
+		{	
+			cout << endl << endl;
+			otherOutput = true;
+		}
 		files.clear();
 
 		organize(directories);
@@ -280,7 +284,7 @@ int main(int argc, char* argv[])
 				cout << "total " << total/2 << endl; //output total block size
 			}
 
-			if(directories.size() > 1) //output directory currently working on
+			if((directories.size() > 1) || otherOutput) //output directory currently working on
 				cout << directories.at(i) << ":" << endl;
 				
 
