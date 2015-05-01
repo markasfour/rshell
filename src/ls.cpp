@@ -272,29 +272,6 @@ int main(int argc, char* argv[])
 			organize(files); //sort extracted files
 			
 			
-			if(lFlag)
-			{
-				int total = 0;
-				for(unsigned int h = 0; h < files.size(); h++) //get total block size
-				{
-					string path = directories.at(i);
-					path += "/";
-					path += files.at(h);
-					if(-1 == (stat(path.c_str(), &name)))
-					{
-						perror("stat error 1");
-						exit(1);
-					}
-					else
-						total += name.st_blocks;
-				}
-				cout << "total " << total/3 << endl; //output total block size
-			}
-
-			if(directories.size() > 1) //output directory currently working on
-				cout << directories.at(i) << ":" << endl;
-			
-			
 			if(!aFlag) //remove hidden files
 			{
 				for(unsigned int k = 0; k < files.size(); k++)
@@ -306,6 +283,30 @@ int main(int argc, char* argv[])
 					}
 				}
 			}
+
+
+			if(lFlag)
+			{
+				int total = 0;
+				for(unsigned int h = 0; h < files.size(); h++) //get total block size
+				{
+					string path = directories.at(i) + "/" + files.at(h);
+					if(-1 == (stat(path.c_str(), &name)))
+					{
+						perror("stat error 1");
+						exit(1);
+					}
+					else
+						total += name.st_blocks;
+
+					//cout << total << endl;
+				}
+				cout << "total " << total/2 << endl; //output total block size
+			}
+
+			if(directories.size() > 1) //output directory currently working on
+				cout << directories.at(i) << ":" << endl;
+				
 
 
 			for(unsigned int j = 0; j < files.size(); j++)
