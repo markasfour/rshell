@@ -69,30 +69,6 @@ void printlFlag(struct stat name)
 }
 
 
-void printme(string argument, struct stat name)
-{
-	if(argument.at(0) == '.') //argument is a hidden file
-	{
-		if(name.st_mode & S_IFDIR) //argument is a directory
-		{
-		}
-		else if(name.st_mode & S_IXUSR) //argument is a usr file
-		{
-		}
-		else //argument is a regular file
-		{
-		}
-	}
-	else if(name.st_mode & S_IFDIR) //argument is a directory
-	{
-	}
-	else if(name.st_mode & S_IXUSR) //argument is a usr file
-	{
-	}
-	else //argument is a regular file
-		cout << argument; 
-}
-
 
 int main(int argc, char* argv[])
 {
