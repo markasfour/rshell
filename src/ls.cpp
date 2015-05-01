@@ -11,6 +11,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include <time.h>
+#include <iomanip>
 using namespace std;
 
 
@@ -24,6 +25,50 @@ bool RFlag = false;
 void organize(deque <string> &files)
 {
 	sort(files.begin(), files.end(), locale("en_US.UTF-8"));
+}
+
+void printme(string file, struct stat name)
+{
+	if(file.at(0) == '.') //if hidden
+	{
+		printf("%c[%dm", 0x1B, 100);
+		if(name.st_mode & S_IFDIR) //hidden dir
+		{
+			printf("%c[%dm", 0x1B, 94);
+			cout << file;
+			printf("%c[%dm", 0x1B, 0);
+		}
+		else if(name.st_mode & S_IXUSR) //hidden exec
+		{
+			printf("%c[%dm", 0x1B, 92);
+			cout << file;
+			printf("%c[%dm", 0x1B, 0);
+		}
+		else //hidden reg
+		{
+			cout << file;
+			printf("%c[%dm", 0x1B, 0);
+		}
+	}
+	else //not hidden
+	{
+		if(name.st_mode & S_IFDIR) //dir
+		{
+			printf("%c[%dm", 0x1B, 94);
+			cout << file;
+			printf("%c[%dm", 0x1B, 0);
+		}
+		else if(name.st_mode & S_IXUSR) //exec
+		{
+			printf("%c[%dm", 0x1B, 92);
+			cout << file;
+			printf("%c[%dm", 0x1B, 0);
+		}
+		else //reg
+		{
+			cout << file;
+		}
+	}
 }
 
 void printlFlag(struct stat name)
@@ -161,21 +206,31 @@ void lsDir(deque <string> files, deque <string> directories, struct stat name, b
 		}
 
 		if((directories.size() > 1) || otherOutput || RFlag) //output directory currently working on
-			cout << directories.at(i) << ":" << endl;
-			
+		{	
+			if(stat(directories.at(i).c_str(), &name) == -1) //assuming no error. just changing name
+				perror("stat error");
+			printme(directories.at(i), name);
+			cout << ":" << endl;
+		}	
 
 
 		for(unsigned int j = 0; j < files.size(); j++)
 		{
+			string path = directories.at(i) + "/" + files.at(j);
+
 			if(lFlag)
 			{
-				string path = directories.at(i) + "/" + files.at(j);
-				if(stat(path.c_str(), &name) == -1)
+					if(stat(path.c_str(), &name) == -1)
 					perror("stat error 2");
 				
 				printlFlag(name);
 			}
-			cout << files.at(j) << "  ";
+
+			if(stat(path.c_str(), &name) == -1) //assuming no error. just changing name
+				perror("stat error");
+			printme(files.at(j), name);
+			cout <<  "  ";
+			
 			if(lFlag) 
 				cout << endl;
 		}
@@ -356,7 +411,8 @@ int main(int argc, char* argv[])
 					perror("stat error");
 				
 				printlFlag(name);
-				cout << files.at(i) << endl;
+				printme(files.at(i), name);
+				cout << endl;
 			}
 			return 0; //end program
 		}
@@ -369,8 +425,12 @@ int main(int argc, char* argv[])
 		bool otherOutput = false;
 		
 		for(unsigned int i = 0; i < files.size(); i++)
-			cout << files.at(i) << "  "; //print out file arguments first
-
+		{	
+			if(stat(files.at(i).c_str(), &name) == -1) //assuming no error. just changing name
+				perror("stat error");
+			printme(files.at(i), name);
+			cout << "  "; //print out file arguments first
+		}
 		if(files.size() > 0)
 		{	
 			cout << endl << endl;
