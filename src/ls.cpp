@@ -224,6 +224,8 @@ int main(int argc, char* argv[])
 	else //case with directories as args
 	{
 		bool otherOutput = false;
+		deque <string> recurrence;
+
 		for(unsigned int i = 0; i < files.size(); i++)
 			cout << files.at(i) << "  "; //print out file arguments first
 
@@ -248,9 +250,20 @@ int main(int argc, char* argv[])
 			while((direntp = readdir(dp)) != 0) //extract files from directory
 			{
 				files.push_back(direntp->d_name);
+
+
+				//for recurrence case
+				string path = directories.at(i) + "/" + direntp->d_name;
+				if(-1 == (stat(path.c_str(), &name)))
+				{
+					perror("stat error 1");
+					exit(1);
+				}
+				else if(name.st_mode & S_IFDIR) 
+					recurrence.push_back(direntp->d_name);
 			}
 			organize(files); //sort extracted files
-			
+			organize(recurrence); //sort extracted directories
 			
 			if(!aFlag) //remove hidden files
 			{
