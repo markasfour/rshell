@@ -65,7 +65,7 @@ void printlFlag(struct stat name)
 	string time = ctime(&name.st_mtime);
 	if(time.at(time.size() - 1) == '\n')
 		time.at(time.size() - 1) = '\0';
-	cout << time;
+	cout << time << " ";
 }
 
 
@@ -166,6 +166,9 @@ int main(int argc, char* argv[])
 
 	
 	struct stat name;
+	
+	if(directories.size() == 0) //case where no arguments are passed in
+		directories.push_back("."); //add current directory as default
 
 
 	//handle case if file names are passed in
@@ -199,8 +202,8 @@ int main(int argc, char* argv[])
 		filesonly = true;
 	}
 
-	for(unsigned int i = 0; i < directories.size(); i++)
-		cout << "Listed as dir: " << directories.at(i) << endl;
+	//for(unsigned int i = 0; i < directories.size(); i++)
+	//	cout << "Listed as dir: " << directories.at(i) << endl;
 
 
 	//cout << filesonly << endl;
@@ -215,6 +218,7 @@ int main(int argc, char* argv[])
 	//{
 	//	cout << "Sorted files: " << files.at(i) << endl;
 	//}
+
 
 	if(filesonly)
 	{
@@ -233,46 +237,67 @@ int main(int argc, char* argv[])
 					perror("stat error");
 				
 				printlFlag(name);
-				cout << " " << files.at(i) << endl;
+				cout << files.at(i) << endl;
 			}
 			return 0; //end program
 		}
 	}
 
-			//if(!(directory = opendir(directories.at(i).c_str())))
-			//{
-			//	perror("cannot open dir");
-			//	exit(1);
-			//}
-		
-			//dirent *dirp = readdir(directory); 
-			//while(dirp == readdir(directory))
-			//{
-			//	if(!(errno == 0))
-			//	{
-			//		perror("error in readdir");
-			//		exit(1);
-			//	}
-			//	files.push_back(dirp->d_name);
-			//}
 
 
-
-		//}
-	//}
 	else //read files in current directory
 	{
-		if(!aFlag && !lFlag && !RFlag)
-		{
-			for(unsigned int i = 0; i < files.size(); i++)
-				cout << files.at(i) << "  ";
+		for(unsigned int i = 0; i < files.size(); i++)
+			cout << files.at(i) << "  "; //print out file arguments first
 
+		if(files.size() > 0)
 			cout << endl;
+		files.clear();
 
-			for(unsigned int i = 0; i < directories.size(); i++)
-			{
+		organize(directories);
+		for(unsigned int i = 0; i < directories.size(); i++)
+		{
+			if(directories.size() > 1)
 				cout << directories.at(i) << ":" << endl;
+			
+			DIR* dp;
+			if((dp = opendir(directories.at(i).c_str()))==0)
+			{
+				perror("cannot open dir");
+				exit(1);
 			}
+			dirent* direntp;
+			while((direntp = readdir(dp)) != 0)
+			{
+				files.push_back(direntp->d_name);
+			}
+			organize(files);
+			if(!aFlag)
+			{
+				for(unsigned int k = 0; k < files.size(); k++)
+				{
+					if(files.at(k).at(0) == '.')
+					{
+						files.erase(files.begin() + k); //erase hidden files
+						k--;
+					}
+				}
+			}
+			for(unsigned int j = 0; j < files.size(); j++)
+			{
+				if(lFlag)
+				{
+					if(stat(files.at(j).c_str(), &name) == -1)
+						perror("stat error");
+					
+					printlFlag(name);
+				}
+				cout << files.at(j) << "  ";
+				if(lFlag) 
+					cout << endl;
+			}
+			cout << endl << endl;
+			files.clear();
 		}
 	}
 	return 0;
