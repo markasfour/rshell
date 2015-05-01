@@ -85,7 +85,7 @@ void lsDir(deque <string> files, deque <string> directories, struct stat name, b
 	for(unsigned int i = 0; i < directories.size(); i++)
 	{
 	
-		cout << "curr dir: " << directories.at(i) << endl;
+		//cout << "curr dir: " << directories.at(i) << endl;
 		DIR* dp;
 		if(!(dp = opendir(directories.at(i).c_str())))
 		{
@@ -107,7 +107,17 @@ void lsDir(deque <string> files, deque <string> directories, struct stat name, b
 			}
 			else if(name.st_mode & S_IFDIR) 
 			{	
-				recurrence.push_back(direntp->d_name);
+				if(!aFlag)
+				{
+					string here = direntp->d_name;
+					if(here.at(0) == '.')
+						continue;
+				}
+				
+				string cur = ".";
+				string pre = "..";
+				if(direntp->d_name != cur && direntp->d_name != pre)
+					recurrence.push_back(directories.at(i) + "/" + direntp->d_name);
 			}
 		}
 		//for(unsigned int w = 0; w < recurrence.size(); w++)
@@ -150,7 +160,7 @@ void lsDir(deque <string> files, deque <string> directories, struct stat name, b
 			cout << "total " << total/2 << endl; //output total block size
 		}
 
-		if((directories.size() > 1) || otherOutput) //output directory currently working on
+		if((directories.size() > 1) || otherOutput || RFlag) //output directory currently working on
 			cout << directories.at(i) << ":" << endl;
 			
 
@@ -184,19 +194,19 @@ void lsDir(deque <string> files, deque <string> directories, struct stat name, b
 					k--;
 				}
 			}
-			if(!aFlag) //remove hidden files
-			{
-				for(unsigned int k = 0; k < recurrence.size(); k++)
-				{
-					if(recurrence.at(k).at(0) == '.')
-					{
-						recurrence.erase(recurrence.begin() + k); //erase hidden files
-						k--;
-					}
-				}
-			}
-			for(unsigned int w = 0; w < recurrence.size(); w++)
-				cout << "r: " << recurrence.at(w) << endl;
+			//if(!aFlag) //remove hidden files
+			//{
+			//	for(unsigned int k = 0; k < recurrence.size(); k++)
+			//	{
+			//		if(recurrence.at(k).at(0) == '.')
+			//		{
+			//			recurrence.erase(recurrence.begin() + k); //erase hidden files
+			//			k--;
+			//		}
+			//	}
+			//}
+			//for(unsigned int w = 0; w < recurrence.size(); w++)
+				//cout << "r: " << recurrence.at(w) << endl;
 
 			lsDir(files, recurrence, name, otherOutput); //recurrence statement
 		}
@@ -270,8 +280,8 @@ int main(int argc, char* argv[])
 		}
 	}
 	
-	if(aFlag || lFlag || RFlag)
-		cout << "yay" << endl;
+	//if(aFlag || lFlag || RFlag)
+	//	cout << "yay" << endl;
 
 	
 	struct stat name;
