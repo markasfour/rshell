@@ -110,8 +110,8 @@ void printlFlag(struct stat name)
 	}
 	else
 		cout << g->gr_name << " ";
-
 	
+	cout << setw(5) << right;
 	cout << name.st_size << " ";
 
 	string time = ctime(&name.st_mtime);
