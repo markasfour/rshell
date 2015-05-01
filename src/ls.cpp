@@ -16,7 +16,7 @@ using namespace std;
 
 void organize(deque <string> &files)
 {
-	sort(files.begin(), files.end());
+	sort(files.begin(), files.end(), locale("en_US.UTF-8"));
 }
 
 void printlFlag(struct stat name)
