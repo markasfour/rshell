@@ -245,7 +245,7 @@ int main(int argc, char* argv[])
 
 
 
-	else //read files in current directory
+	else //case with directories as args
 	{
 		for(unsigned int i = 0; i < files.size(); i++)
 			cout << files.at(i) << "  "; //print out file arguments first
@@ -257,9 +257,7 @@ int main(int argc, char* argv[])
 		organize(directories);
 		for(unsigned int i = 0; i < directories.size(); i++)
 		{
-			if(directories.size() > 1)
-				cout << directories.at(i) << ":" << endl;
-			
+		
 			DIR* dp;
 			if((dp = opendir(directories.at(i).c_str()))==0)
 			{
@@ -267,12 +265,37 @@ int main(int argc, char* argv[])
 				exit(1);
 			}
 			dirent* direntp;
-			while((direntp = readdir(dp)) != 0)
+			while((direntp = readdir(dp)) != 0) //extract files from directory
 			{
 				files.push_back(direntp->d_name);
 			}
-			organize(files);
-			if(!aFlag)
+			organize(files); //sort extracted files
+			
+			
+			if(lFlag)
+			{
+				int total = 0;
+				for(unsigned int h = 0; h < files.size(); h++) //get total block size
+				{
+					string path = directories.at(i);
+					path += "/";
+					path += files.at(h);
+					if(-1 == (stat(path.c_str(), &name)))
+					{
+						perror("stat error 1");
+						exit(1);
+					}
+					else
+						total += name.st_blocks;
+				}
+				cout << "total " << total/3 << endl; //output total block size
+			}
+
+			if(directories.size() > 1) //output directory currently working on
+				cout << directories.at(i) << ":" << endl;
+			
+			
+			if(!aFlag) //remove hidden files
 			{
 				for(unsigned int k = 0; k < files.size(); k++)
 				{
@@ -283,12 +306,15 @@ int main(int argc, char* argv[])
 					}
 				}
 			}
+
+
 			for(unsigned int j = 0; j < files.size(); j++)
 			{
 				if(lFlag)
 				{
-					if(stat(files.at(j).c_str(), &name) == -1)
-						perror("stat error");
+					string path = directories.at(i) + "/" + files.at(j);
+					if(stat(path.c_str(), &name) == -1)
+						perror("stat error 2");
 					
 					printlFlag(name);
 				}
