@@ -25,4 +25,4 @@ cp:
 	g++ -Wall -Werror -ansi -pedantic src/cs.cpp -o bin/cp
 
 clean:
-	rm -rf bin/
+	rm -rf bin
