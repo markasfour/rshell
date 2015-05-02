@@ -1,0 +1,2578 @@
+Script started on Fri 01 May 2015 06:53:59 PM PDT
+~
+masfo001@hammer $ ls
+[0m[01;34mcs100[0m/    [01;34mDocuments[0m/  [01;34mhw0test[0m/     [01;34mlab3fix[0m/   [01;34mlab3fix3[0m/  [01;34mlab3fix5[0m/  [01;34mlab3fix7[0m/  [01;34mlab4fix[0m/  [01;34mPictures[0m/  [01;34mTemplates[0m/  [01;34mVideos[0m/
+[01;34mDesktop[0m/  [01;34mDownloads[0m/  [01;34mhw4datefix[0m/  [01;34mlab3fix2[0m/  [01;34mlab3fix4[0m/  [01;34mlab3fix6[0m/  [01;34mlab3fix8[0m/  [01;34mMusic[0m/    [01;34mPublic[0m/    [01;34mucr-cs100[0m/
+[m~
+masfo001@hammer $ cd cs100/
+~/cs100
+masfo001@hammer $ cd rshell/
+~/cs100/rshell
+masfo001@hammer $ make ls
+if [ ! -d "./bin" ];\
+	then mkdir bin;\
+	fi
+g++ -Wall -Werror -ansi -pedantic src/ls.cpp -o bin/ls   
+~/cs100/rshell
+masfo001@hammer $ #START TESTING -------------------------------
+~/cs100/rshell
+masfo001@hammer $ valgrind --tool=memcheck bin/ls
+==3645== Memcheck, a memory error detector
+==3645== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==3645== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==3645== Command: bin/ls
+==3645== 
+[94mbin        [0mLICENSE    makefile   README.md  [94msrc        [0m[94mtest       [0m
+
+==3645== 
+==3645== HEAP SUMMARY:
+==3645==     in use at exit: 0 bytes in 0 blocks
+==3645==   total heap usage: 390 allocs, 390 frees, 80,768 bytes allocated
+==3645== 
+==3645== All heap blocks were freed -- no leaks are possible
+==3645== 
+==3645== For counts of detected and suppressed errors, rerun with: -v
+==3645== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+~/cs100/rshell
+masfo001@hammer $ #NO MEMORY LEAKS :)
+~/cs100/rshell
+masfo001@hammer $ #TESTING WITH FILE PARAMS
+~/cs100/rshell
+masfo001@hammer $ bin/ls makefile 
+makefile  
+~/cs100/rshell
+masfo001@hammer $ bin/ls makefile LICENSE 
+LICENSE  makefile  
+~/cs100/rshell
+masfo001@hammer $ bin/ls LICENSE LICENSE M[Kmakefile 
+LICENSE  LICENSE  makefile  
+~/cs100/rshell
+masfo001@hammer $ bin/ls makefile  makefile makefile LICENSE LICENSE 
+LICENSE  LICENSE  makefile  makefile  makefile  
+~/cs100/rshell
+masfo001@hammer $ bin/ls makefile              makefile  LICENSE            LICENSE 
+LICENSE  LICENSE  makefile  makefile  
+~/cs100/rshell
+masfo001@hammer $ #TO CONFO[KIRM WITH ACTUAL LS
+~/cs100/rshell
+masfo001@hammer $ ls makefile            makefile      l[KLICENSE       LICENSE 
+LICENSE  LICENSE  makefile  makefile
+~/cs100/rshell
+masfo001@hammer $ ls makefile makefile makefile 
+makefile  makefile  makefile
+~/cs100/rshell
+masfo001@hammer $ #TESTING WITH WRONG FILE NAMES
+~/cs100/rshell
+masfo001@hammer $ ls makefile hello 
+ls: cannot access hello: No such file or directory
+makefile
+~/cs100/rshell
+masfo001@hammer $ bin/ls makefile hello
+stat error: No such file or directory
+makefile  
+~/cs100/rshell
+masfo001@hammer $ bin/ls this will not work
+stat error: No such file or directory
+stat error: No such file or directory
+stat error: No such file or directory
+stat error: No such file or directory
+
+~/cs100/rshell
+masfo001@hammer $ i[Kbin/ls makefile LICENSE hello makefile 
+stat error: No such file or directory
+LICENSE  makefile  makefile  
+~/cs100/rshell
+masfo001@hammer $ bin/ls wooooooow
+stat error: No such file or directory
+
+~/cs100/rshell
+masfo001@hammer $ #TESTING DIRECTORY PARAMS
+~/cs100/rshell
+masfo001@hammer $ bin/ls src/
+ls.cpp    main.cpp  
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls test/
+exec.script  ls.script    
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls .
+[94mbin        [0mLICENSE    makefile   README.md  [94msrc        [0m[94mtest       [0m
+
+~/cs100/rshell
+masfo001@hammer $ i[Kbin/ls ..
+[94mlab3    [0m[94mlab4    [0m[94mrshell  [0m
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls ./.[K../.
+[94mlab3    [0m[94mlab4    [0m[94mrshell  [0m
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls ../../
+[94mcs100       [0m[94mDesktop     [0m[94mDocuments   [0m[94mDownloads   [0m[94mhw0test     [0m[94mhw4datefix  [0m
+[94mlab3fix     [0m[94mlab3fix2    [0m[94mlab3fix3    [0m[94mlab3fix4    [0m[94mlab3fix5    [0m[94mlab3fix6    [0m
+[94mlab3fix7    [0m[94mlab3fix8    [0m[94mlab4fix     [0m[94mMusic       [0m[94mPictures    [0m[94mPublic      [0m
+[94mTemplates   [0m[94mucr-cs100   [0m[94mVideos      [0m
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls test/ src/ ../
+[100m[94m../[0m:
+[94mlab3    [0m[94mlab4    [0m[94mrshell  [0m
+
+[94msrc/[0m:
+ls.cpp    main.cpp  
+
+[94mtest/[0m:
+exec.script  ls.script    
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls ~/
+[94mcs100       [0m[94mDesktop     [0m[94mDocuments   [0m[94mDownloads   [0m[94mhw0test     [0m[94mhw4datefix  [0m
+[94mlab3fix     [0m[94mlab3fix2    [0m[94mlab3fix3    [0m[94mlab3fix4    [0m[94mlab3fix5    [0m[94mlab3fix6    [0m
+[94mlab3fix7    [0m[94mlab3fix8    [0m[94mlab4fix     [0m[94mMusic       [0m[94mPictures    [0m[94mPublic      [0m
+[94mTemplates   [0m[94mucr-cs100   [0m[94mVideos      [0m
+
+~/cs100/rshell
+masfo001@hammer $ #TESTING WITH WRONG DIRECTORIES NAMES
+~/cs100/rshell
+masfo001@hammer $ binl[K/ls src/ bad
+stat error: No such file or directory
+ls.cpp    main.cpp  
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls bad
+stat error: No such file or directory
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls src/ bin/ /tmp/[K[K[Kmp/[K[K[K[K[Kbad
+stat error: No such file or directory
+[94mbin/[0m:
+[92mls  [0m
+
+[94msrc/[0m:
+ls.cpp    main.cpp  
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls ./src/another/another/another
+stat error: No such file or directory
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls ../../cs100 nothing
+stat error: No such file or directory
+[94mlab3    [0m[94mlab4    [0m[94mrshell  [0m
+
+~/cs100/rshell
+masfo001@hammer $ #TESTING WITH NO ARGS
+~/cs100/rshell
+masfo001@hammer $ #SHOULD WORK LIKE . ARG
+~/cs100/rshell
+masfo001@hammer $ bin/ls
+[94mbin        [0mLICENSE    makefile   README.md  [94msrc        [0m[94mtest       [0m
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls .
+[94mbin        [0mLICENSE    makefile   README.md  [94msrc        [0m[94mtest       [0m
+
+~/cs100/rshell
+masfo001@hammer $ #THEY ARE THE SAME :)
+~/cs100/rshell
+masfo001@hammer $ #TESTING WITH FILE AND DIR ARGS
+~/cs100/rshell
+masfo001@hammer $ bin/ls makefile src/
+makefile  
+
+[94msrc/[0m:
+ls.cpp    main.cpp  
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls makefile LICENSE README.md src/ test/
+LICENSE  makefile  README.md  
+
+[94msrc/[0m:
+ls.cpp    main.cpp  
+
+[94mtest/[0m:
+exec.script  ls.script    
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls test/ src/ makefile 
+makefile  
+
+[94msrc/[0m:
+ls.cpp    main.cpp  
+
+[94mtest/[0m:
+exec.script  ls.script    
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls test/ src/ bin/ README.md LICENSE  makefile 
+LICENSE  makefile  README.md  
+
+[94mbin/[0m:
+[92mls  [0m
+
+[94msrc/[0m:
+ls.cpp    main.cpp  
+
+[94mtest/[0m:
+exec.script  ls.script    
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls ../../ src/ README.md 
+README.md  
+
+[100m[94m../../[0m:
+[94mcs100       [0m[94mDesktop     [0m[94mDocuments   [0m[94mDownloads   [0m[94mhw0test     [0m[94mhw4datefix  [0m
+[94mlab3fix     [0m[94mlab3fix2    [0m[94mlab3fix3    [0m[94mlab3fix4    [0m[94mlab3fix5    [0m[94mlab3fix6    [0m
+[94mlab3fix7    [0m[94mlab3fix8    [0m[94mlab4fix     [0m[94mMusic       [0m[94mPictures    [0m[94mPublic      [0m
+[94mTemplates   [0m[94mucr-cs100   [0m[94mVideos      [0m
+
+[94msrc/[0m:
+ls.cpp    main.cpp  
+
+~/cs100/rshell
+masfo001@hammer $ #TESTING MIX ARGS WITH BAD ARGS
+~/cs100/rshell
+masfo001@hammer $ bin/ls wrong ../../ README.md makefile src/
+stat error: No such file or directory
+makefile  README.md  
+
+[100m[94m../../[0m:
+[94mcs100       [0m[94mDesktop     [0m[94mDocuments   [0m[94mDownloads   [0m[94mhw0test     [0m[94mhw4datefix  [0m
+[94mlab3fix     [0m[94mlab3fix2    [0m[94mlab3fix3    [0m[94mlab3fix4    [0m[94mlab3fix5    [0m[94mlab3fix6    [0m
+[94mlab3fix7    [0m[94mlab3fix8    [0m[94mlab4fix     [0m[94mMusic       [0m[94mPictures    [0m[94mPublic      [0m
+[94mTemplates   [0m[94mucr-cs100   [0m[94mVideos      [0m
+
+[94msrc/[0m:
+ls.cpp    main.cpp  
+
+~/cs100/rshell
+masfo001@hammer $ .[Kbin/ls bin/ wrong hello makefile LICENSE src/
+stat error: No such file or directory
+stat error: No such file or directory
+LICENSE  makefile  
+
+[94mbin/[0m:
+[92mls  [0m
+
+[94msrc/[0m:
+ls.cpp    main.cpp  
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls
+[94mbin        [0mLICENSE    makefile   README.md  [94msrc        [0m[94mtest       [0m
+
+~/cs100/rshell
+masfo001@hammer $ #TESTING FLAGS WITH NO OTHER ARGS
+~/cs100/rshell
+masfo001@hammer $ bin/ls -l
+total 24
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [94mbin        [0m
+-rw------- 1 masfo001 csmajs  1068 Thu Apr  9 21:24:41 2015  LICENSE    
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile   
+-rw------- 1 masfo001 csmajs  3036 Fri May  1 18:02:24 2015  README.md  
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [94msrc        [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [94mtest       [0m
+
+
+~/cs100/rshell
+masfo001@hammer $ bin[K[K[K#PLEASE NOTE!!!!! dy[Ko_ypcall is a hammer server error!!!!!!!!!!
+~/cs100/rshell
+masfo001@hammer $ #Professor Izbicki does not mind this eror!!!!!
+~/cs100/rshell
+masfo001@hammer $ #CONTINUE TESTING FLAGS WITH NO OTHER ARGS
+~/cs100/rshell
+masfo001@hammer $ bin/ls -a
+[100m[94m.          [0m[100m[94m..         [0m[94mbin        [0m[100m[94m.git       [0mLICENSE    makefile   README.md  
+[94msrc        [0m[94mtest       [0m
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls -R
+[100m[94m.[0m:
+[94mbin        [0mLICENSE    makefile   README.md  [94msrc        [0m[94mtest       [0m
+
+[100m[94m./bin[0m:
+[92mls  [0m
+
+[100m[94m./src[0m:
+ls.cpp    main.cpp  
+
+[100m[94m./test[0m:
+exec.script  ls.script    
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls -al
+total 36
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m.          [0m
+drwx------ 6 masfo001 csmajs  4096 Mon Apr 27 15:14:53 2015  [100m[94m..         [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [94mbin        [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m.git       [0m
+-rw------- 1 masfo001 csmajs  1068 Thu Apr  9 21:24:41 2015  LICENSE    
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile   
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-rw------- 1 masfo001 csmajs  3036 Fri May  1 18:02:24 2015  README.md  
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [94msrc        [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [94mtest       [0m
+
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls -la
+total 36
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m.          [0m
+drwx------ 6 masfo001 csmajs  4096 Mon Apr 27 15:14:53 2015  [100m[94m..         [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [94mbin        [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m.git       [0m
+-rw------- 1 masfo001 csmajs  1068 Thu Apr  9 21:24:41 2015  LICENSE    
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile   
+-rw------- 1 masfo001 csmajs  3036 Fri May  1 18:02:24 2015  README.md  
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [94msrc        [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [94mtest       [0m
+
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls -alalala
+total 36
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m.          [0m
+drwx------ 6 masfo001 csmajs  4096 Mon Apr 27 15:14:53 2015  [100m[94m..         [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [94mbin        [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m.git       [0m
+-rw------- 1 masfo001 csmajs  1068 Thu Apr  9 21:24:41 2015  LICENSE    
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile   
+-rw------- 1 masfo001 csmajs  3036 Fri May  1 18:02:24 2015  README.md  
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [94msrc        [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [94mtest       [0m
+
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls -llllllllaaaaaaaaaa
+total 36
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m.          [0m
+drwx------ 6 masfo001 csmajs  4096 Mon Apr 27 15:14:53 2015  [100m[94m..         [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [94mbin        [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m.git       [0m
+-rw------- 1 masfo001 csmajs  1068 Thu Apr  9 21:24:41 2015  LICENSE    
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile   
+-rw------- 1 masfo001 csmajs  3036 Fri May  1 18:02:24 2015  README.md  
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [94msrc        [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [94mtest       [0m
+
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls -RL[Kl
+total 24
+[100m[94m.[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [94mbin        [0m
+-rw------- 1 masfo001 csmajs  1068 Thu Apr  9 21:24:41 2015  LICENSE    
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile   
+-rw------- 1 masfo001 csmajs  3036 Fri May  1 18:02:24 2015  README.md  
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [94msrc        [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [94mtest       [0m
+
+
+total 64
+[100m[94m./bin[0m:
+-rwx------ 1 masfo001 csmajs 62032 Fri May  1 18:48:23 2015  [92mls  [0m
+
+
+total 20
+[100m[94m./src[0m:
+-rw------- 1 masfo001 csmajs  9637 Fri May  1 18:43:39 2015  ls.cpp    
+-rw------- 1 masfo001 csmajs  6089 Sun Apr 19 00:03:48 2015  main.cpp  
+
+
+total 8
+[100m[94m./test[0m:
+-rw------- 1 masfo001 csmajs  5626 Sun Apr 19 00:03:48 2015  exec.script  
+-rw------- 1 masfo001 csmajs     0 Fri May  1 18:47:57 2015  ls.script    
+
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls -lRRRRR
+total 24
+[100m[94m.[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [94mbin        [0m
+-rw------- 1 masfo001 csmajs  1068 Thu Apr  9 21:24:41 2015  LICENSE    
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile   
+-rw------- 1 masfo001 csmajs  3036 Fri May  1 18:02:24 2015  README.md  
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [94msrc        [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [94mtest       [0m
+
+
+total 64
+[100m[94m./bin[0m:
+-rwx------ 1 masfo001 csmajs 62032 Fri May  1 18:48:23 2015  [92mls  [0m
+
+
+total 20
+[100m[94m./src[0m:
+-rw------- 1 masfo001 csmajs  9637 Fri May  1 18:43:39 2015  ls.cpp    
+-rw------- 1 masfo001 csmajs  6089 Sun Apr 19 00:03:48 2015  main.cpp  
+
+
+total 8
+[100m[94m./test[0m:
+-rw------- 1 masfo001 csmajs  5626 Sun Apr 19 00:03:48 2015  exec.script  
+-rw------- 1 masfo001 csmajs     0 Fri May  1 18:47:57 2015  ls.script    
+
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls -lRlRlRlR
+total 24
+[100m[94m.[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [94mbin        [0m
+-rw------- 1 masfo001 csmajs  1068 Thu Apr  9 21:24:41 2015  LICENSE    
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile   
+-rw------- 1 masfo001 csmajs  3036 Fri May  1 18:02:24 2015  README.md  
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [94msrc        [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [94mtest       [0m
+
+
+total 64
+[100m[94m./bin[0m:
+-rwx------ 1 masfo001 csmajs 62032 Fri May  1 18:48:23 2015  [92mls  [0m
+
+
+total 20
+[100m[94m./src[0m:
+-rw------- 1 masfo001 csmajs  9637 Fri May  1 18:43:39 2015  ls.cpp    
+-rw------- 1 masfo001 csmajs  6089 Sun Apr 19 00:03:48 2015  main.cpp  
+
+
+total 8
+[100m[94m./test[0m:
+-rw------- 1 masfo001 csmajs  5626 Sun Apr 19 00:03:48 2015  exec.script  
+-rw------- 1 masfo001 csmajs     0 Fri May  1 18:47:57 2015  ls.script    
+
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls -alR
+total 36
+[100m[94m.[0m:
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m.          [0m
+drwx------ 6 masfo001 csmajs  4096 Mon Apr 27 15:14:53 2015  [100m[94m..         [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [94mbin        [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m.git       [0m
+-rw------- 1 masfo001 csmajs  1068 Thu Apr  9 21:24:41 2015  LICENSE    
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile   
+-rw------- 1 masfo001 csmajs  3036 Fri May  1 18:02:24 2015  README.md  
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [94msrc        [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [94mtest       [0m
+
+
+total 72
+[100m[94m./bin[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [100m[94m.   [0m
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m..  [0m
+-rwx------ 1 masfo001 csmajs 62032 Fri May  1 18:48:23 2015  [92mls  [0m
+
+
+total 60
+[100m[94m./.git[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m.               [0m
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m..              [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:39 2015  [94mbranches        [0m
+-rw------- 1 masfo001 csmajs    19 Fri May  1 18:44:24 2015  COMMIT_EDITMSG  
+-rw------- 1 masfo001 csmajs   264 Thu Apr  9 21:24:41 2015  config          
+-rw------- 1 masfo001 csmajs    73 Thu Apr  9 21:24:39 2015  description     
+-rw------- 1 masfo001 csmajs   205 Mon Apr 27 14:13:53 2015  FETCH_HEAD      
+-rw------- 1 masfo001 csmajs    23 Fri May  1 17:07:45 2015  HEAD            
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:39 2015  [94mhooks           [0m
+-rw------- 1 masfo001 csmajs   568 Fri May  1 18:44:24 2015  index           
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:39 2015  [94minfo            [0m
+drwx------ 3 masfo001 csmajs  4096 Thu Apr  9 21:24:41 2015  [94mlogs            [0m
+-rw------- 1 masfo001 csmajs   160 Sat Apr 18 22:14:16 2015  #MERGE_MSG#     
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [94mobjects         [0m
+-rw------- 1 masfo001 csmajs    41 Mon Apr 27 14:13:20 2015  ORIG_HEAD       
+-rw------- 1 masfo001 csmajs   107 Thu Apr  9 21:24:40 2015  packed-refs     
+drwx------ 5 masfo001 csmajs  4096 Thu Apr  9 21:24:40 2015  [94mrefs            [0m
+
+
+total 28
+[100m[94m./src[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [100m[94m.         [0m
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m..        [0m
+-rw------- 1 masfo001 csmajs  9637 Fri May  1 18:43:39 2015  ls.cpp    
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-rw------- 1 masfo001 csmajs  6089 Sun Apr 19 00:03:48 2015  main.cpp  
+
+
+total 16
+[100m[94m./test[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [100m[94m.            [0m
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m..           [0m
+-rw------- 1 masfo001 csmajs  5626 Sun Apr 19 00:03:48 2015  exec.script  
+-rw------- 1 masfo001 csmajs     0 Fri May  1 18:47:57 2015  ls.script    
+
+
+total 8
+[100m[94m./.git/branches[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:39 2015  [100m[94m.   [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m..  [0m
+
+
+total 48
+[100m[94m./.git/hooks[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:39 2015  [100m[94m.                          [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m..                         [0m
+-rwx------ 1 masfo001 csmajs   452 Thu Apr  9 21:24:39 2015  [92mapplypatch-msg.sample      [0m
+-rwx------ 1 masfo001 csmajs   896 Thu Apr  9 21:24:39 2015  [92mcommit-msg.sample          [0m
+-rwx------ 1 masfo001 csmajs   189 Thu Apr  9 21:24:39 2015  [92mpost-update.sample         [0m
+-rwx------ 1 masfo001 csmajs   398 Thu Apr  9 21:24:39 2015  [92mpre-applypatch.sample      [0m
+-rwx------ 1 masfo001 csmajs  1635 Thu Apr  9 21:24:39 2015  [92mpre-commit.sample          [0m
+-rwx------ 1 masfo001 csmajs  1239 Thu Apr  9 21:24:39 2015  [92mprepare-commit-msg.sample  [0m
+-rwx------ 1 masfo001 csmajs  1348 Thu Apr  9 21:24:39 2015  [92mpre-push.sample            [0m
+-rwx------ 1 masfo001 csmajs  4951 Thu Apr  9 21:24:39 2015  [92mpre-rebase.sample          [0m
+-rwx------ 1 masfo001 csmajs  3611 Thu Apr  9 21:24:39 2015  [92mupdate.sample              [0m
+
+
+total 12
+[100m[94m./.git/info[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:39 2015  [100m[94m.        [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m..       [0m
+-rw------- 1 masfo001 csmajs   240 Thu Apr  9 21:24:39 2015  exclude  
+
+
+total 28
+[100m[94m./.git/logs[0m:
+drwx------ 3 masfo001 csmajs  4096 Thu Apr  9 21:24:41 2015  [100m[94m.     [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m..    [0m
+-rw------- 1 masfo001 csmajs 14399 Fri May  1 18:44:25 2015  HEAD  
+drwx------ 4 masfo001 csmajs  4096 Thu Apr  9 21:24:41 2015  [94mrefs  [0m
+
+
+total 612
+[100m[94m./.git/objects[0m:
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m.     [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m..    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 17:28:38 2015  [94m00    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:27:39 2015  [94m01    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:14:44 2015  [94m02    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 22:38:46 2015  [94m03    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:46:00 2015  [94m04    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:51:32 2015  [94m05    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 14:16:02 2015  [94m06    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:03:45 2015  [94m08    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 15:51:30 2015  [94m09    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 25 15:47:24 2015  [94m0b    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 12:40:24 2015  [94m0e    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [94m10    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 10:41:23 2015  [94m11    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 00:23:28 2015  [94m12    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:51:35 2015  [94m13    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 14:16:02 2015  [94m14    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 18:07:00 2015  [94m17    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:58:31 2015  [94m18    [0m
+drwx------ 2 masfo001 csmajs  4096 Mon Apr 27 14:56:23 2015  [94m1b    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:19:08 2015  [94m1c    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 25 15:02:00 2015  [94m1f    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 17:18:43 2015  [94m20    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 21:41:43 2015  [94m21    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 17:18:43 2015  [94m24    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:02:31 2015  [94m25    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:07:56 2015  [94m28    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 23:33:12 2015  [94m29    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:58:31 2015  [94m2d    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:19:08 2015  [94m2f    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:45:27 2015  [94m30    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:36:04 2015  [94m33    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 19:36:33 2015  [94m34    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:44:15 2015  [94m35    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:16:23 2015  [94m36    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:27:39 2015  [94m38    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 12:40:24 2015  [94m39    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 12:12:46 2015  [94m3a    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 18:07:00 2015  [94m3c    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:14:16 2015  [94m3d    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 11:35:41 2015  [94m40    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 16:16:50 2015  [94m41    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:51:35 2015  [94m42    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:16:43 2015  [94m43    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:37:27 2015  [94m46    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:58:31 2015  [94m47    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:08:13 2015  [94m48    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:40:50 2015  [94m49    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:52:19 2015  [94m4a    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [94m4d    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:15:03 2015  [94m4e    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 10:41:24 2015  [94m4f    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 23:53:16 2015  [94m50    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 11 12:18:29 2015  [94m51    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 00:23:09 2015  [94m52    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:16:44 2015  [94m53    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 12:12:46 2015  [94m56    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:03:45 2015  [94m57    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:22:25 2015  [94m58    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 23:57:01 2015  [94m5b    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 19 00:00:59 2015  [94m5c    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:02:44 2015  [94m5e    [0m
+drwx------ 2 masfo001 csmajs  4096 Wed Apr 29 18:05:18 2015  [94m5f    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 14:16:02 2015  [94m60    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:03:17 2015  [94m61    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 11:26:39 2015  [94m62    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:22:50 2015  [94m63    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 14:41:48 2015  [94m65    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 19:36:33 2015  [94m66    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 12:40:24 2015  [94m67    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:37:27 2015  [94m68    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 21:41:43 2015  [94m69    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:02:31 2015  [94m6a    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 17:29:03 2015  [94m6c    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 25 15:47:00 2015  [94m6d    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:51:45 2015  [94m71    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:22:50 2015  [94m72    [0m
+drwx------ 2 masfo001 csmajs  4096 Wed Apr 29 18:05:18 2015  [94m73    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 16:44:31 2015  [94m75    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:03:45 2015  [94m76    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 11:35:41 2015  [94m79    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 11 12:54:07 2015  [94m7b    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [94m7c    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 25 15:01:33 2015  [94m7d    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 11:26:39 2015  [94m7f    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 15:51:30 2015  [94m82    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 01:23:50 2015  [94m83    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:33:59 2015  [94m87    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:41:13 2015  [94m89    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:16:43 2015  [94m8f    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 15:51:30 2015  [94m90    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:17:03 2015  [94m91    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 21:41:11 2015  [94m93    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 12:12:20 2015  [94m95    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 23:32:32 2015  [94m97    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:58:18 2015  [94m98    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 14:41:23 2015  [94m9a    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:01:55 2015  [94m9e    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 18:06:09 2015  [94m9f    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:02:31 2015  [94ma0    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 12:12:46 2015  [94ma1    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:17:03 2015  [94ma2    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:51:35 2015  [94ma4    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:27:26 2015  [94ma7    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:27:39 2015  [94maa    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:51:45 2015  [94mab    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 17:18:43 2015  [94mac    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 00:23:28 2015  [94maf    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 18:07:00 2015  [94mb0    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:08:13 2015  [94mb2    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 14:27:00 2015  [94mb4    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 14:27:43 2015  [94mb5    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:22:50 2015  [94mbd    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 23:53:31 2015  [94mbf    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:45:04 2015  [94mc1    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:40 2015  [94mc2    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:15:02 2015  [94mc3    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:15:03 2015  [94mc7    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:19:08 2015  [94mc8    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:37:11 2015  [94mca    [0m
+drwx------ 2 masfo001 csmajs  4096 Wed Apr 29 18:05:18 2015  [94mcb    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:08:13 2015  [94mcd    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:50:18 2015  [94mce    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:46:00 2015  [94md1    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 11:34:52 2015  [94md2    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 10:41:23 2015  [94md6    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 12:39:56 2015  [94mda    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:15:12 2015  [94mdb    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 22:38:46 2015  [94mdc    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:51:45 2015  [94mdd    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 17:29:03 2015  [94mdf    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 19:36:12 2015  [94me1    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 00:23:28 2015  [94me2    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 16:16:50 2015  [94me4    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:45:27 2015  [94me5    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 15:51:12 2015  [94me6    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 19:36:33 2015  [94me8    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 23:53:31 2015  [94me9    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:14:53 2015  [94meb    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:18:56 2015  [94mee    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 14:27:22 2015  [94mf1    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:15:12 2015  [94mf2    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:03:17 2015  [94mf3    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 16:44:31 2015  [94mf4    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 17:29:03 2015  [94mf7    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 16:44:16 2015  [94mf8    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:03:32 2015  [94mfa    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 16:44:31 2015  [94mfe    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 10:41:15 2015  [94mff    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:39 2015  [94minfo  [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:39 2015  [94mpack  [0m
+
+
+total 20
+[100m[94m./.git/refs[0m:
+drwx------ 5 masfo001 csmajs  4096 Thu Apr  9 21:24:40 2015  [100m[94m.        [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m..       [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [94mheads    [0m
+drwx------ 3 masfo001 csmajs  4096 Thu Apr  9 21:24:40 2015  [94mremotes  [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 19 00:01:27 2015  [94mtags     [0m
+
+
+total 16
+[100m[94m./.git/logs/refs[0m:
+drwx------ 4 masfo001 csmajs  4096 Thu Apr  9 21:24:41 2015  [100m[94m.        [0m
+drwx------ 3 masfo001 csmajs  4096 Thu Apr  9 21:24:41 2015  [100m[94m..       [0m
+drwx------ 2 masfo001 csmajs  4096 Mon Apr 27 14:13:59 2015  [94mheads    [0m
+drwx------ 3 masfo001 csmajs  4096 Thu Apr  9 21:24:40 2015  [94mremotes  [0m
+
+
+total 16
+[100m[94m./.git/objects/00[0m:
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 17:28:38 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs  1315 Sun Apr 26 17:28:38 2015  3a08d5df6b025c31395e42928065225cd2b5f6  
+
+
+total 16
+[100m[94m./.git/objects/01[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:27:39 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   173 Thu Apr 30 23:27:39 2015  c8db9d1a1871aa0b07b7b6e269b88b42dd36cb  
+
+
+total 16
+[100m[94m./.git/objects/02[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:14:44 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs  2025 Thu Apr 30 21:14:44 2015  fbafd6097793b73c753730e67004e331f651db  
+
+
+total 12
+[100m[94m./.git/objects/03[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 22:38:46 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    53 Thu Apr 16 22:38:46 2015  d403a06b1a32fd6ffe758880bb1b4d67223bc0  
+
+
+total 16
+[100m[94m./.git/objects/04[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:46:00 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   209 Sat Apr 18 22:46:00 2015  980f1b3da94f0e77e825e5d6b4c4b3ccc14a78  
+
+
+total 20
+[100m[94m./.git/objects/05[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:51:32 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   195 Sun Apr 19 00:00:59 2015  54fac2d4e678030a850acf0ae9ec004fe6f53e  
+-r-------- 1 masfo001 csmajs  2269 Thu Apr 30 22:51:32 2015  fc4b90b55813f64f7d3674ec3e5beacedb7b58  
+
+
+total 20
+[100m[94m./.git/objects/06[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 14:16:02 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   148 Sun Apr 12 14:27:00 2015  4c4c97bcee356fe7f72880ed0833ec3231395f  
+-r-------- 1 masfo001 csmajs   180 Thu Apr 16 14:16:02 2015  557339f3004c22f56de4741929c8cf920df8a7  
+
+
+total 16
+[100m[94m./.git/objects/08[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:03:45 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+getgrgid error: Success
+-r-------- 1 masfo001 ~/cs100/rshell
+masfo001@hammer $ bin/ls -RRRRLLL[K[K[Klllllaaa
+total 36
+[100m[94m.[0m:
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m.          [0m
+drwx------ 6 masfo001 csmajs  4096 Mon Apr 27 15:14:53 2015  [100m[94m..         [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [94mbin        [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m.git       [0m
+-rw------- 1 masfo001 csmajs  1068 Thu Apr  9 21:24:41 2015  LICENSE    
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile   
+-rw------- 1 masfo001 csmajs  3036 Fri May  1 18:02:24 2015  README.md  
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [94msrc        [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [94mtest       [0m
+
+
+total 72
+[100m[94m./bin[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [100m[94m.   [0m
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m..  [0m
+-rwx------ 1 masfo001 csmajs 62032 Fri May  1 18:48:23 2015  [92mls  [0m
+
+
+total 60
+[100m[94m./.git[0m:
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m.               [0m
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m..              [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:39 2015  [94mbranches        [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-rw------- 1 masfo001 csmajs    19 Fri May  1 18:44:24 2015  COMMIT_EDITMSG  
+-rw------- 1 masfo001 csmajs   264 Thu Apr  9 21:24:41 2015  config          
+-rw------- 1 masfo001 csmajs    73 Thu Apr  9 21:24:39 2015  description     
+-rw------- 1 masfo001 csmajs   205 Mon Apr 27 14:13:53 2015  FETCH_HEAD      
+-rw------- 1 masfo001 csmajs    23 Fri May  1 17:07:45 2015  HEAD            
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:39 2015  [94mhooks           [0m
+-rw------- 1 masfo001 csmajs   568 Fri May  1 18:44:24 2015  index           
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:39 2015  [94minfo            [0m
+drwx------ 3 masfo001 csmajs  4096 Thu Apr  9 21:24:41 2015  [94mlogs            [0m
+-rw------- 1 masfo001 csmajs   160 Sat Apr 18 22:14:16 2015  #MERGE_MSG#     
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [94mobjects         [0m
+-rw------- 1 masfo001 csmajs    41 Mon Apr 27 14:13:20 2015  ORIG_HEAD       
+-rw------- 1 masfo001 csmajs   107 Thu Apr  9 21:24:40 2015  packed-refs     
+drwx------ 5 masfo001 csmajs  4096 Thu Apr  9 21:24:40 2015  [94mrefs            [0m
+
+
+total 28
+[100m[94m./src[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [100m[94m.         [0m
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m..        [0m
+-rw------- 1 masfo001 csmajs  9637 Fri May  1 18:43:39 2015  ls.cpp    
+-rw------- 1 masfo001 csmajs  6089 Sun Apr 19 00:03:48 2015  main.cpp  
+
+
+total 48
+[100m[94m./test[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [100m[94m.            [0m
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m..           [0m
+-rw------- 1 masfo001 csmajs  5626 Sun Apr 19 00:03:48 2015  exec.script  
+-rw------- 1 masfo001 csmajs 32768 Fri May  1 19:06:41 2015  ls.script    
+
+
+total 8
+[100m[94m./.git/branches[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:39 2015  [100m[94m.   [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m..  [0m
+
+
+total 48
+[100m[94m./.git/hooks[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:39 2015  [100m[94m.                          [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m..                         [0m
+-rwx------ 1 masfo001 csmajs   452 Thu Apr  9 21:24:39 2015  [92mapplypatch-msg.sample      [0m
+-rwx------ 1 masfo001 csmajs   896 Thu Apr  9 21:24:39 2015  [92mcommit-msg.sample          [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-rwx------ 1 masfo001 csmajs   189 Thu Apr  9 21:24:39 2015  [92mpost-update.sample         [0m
+-rwx------ 1 masfo001 csmajs   398 Thu Apr  9 21:24:39 2015  [92mpre-applypatch.sample      [0m
+-rwx------ 1 masfo001 csmajs  1635 Thu Apr  9 21:24:39 2015  [92mpre-commit.sample          [0m
+-rwx------ 1 masfo001 csmajs  1239 Thu Apr  9 21:24:39 2015  [92mprepare-commit-msg.sample  [0m
+-rwx------ 1 masfo001 csmajs  1348 Thu Apr  9 21:24:39 2015  [92mpre-push.sample            [0m
+-rwx------ 1 masfo001 csmajs  4951 Thu Apr  9 21:24:39 2015  [92mpre-rebase.sample          [0m
+-rwx------ 1 masfo001 csmajs  3611 Thu Apr  9 21:24:39 2015  [92mupdate.sample              [0m
+
+
+total 12
+[100m[94m./.git/info[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:39 2015  [100m[94m.        [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m..       [0m
+-rw------- 1 masfo001 csmajs   240 Thu Apr  9 21:24:39 2015  exclude  
+
+
+total 28
+[100m[94m./.git/logs[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 3 masfo001 csmajs  4096 Thu Apr  9 21:24:41 2015  [100m[94m.     [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m..    [0m
+-rw------- 1 masfo001 csmajs 14399 Fri May  1 18:44:25 2015  HEAD  
+drwx------ 4 masfo001 csmajs  4096 Thu Apr  9 21:24:41 2015  [94mrefs  [0m
+
+
+total 612
+[100m[94m./.git/objects[0m:
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m.     [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m..    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 17:28:38 2015  [94m00    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:27:39 2015  [94m01    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:14:44 2015  [94m02    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 22:38:46 2015  [94m03    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:46:00 2015  [94m04    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:51:32 2015  [94m05    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 14:16:02 2015  [94m06    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:03:45 2015  [94m08    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 15:51:30 2015  [94m09    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 25 15:47:24 2015  [94m0b    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 12:40:24 2015  [94m0e    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [94m10    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 10:41:23 2015  [94m11    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 00:23:28 2015  [94m12    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:51:35 2015  [94m13    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 14:16:02 2015  [94m14    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 18:07:00 2015  [94m17    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:58:31 2015  [94m18    [0m
+drwx------ 2 masfo001 csmajs  4096 Mon Apr 27 14:56:23 2015  [94m1b    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:19:08 2015  [94m1c    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 25 15:02:00 2015  [94m1f    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 17:18:43 2015  [94m20    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 21:41:43 2015  [94m21    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 17:18:43 2015  [94m24    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:02:31 2015  [94m25    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:07:56 2015  [94m28    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 23:33:12 2015  [94m29    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:58:31 2015  [94m2d    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:19:08 2015  [94m2f    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:45:27 2015  [94m30    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:36:04 2015  [94m33    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 19:36:33 2015  [94m34    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:44:15 2015  [94m35    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:16:23 2015  [94m36    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:27:39 2015  [94m38    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 12:40:24 2015  [94m39    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 12:12:46 2015  [94m3a    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 18:07:00 2015  [94m3c    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:14:16 2015  [94m3d    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 11:35:41 2015  [94m40    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 16:16:50 2015  [94m41    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:51:35 2015  [94m42    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:16:43 2015  [94m43    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:37:27 2015  [94m46    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:58:31 2015  [94m47    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:08:13 2015  [94m48    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:40:50 2015  [94m49    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:52:19 2015  [94m4a    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [94m4d    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:15:03 2015  [94m4e    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 10:41:24 2015  [94m4f    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 23:53:16 2015  [94m50    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 11 12:18:29 2015  [94m51    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 00:23:09 2015  [94m52    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:16:44 2015  [94m53    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 12:12:46 2015  [94m56    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:03:45 2015  [94m57    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:22:25 2015  [94m58    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 23:57:01 2015  [94m5b    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 19 00:00:59 2015  [94m5c    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:02:44 2015  [94m5e    [0m
+drwx------ 2 masfo001 csmajs  4096 Wed Apr 29 18:05:18 2015  [94m5f    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 14:16:02 2015  [94m60    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:03:17 2015  [94m61    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 11:26:39 2015  [94m62    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:22:50 2015  [94m63    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 14:41:48 2015  [94m65    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 19:36:33 2015  [94m66    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 12:40:24 2015  [94m67    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:37:27 2015  [94m68    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 21:41:43 2015  [94m69    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:02:31 2015  [94m6a    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 17:29:03 2015  [94m6c    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 25 15:47:00 2015  [94m6d    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:51:45 2015  [94m71    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:22:50 2015  [94m72    [0m
+drwx------ 2 masfo001 csmajs  4096 Wed Apr 29 18:05:18 2015  [94m73    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 16:44:31 2015  [94m75    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:03:45 2015  [94m76    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 11:35:41 2015  [94m79    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 11 12:54:07 2015  [94m7b    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [94m7c    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 25 15:01:33 2015  [94m7d    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 11:26:39 2015  [94m7f    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 15:51:30 2015  [94m82    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 01:23:50 2015  [94m83    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:33:59 2015  [94m87    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:41:13 2015  [94m89    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:16:43 2015  [94m8f    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 15:51:30 2015  [94m90    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:17:03 2015  [94m91    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 21:41:11 2015  [94m93    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 12:12:20 2015  [94m95    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 23:32:32 2015  [94m97    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:58:18 2015  [94m98    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 14:41:23 2015  [94m9a    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:01:55 2015  [94m9e    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 18:06:09 2015  [94m9f    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:02:31 2015  [94ma0    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 12:12:46 2015  [94ma1    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:17:03 2015  [94ma2    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:51:35 2015  [94ma4    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:27:26 2015  [94ma7    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:27:39 2015  [94maa    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:51:45 2015  [94mab    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 17:18:43 2015  [94mac    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 00:23:28 2015  [94maf    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 18:07:00 2015  [94mb0    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:08:13 2015  [94mb2    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 14:27:00 2015  [94mb4    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 14:27:43 2015  [94mb5    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:22:50 2015  [94mbd    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 23:53:31 2015  [94mbf    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:45:04 2015  [94mc1    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:40 2015  [94mc2    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:15:02 2015  [94mc3    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:15:03 2015  [94mc7    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:19:08 2015  [94mc8    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:37:11 2015  [94mca    [0m
+drwx------ 2 masfo001 csmajs  4096 Wed Apr 29 18:05:18 2015  [94mcb    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:08:13 2015  [94mcd    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:50:18 2015  [94mce    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:46:00 2015  [94md1    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 11:34:52 2015  [94md2    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 10:41:23 2015  [94md6    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 12:39:56 2015  [94mda    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:15:12 2015  [94mdb    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 22:38:46 2015  [94mdc    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:51:45 2015  [94mdd    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 17:29:03 2015  [94mdf    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 19:36:12 2015  [94me1    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 00:23:28 2015  [94me2    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 16:16:50 2015  [94me4    [0m
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:45:27 2015  [94me5    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 15:51:12 2015  [94me6    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 19:36:33 2015  [94me8    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 23:53:31 2015  [94me9    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:14:53 2015  [94meb    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:18:56 2015  [94mee    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 14:27:22 2015  [94mf1    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:15:12 2015  [94mf2    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:03:17 2015  [94mf3    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 16:44:31 2015  [94mf4    [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 17:29:03 2015  [94mf7    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 16:44:16 2015  [94mf8    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:03:32 2015  [94mfa    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 16:44:31 2015  [94mfe    [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 10:41:15 2015  [94mff    [0m
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:39 2015  [94minfo  [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:39 2015  [94mpack  [0m
+
+
+total 20
+[100m[94m./.git/refs[0m:
+drwx------ 5 masfo001 csmajs  4096 Thu Apr  9 21:24:40 2015  [100m[94m.        [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m..       [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [94mheads    [0m
+drwx------ 3 masfo001 csmajs  4096 Thu Apr  9 21:24:40 2015  [94mremotes  [0m
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 19 00:01:27 2015  [94mtags     [0m
+
+
+total 16
+[100m[94m./.git/logs/refs[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 4 masfo001 csmajs  4096 Thu Apr  9 21:24:41 2015  [100m[94m.        [0m
+drwx------ 3 masfo001 csmajs  4096 Thu Apr  9 21:24:41 2015  [100m[94m..       [0m
+drwx------ 2 masfo001 csmajs  4096 Mon Apr 27 14:13:59 2015  [94mheads    [0m
+drwx------ 3 masfo001 csmajs  4096 Thu Apr  9 21:24:40 2015  [94mremotes  [0m
+
+
+total 16
+[100m[94m./.git/objects/00[0m:
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 17:28:38 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs  1315 Sun Apr 26 17:28:38 2015  3a08d5df6b025c31395e42928065225cd2b5f6  
+
+
+total 16
+[100m[94m./.git/objects/01[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:27:39 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   173 Thu Apr 30 23:27:39 2015  c8db9d1a1871aa0b07b7b6e269b88b42dd36cb  
+
+
+total 16
+[100m[94m./.git/objects/02[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:14:44 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs  2025 Thu Apr 30 21:14:44 2015  fbafd6097793b73c753730e67004e331f651db  
+
+
+total 12
+[100m[94m./.git/objects/03[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 22:38:46 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    53 Thu Apr 16 22:38:46 2015  d403a06b1a32fd6ffe758880bb1b4d67223bc0  
+
+
+total 16
+[100m[94m./.git/objects/04[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:46:00 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs   209 Sat Apr 18 22:46:00 2015  980f1b3da94f0e77e825e5d6b4c4b3ccc14a78  
+
+
+total 20
+[100m[94m./.git/objects/05[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:51:32 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   195 Sun Apr 19 00:00:59 2015  54fac2d4e678030a850acf0ae9ec004fe6f53e  
+-r-------- 1 masfo001 csmajs  2269 Thu Apr 30 22:51:32 2015  fc4b90b55813f64f7d3674ec3e5beacedb7b58  
+
+
+total 20
+[100m[94m./.git/objects/06[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 14:16:02 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   148 Sun Apr 12 14:27:00 2015  4c4c97bcee356fe7f72880ed0833ec3231395f  
+-r-------- 1 masfo001 csmajs   180 Thu Apr 16 14:16:02 2015  557339f3004c22f56de4741929c8cf920df8a7  
+
+
+total 16
+[100m[94m./.git/objects/08[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:03:45 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    80 Fri May  1 00:03:45 2015  cbfed00cec15d14293f2115272d8c7ac5dd029  
+
+
+total 16
+[100m[94m./.git/objects/09[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 15:51:30 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   175 Thu Apr 30 15:51:30 2015  bcdb1e7cd5f10baac1a8fb42f3a577ccc5f525  
+
+
+total 20
+[100m[94m./.git/objects/0b[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 25 15:47:24 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   175 Sat Apr 25 15:47:24 2015  cba25676ce62500bcd989e568257f2a6575591  
+-r-------- 1 masfo001 csmajs   171 Thu Apr 23 22:41:13 2015  f0ca583ce33b5ac174d9ab29fcf6095518943f  
+
+
+total 16
+[100m[94m./.git/objects/0e[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 12:40:24 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs   175 Fri May  1 12:40:24 2015  6626ee29d18cfeb70bdfa9ec7f261b0d66ea9a  
+
+
+total 16
+[100m[94m./.git/objects/10[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   176 Fri May  1 18:44:25 2015  8943bf1c8e6b656ecbd9f0e2cf6a5d8b8c631d  
+
+
+total 16
+[100m[94m./.git/objects/11[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 10:41:23 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    80 Fri May  1 10:41:23 2015  dc85ccc4dddae516e52255cd06e9dd773b44bf  
+
+
+total 16
+[100m[94m./.git/objects/12[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 00:23:28 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   165 Sat Apr 18 00:23:28 2015  b37dea7c3b165845b4a9b2756ec124026b4696  
+
+
+total 16
+[100m[94m./.git/objects/13[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:51:35 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   187 Sat Apr 18 21:51:35 2015  3ae8e35de5fcd72a6855a7f9c7e3d5e661099e  
+
+
+total 20
+[100m[94m./.git/objects/14[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 14:16:02 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   148 Thu Apr 16 14:16:02 2015  9d8e77a129a74b468c99f6bca55f165a6170ae  
+-r-------- 1 masfo001 csmajs   188 Sat Apr 11 11:41:29 2015  e533949b8edd6c727d5365b76606e9732e2de9  
+
+
+total 20
+[100m[94m./.git/objects/17[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 18:07:00 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   178 Fri Apr 17 18:07:00 2015  4224cc3ed64dd8ecbdd6489c6b9f33162a4f6e  
+-r-------- 1 masfo001 csmajs  1740 Thu Apr 16 23:44:55 2015  538887e75071c0751821a26e3ae492e3f80d3e  
+
+
+total 16
+[100m[94m./.git/objects/18[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:58:31 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   175 Thu Apr 30 22:58:31 2015  57723c3cbeac76b41f18c305f78bafe6fd276b  
+
+
+total 16
+[100m[94m./.git/objects/1b[0m:
+drwx------ 2 masfo001 csmajs  4096 Mon Apr 27 14:56:23 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs   471 Mon Apr 27 14:56:23 2015  270f80e7f07522427af17b4b68869cb5cb608f  
+
+
+total 20
+[100m[94m./.git/objects/1c[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:19:08 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   175 Fri May  1 15:19:08 2015  487a197230e1bf5787c5df021c9703939ec702  
+-r-------- 1 masfo001 csmajs   189 Sun Apr 12 01:23:50 2015  ae784627ec5e9ef6e49d2244a8d379e5e40c6c  
+
+
+total 16
+[100m[94m./.git/objects/1f[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 25 15:02:00 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   175 Sat Apr 25 15:02:00 2015  9c42513f701eca34de664e7ac2d5177f0c83e0  
+
+
+total 24
+[100m[94m./.git/objects/20[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 17:18:43 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   716 Sun Apr 12 01:23:17 2015  7b57ea1593787e8c436988d11c55f634d9079f  
+-r-------- 1 masfo001 csmajs   183 Fri Apr 17 17:18:43 2015  aca1412d50b1b1da261b52beb0df7880f8d119  
+-r-------- 1 masfo001 csmajs   653 Thu Apr  9 21:24:40 2015  efd1b3e9763444d06a2d5e47b6bf048d83e7f4  
+
+
+total 16
+[100m[94m./.git/objects/21[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 21:41:43 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   148 Thu Apr 16 21:41:43 2015  c624bc1f34cf6198fcec7413c0961503986bf3  
+
+
+total 12
+[100m[94m./.git/objects/24[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 17:18:43 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    53 Fri Apr 17 17:18:43 2015  b9c1679561384d8401270763dadc935dbca229  
+
+
+total 16
+[100m[94m./.git/objects/25[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:02:31 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    79 Fri May  1 17:02:31 2015  c684c6320161481096ca1a9c2bc4d0e13e3ce0  
+
+
+total 16
+[100m[94m./.git/objects/28[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:07:56 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs  2868 Fri May  1 15:07:56 2015  aa2a7d22f14da29b1f2e5b46faa635de5b0a2a  
+
+
+total 16
+[100m[94m./.git/objects/29[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 23:33:12 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs   181 Sat Apr 18 23:33:12 2015  5716d093a536512efd883c2b7783b542212738  
+
+
+total 16
+[100m[94m./.git/objects/2d[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:58:31 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   172 Thu Apr 30 22:58:31 2015  c6eb66805aa94507d961b5d77172ac1149cdae  
+
+
+total 16
+[100m[94m./.git/objects/2f[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:19:08 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   170 Fri May  1 15:19:08 2015  9df09c8672ea65fcbe4ab224d9a8f992bb2532  
+
+
+total 16
+[100m[94m./.git/objects/30[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:45:27 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   173 Sat Apr 18 22:45:27 2015  dc177d41dedbb9378629e163bdd40471d875b4  
+
+
+total 16
+[100m[94m./.git/objects/33[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:36:04 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs  1931 Sat Apr 18 21:36:04 2015  194508d83103f9da67f9e835e245924b31e903  
+
+
+total 16
+[100m[94m./.git/objects/34[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 19:36:33 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   148 Fri Apr 17 19:36:33 2015  7aadff0520508108aab09d493ab09ad9311ce6  
+
+
+total 24
+[100m[94m./.git/objects/35[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:44:15 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   148 Thu Apr 16 23:45:09 2015  834ce60dca1bca6220a15b42eec0e4786a9281  
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs  3044 Fri May  1 18:44:15 2015  97e4269a3c45f41dd259ce97fb80f4c9fc2d41  
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs   118 Thu Apr  9 21:34:21 2015  97e5b02200569e0a549965b4432a5bddbcf170  
+
+
+total 16
+[100m[94m./.git/objects/36[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:16:23 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs  2044 Thu Apr 30 21:16:23 2015  00bfc869da44ab8dcf03c1627c9f76892bd1fa  
+
+
+total 16
+[100m[94m./.git/objects/38[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:27:39 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   175 Thu Apr 30 23:27:39 2015  85e7873ac8cce30c40f8024737ab0eb1f75f6e  
+
+
+total 20
+[100m[94m./.git/objects/39[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 12:40:24 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   175 Sat Apr 18 21:53:47 2015  4756f8b3bdc26a44e3f84715f6e347468c693b  
+-r-------- 1 masfo001 csmajs    80 Fri May  1 12:40:24 2015  8052858c5d59cff6463c95e8fbb5afa43bd290  
+
+
+total 20
+[100m[94m./.git/objects/3a[0m:
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 12:12:46 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    52 Sun Apr 12 16:16:50 2015  1e29692f019bdff707bc681b12a8f70d095738  
+-r-------- 1 masfo001 csmajs   179 Thu Apr 16 22:38:46 2015  6c64dcb93876ce253c6d93ec5feaa61fd341f9  
+-r-------- 1 masfo001 csmajs   175 Sun Apr 26 12:12:46 2015  89496ba95038718081d35e58e89f4d1e414b03  
+
+
+total 16
+[100m[94m./.git/objects/3c[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 18:07:00 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   148 Fri Apr 17 18:07:00 2015  1a2ebb4dc3ea8eda5346fdb64540361857c0a2  
+
+
+total 16
+[100m[94m./.git/objects/3d[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:14:16 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   200 Sat Apr 18 22:14:16 2015  ca7433558373df8ed74a3da0721d98eab46fb4  
+
+
+total 20
+[100m[94m./.git/objects/40[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 11:35:41 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   175 Thu Apr 30 11:35:41 2015  bd65cc732d31b8c808568ab2680523785fbd80  
+-r-------- 1 masfo001 csmajs   175 Sat Apr 18 23:33:12 2015  f1c70b8a00fb0c210b7b40312f2deb4f7267af  
+
+
+total 20
+[100m[94m./.git/objects/41[0m:
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 16:16:50 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   179 Sun Apr 12 16:16:50 2015  b19b1270f67cf5df4b7b18102bc450a373e095  
+-r-------- 1 masfo001 csmajs   148 Sun Apr 12 14:41:48 2015  b4457ad12fc7c3c43d1cde03dfe6819fabb094  
+
+
+total 12
+[100m[94m./.git/objects/42[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:51:35 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    53 Sat Apr 18 21:51:35 2015  aedad84f724f5aa3c612f32761994b2671a152  
+
+
+total 16
+[100m[94m./.git/objects/43[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:16:43 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    52 Sun Apr 12 01:23:50 2015  5834fe927013e1cc9b3943b8cdd4b91b52f4f1  
+-r-------- 1 masfo001 csmajs   175 Thu Apr 30 21:16:43 2015  f3738350715aea86d8f25c1049d0c1392bb962  
+
+
+total 16
+[100m[94m./.git/objects/46[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:37:27 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    80 Thu Apr 30 23:37:27 2015  1b7b6ec4d32bd84a455a96622ff80eb3029cde  
+
+
+total 16
+[100m[94m./.git/objects/47[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:58:31 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    80 Thu Apr 30 22:58:31 2015  fc420e96431f10734a747c06345fbab690cac2  
+
+
+total 16
+[100m[94m./.git/objects/48[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:08:13 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs   167 Fri May  1 15:08:13 2015  edf90db3c83647576f05c70dc6b7fd333eab51  
+
+
+total 20
+[100m[94m./.git/objects/49[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:40:50 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   155 Thu Apr 23 22:40:50 2015  167ce0b726e80051f527eddb371b5be1a35d7c  
+-r-------- 1 masfo001 csmajs   183 Sun Apr 12 11:26:39 2015  c47e527e4229ba45969cb651d5833b98b73cd2  
+
+
+total 16
+[100m[94m./.git/objects/4a[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:52:19 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   513 Sat Apr 18 21:52:19 2015  7b5ea8177207fc5ae000e6d94583f6d0619429  
+
+
+total 16
+[100m[94m./.git/objects/4d[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   169 Fri May  1 18:44:25 2015  c124ea618e61fde35547333aecceb24a7cb581  
+
+
+total 24
+[100m[94m./.git/objects/4e[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:15:03 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   118 Sat Apr 11 11:42:22 2015  22adca5394a53d32de79fe5fa4819a872e257c  
+-r-------- 1 masfo001 csmajs    53 Sun Apr 12 14:41:48 2015  4096fdaf87d7c92f91908ab627eaefed8ef279  
+-r-------- 1 masfo001 csmajs   175 Thu Apr 30 21:15:03 2015  9ad27b015806d6f56fbb64f6e524af5c6d68b8  
+-r-------- 1 masfo001 csmajs   673 Fri Apr 17 23:56:48 2015  f983316214a868cf46c4d78d716a844469268f  
+
+
+total 24
+[100m[94m./.git/objects/4f[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 10:41:24 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   175 Fri May  1 00:17:03 2015  08c03b292ec83d76c22102eb9b0a9342cbbc9c  
+-r-------- 1 masfo001 csmajs   185 Sat Apr 25 15:02:00 2015  2e2ad25875ac2f8bf9007b2b97b9f05cef0ef3  
+-r-------- 1 masfo001 csmajs   169 Fri May  1 10:41:24 2015  b344927ccd21e79a63427d8145f735c1acb83f  
+
+
+total 16
+[100m[94m./.git/objects/50[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 23:53:16 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   673 Fri Apr 17 23:53:16 2015  780267c0adf52621d7cedf6fd6568ff21ba21b  
+
+
+total 16
+[100m[94m./.git/objects/51[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 11 12:18:29 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   172 Sat Apr 11 12:18:29 2015  e0649ad06c78f2c9276172168b4f63d6977be4  
+
+
+total 20
+[100m[94m./.git/objects/52[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 00:23:09 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs  7090 Sat Apr 18 00:23:09 2015  c504b0d3934675873ccf41c4c333a84049fe5d  
+
+
+total 24
+[100m[94m./.git/objects/53[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:16:44 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   181 Thu Apr 30 21:16:43 2015  10e893ad4df0631c89c410f6526234ff53c6e5  
+-r-------- 1 masfo001 csmajs    52 Thu Apr 16 14:27:43 2015  2a8ebf58a2b92179d124b88f7a4fabcfa60179  
+-r-------- 1 masfo001 csmajs    80 Sat Apr 25 15:47:24 2015  9bf92d103c23afff1f3e7d83ba04989a93a000  
+-r-------- 1 masfo001 csmajs  1405 Sun Apr 12 17:48:22 2015  e296b9fe333b970a668c6fbee8d713bda39cd3  
+
+
+total 20
+[100m[94m./.git/objects/56[0m:
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 12:12:46 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    80 Sun Apr 26 12:12:46 2015  8348d56bdbb7f4dad2818d800b43fade8105f9  
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs   118 Sat Apr 11 12:18:29 2015  8e0650e27354bf81b464a129aed6f4c73f966a  
+
+
+total 20
+[100m[94m./.git/objects/57[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:03:45 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs   175 Fri May  1 00:03:45 2015  50b89d6059d4342657ed723a43f98c40ed0d6f  
+-r-------- 1 masfo001 csmajs   173 Thu Apr 30 23:37:27 2015  da4efeeda7fbeb93938d97b967b77ebb8ac3c5  
+
+
+total 16
+[100m[94m./.git/objects/58[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:22:25 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   125 Thu Apr 23 22:22:25 2015  8e4a81f62fe2be4f1b4a3d69566b23330e0c2a  
+
+
+total 16
+[100m[94m./.git/objects/5b[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 23:57:01 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   148 Fri Apr 17 23:57:01 2015  7172a4ffafe2ba3118ed43b9561503170ac932  
+
+
+total 12
+[100m[94m./.git/objects/5c[0m:
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 19 00:00:59 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    56 Sun Apr 19 00:00:59 2015  b97f2ed766d561975f78d5405ef3c3a77d7229  
+
+
+total 16
+[100m[94m./.git/objects/5e[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:02:44 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs  1374 Fri May  1 18:02:44 2015  b673875f6ec892fcd6b68020ebf1a02d349e38  
+
+
+total 20
+[100m[94m./.git/objects/5f[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Wed Apr 29 18:05:18 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   171 Wed Apr 29 18:05:18 2015  664f0061a3c9642bc36e6f850981d5cc34410a  
+-r-------- 1 masfo001 csmajs  1383 Sun Apr 19 00:00:21 2015  d551af2cc426b0222876a0d79a29c3377662a4  
+
+
+total 12
+[100m[94m./.git/objects/60[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 14:16:02 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    53 Thu Apr 16 14:16:02 2015  b25bba6490b7396c60090a2a34b8b1b5bde2dc  
+
+
+total 16
+[100m[94m./.git/objects/61[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:03:17 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   176 Fri May  1 18:03:17 2015  c887e462650c0686779f82d1e47ab29683f8b0  
+
+
+total 16
+[100m[94m./.git/objects/62[0m:
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 11:26:39 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs   148 Sun Apr 12 11:26:39 2015  b3f00a896268637d76a1ba120500285e6c1da7  
+
+
+total 20
+[100m[94m./.git/objects/63[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:22:50 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   118 Sat Apr 11 12:54:33 2015  4fb63250a089381e2329613c367787cf998606  
+-r-------- 1 masfo001 csmajs   173 Thu Apr 23 22:22:50 2015  a960db3890385171981d50fb388e3b93e8beb7  
+
+
+total 16
+[100m[94m./.git/objects/65[0m:
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 14:41:48 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   174 Sun Apr 12 14:41:48 2015  85957dc77c4f6391b3d3b59131ccfb3cf26dbf  
+
+
+total 16
+[100m[94m./.git/objects/66[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 19:36:33 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs   179 Fri Apr 17 19:36:33 2015  36519b8369001e324a4df5112133b3b91bb57a  
+
+
+total 16
+[100m[94m./.git/objects/67[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 12:40:24 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   164 Fri May  1 12:40:24 2015  fdfb7bf0e8169e67085338f467da4fa90060b2  
+
+
+total 24
+[100m[94m./.git/objects/68[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:37:27 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   172 Fri Apr 17 23:57:01 2015  405be8f85cae99692d9086601d80a4bc61c83a  
+-r-------- 1 masfo001 csmajs   175 Thu Apr 30 23:37:27 2015  c0e6292d37b4d3f69f5f08f9af7808e55a8cca  
+-r-------- 1 masfo001 csmajs    79 Sat Apr 25 15:02:00 2015  cbd6779d3954bf71f3d2f4c607ab956a400e30  
+
+
+total 16
+[100m[94m./.git/objects/69[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 21:41:43 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   169 Thu Apr 16 21:41:43 2015  27cefd7c0664d8789a41f7732c60216ac71cea  
+
+
+total 16
+[100m[94m./.git/objects/6a[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:02:31 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs   175 Fri May  1 17:02:31 2015  a2657cf7b481ba87736421171b4f3354261627  
+
+
+total 16
+[100m[94m./.git/objects/6c[0m:
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 17:29:03 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   176 Sun Apr 26 17:29:03 2015  15a5009743a8d87949b05875465bd58151ea09  
+
+
+total 20
+[100m[94m./.git/objects/6d[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 25 15:47:00 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   797 Sat Apr 25 15:47:00 2015  cb5441ab19ed475b0ad7fd9ac28c65ddfa8ed2  
+-r-------- 1 masfo001 csmajs   282 Sat Apr 11 12:18:06 2015  fcb663731ca7bc3b71a0407b847b5a1c06c2d9  
+
+
+total 16
+[100m[94m./.git/objects/71[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:51:45 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs   173 Thu Apr 30 22:51:45 2015  561d6395817f51dff987598d164201cf339cf7  
+
+
+total 16
+[100m[94m./.git/objects/72[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:22:50 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   176 Thu Apr 23 22:22:50 2015  dce256c8b12ea8f751b39e992e81d6f732f8b1  
+
+
+total 16
+[100m[94m./.git/objects/73[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Wed Apr 29 18:05:18 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   175 Wed Apr 29 18:05:18 2015  fd8aa0590fcf70f817ffa30fef44749b82d141  
+
+
+total 16
+[100m[94m./.git/objects/75[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 16:44:31 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    80 Thu Apr 30 16:44:31 2015  f731746a95d46c23052d0cb3bf62039ef563f0  
+
+
+total 20
+[100m[94m./.git/objects/76[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:03:45 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   173 Fri May  1 00:03:45 2015  8dd5faec6b9f1d08c19c39d2981bafc107e807  
+-r-------- 1 masfo001 csmajs  1006 Sun Apr 12 14:26:22 2015  fce5c0675ff69be386fa277564766f3fd94977  
+
+
+total 20
+[100m[94m./.git/objects/79[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 11:35:41 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs    80 Thu Apr 30 11:35:41 2015  3c68ce1e409a10dc3d28703894c0b0e6aebc40  
+-r-------- 1 masfo001 csmajs  1212 Sun Apr 12 16:16:09 2015  9330792132d6886a823805616c7904409884e0  
+
+
+total 16
+[100m[94m./.git/objects/7b[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 11 12:54:07 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   403 Sat Apr 11 12:54:07 2015  cfa462aa2ca359f7add943cff47d5f7587aeee  
+
+
+total 20
+[100m[94m./.git/objects/7c[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs  1963 Fri Apr 17 17:18:15 2015  1ee9a0d0b423b4757e07dd33d097073849ed74  
+-r-------- 1 masfo001 csmajs    80 Fri May  1 18:44:25 2015  42562bb27468d60633a1e09abefbcb33a90b07  
+
+
+total 24
+[100m[94m./.git/objects/7d[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 25 15:01:33 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   671 Sat Apr 25 15:01:33 2015  17140ae27409433f82aadb5c18b3279f38f648  
+-r-------- 1 masfo001 csmajs   953 Sun Apr 12 11:25:52 2015  5249cd823549ddcbed47ae62830b0abecc3dec  
+-r-------- 1 masfo001 csmajs   131 Thu Apr  9 21:24:40 2015  8ac75e27079617f98671b1ac4c230bb79db38d  
+
+
+total 12
+[100m[94m./.git/objects/7f[0m:
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 11:26:39 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs    53 Sun Apr 12 11:26:39 2015  fdfb0c7b2652c3a8243d82bbc6f10af9f28eb8  
+
+
+total 16
+[100m[94m./.git/objects/82[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 15:51:30 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   174 Thu Apr 30 15:51:30 2015  6d988312c2dbe5516cf22a92b08363a898ac02  
+
+
+total 16
+[100m[94m./.git/objects/83[0m:
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 01:23:50 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs   148 Sun Apr 12 01:23:50 2015  44e287a18cf2eecd2596f3d34b5621f43d1d8d  
+
+
+total 16
+[100m[94m./.git/objects/87[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:33:59 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   151 Thu Apr  9 21:33:59 2015  16b93e0e4cc664b53bcf995e19afc6c5e54e6c  
+
+
+total 16
+[100m[94m./.git/objects/89[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:41:13 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs   175 Thu Apr 23 22:41:13 2015  b2e7ebec0f249e3c23d0ed1125adcd80094e1c  
+
+
+total 20
+[100m[94m./.git/objects/8f[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:16:43 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   168 Sun Apr 12 17:48:41 2015  28f8d9c7c27b81e7212853aa603ca6fe9e5342  
+-r-------- 1 masfo001 csmajs    80 Thu Apr 30 21:16:43 2015  d45a1161aed37fc89ebfee797467f24fdf8309  
+
+
+total 16
+[100m[94m./.git/objects/90[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 15:51:30 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs    80 Thu Apr 30 15:51:30 2015  64dc7ce3f2ca8637e94bc35b2985bcd1bca616  
+
+
+total 16
+[100m[94m./.git/objects/91[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:17:03 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    80 Fri May  1 00:17:03 2015  76596f60bc3feb7ac1e1003cb28cb4d32c7e48  
+
+
+total 16
+[100m[94m./.git/objects/93[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 21:41:11 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs  1698 Thu Apr 16 21:41:11 2015  6016c5d373db404e6513b53358cf4ec6b6aa11  
+
+
+total 16
+[100m[94m./.git/objects/95[0m:
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 12:12:20 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   974 Sun Apr 26 12:12:20 2015  8deb89cd64c5040dc7633aa8e45b6c524ac7ed  
+-r-------- 1 masfo001 csmajs    53 Thu Apr 16 23:45:09 2015  f58a98aa470d11e00666fa15978d09d50934c1  
+
+
+total 16
+[100m[94m./.git/objects/97[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 23:32:32 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   782 Sat Apr 18 23:32:32 2015  02be637ebed9765dcc094028f18536c9022f5c  
+
+
+total 16
+[100m[94m./.git/objects/98[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:58:18 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs  2263 Thu Apr 30 22:58:18 2015  1e06b5425b4060fdd5649255f0d102d1c50af0  
+
+
+total 16
+[100m[94m./.git/objects/9a[0m:
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 14:41:23 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs  1073 Sun Apr 12 14:41:23 2015  de624dbc3b5a24ce91bc2c3fe69e02c09fb925  
+
+
+total 20
+[100m[94m./.git/objects/9e[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:01:55 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs  3031 Fri May  1 17:01:55 2015  0239128011392bb49f21a633e30d04813acd80  
+-r-------- 1 masfo001 csmajs  1368 Wed Apr 29 18:04:02 2015  b810db73e350d3fd9b6a53b276befd6afd252a  
+
+
+total 16
+[100m[94m./.git/objects/9f[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 18:06:09 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs  1873 Fri Apr 17 18:06:09 2015  231d9a631c9511a3feb46e642cd7486cf50f89  
+
+
+total 16
+[100m[94m./.git/objects/a0[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:02:31 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   179 Fri May  1 17:02:31 2015  afe23eda05c15e24e8873ad59eb505fa4e9b8c  
+
+
+total 16
+[100m[94m./.git/objects/a1[0m:
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 12:12:46 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   171 Sun Apr 26 12:12:46 2015  78f08c7f14f14876eda2bc589e53e190495186  
+
+
+total 16
+[100m[94m./.git/objects/a2[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 00:17:03 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    53 Sun Apr 12 14:27:00 2015  490278918482b8d6140c4dccf644e21dc7e3ba  
+-r-------- 1 masfo001 csmajs   177 Fri May  1 00:17:03 2015  5656862a86bb41eaed001420d9368c498b8b5d  
+
+
+total 16
+[100m[94m./.git/objects/a4[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:51:35 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   147 Sat Apr 18 21:51:35 2015  dc1a945b0de2326d574f0e68b9fc3fe3a98e00  
+
+
+total 20
+[100m[94m./.git/objects/a7[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:27:26 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs  2155 Thu Apr 30 23:27:26 2015  9ad82f504872488991c3c2faf35e0e472e0ae9  
+-r-------- 1 masfo001 csmajs   178 Sat Apr 25 15:47:24 2015  dd50cb05bd06940ccb69bd0e94f043c1b8657a  
+
+
+total 20
+[100m[94m./.git/objects/aa[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:27:39 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   168 Thu Apr 16 23:45:09 2015  a05830e1db9fd3dc66d3425ea468f0d0e01d51  
+-r-------- 1 masfo001 csmajs    80 Thu Apr 30 23:27:39 2015  e5e40d9256267186e47bbff5304ddb06934214  
+
+
+total 20
+[100m[94m./.git/objects/ab[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:51:45 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   176 Sun Apr 19 00:00:59 2015  070d834eeb64ffb137fe251205640f8ae9cee4  
+-r-------- 1 masfo001 csmajs   175 Thu Apr 30 22:51:45 2015  a5862c7351e6ab6ebfd9781f83d4aa79b120dd  
+
+
+total 16
+[100m[94m./.git/objects/ac[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 17:18:43 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs   148 Fri Apr 17 17:18:43 2015  4b4116024e30382052a654248ed7ba866a15c5  
+
+
+total 16
+[100m[94m./.git/objects/af[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 00:23:28 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   175 Sat Apr 18 00:23:28 2015  45359e34f771922c30ebe0accb29ad1fbbea04  
+
+
+total 16
+[100m[94m./.git/objects/b0[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 18:07:00 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    53 Fri Apr 17 18:07:00 2015  e52e403f158ccb4de565da494c2de699444f11  
+-r-------- 1 masfo001 csmajs   167 Thu Apr  9 21:34:21 2015  e711d9d960c403a8886c6a45b80895a80d03e9  
+
+
+total 20
+[100m[94m./.git/objects/b2[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:08:13 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs    80 Fri May  1 15:08:13 2015  09a1ba3589b4723607e4fb2ed1ffd8b2e23ad9  
+-r-------- 1 masfo001 csmajs  2334 Fri May  1 00:16:28 2015  55ee8d31a6752668b4b5dc1dd3482d362fbd56  
+
+
+total 16
+[100m[94m./.git/objects/b4[0m:
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 12 14:27:00 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   170 Sun Apr 12 14:27:00 2015  b86d44bc5fde3272fa2c876ebacdbd9126e47a  
+
+
+total 16
+[100m[94m./.git/objects/b5[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 14:27:43 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   148 Thu Apr 16 14:27:43 2015  a324d43170b8b3c84c479c064443e8b95e00f0  
+
+
+total 16
+[100m[94m./.git/objects/bd[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 23 22:22:50 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    79 Thu Apr 23 22:22:50 2015  24766c062c761ba8e0a392bf1ac3b9e37a44fe  
+
+
+total 16
+[100m[94m./.git/objects/bf[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri Apr 17 23:53:31 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   172 Fri Apr 17 23:53:31 2015  36b8f4182bc2454a88ac0a71b8d97ae8a2dc18  
+
+
+total 16
+[100m[94m./.git/objects/c1[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:45:04 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   742 Sat Apr 18 22:45:04 2015  0b9aeb30be28df6e8c4fed4342c742449a222c  
+
+
+total 16
+[100m[94m./.git/objects/c2[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Thu Apr  9 21:24:40 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    85 Thu Apr  9 21:24:40 2015  1cfdb00763baf835d0b821c7cd98132eb805d3  
+
+
+total 20
+[100m[94m./.git/objects/c3[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:15:02 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    80 Thu Apr 30 21:15:02 2015  1c1353a82ee527a4315156760b68ce4e1a3a99  
+-r-------- 1 masfo001 csmajs  1465 Thu Apr 16 14:15:40 2015  d1e7fe5b5939ab76bb19f9c6cc8bdf490ca58e  
+
+
+total 16
+[100m[94m./.git/objects/c7[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 21:15:03 2015  [100m[94m.                                       [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    24 Thu Apr  9 21:24:40 2015  3b9803d4e5585a8cb370e25ecc156503a27ca8  
+-r-------- 1 masfo001 csmajs   170 Thu Apr 30 21:15:03 2015  4e8c2019e841d301527e93378b6b4009e3a9f2  
+
+
+total 16
+[100m[94m./.git/objects/c8[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:19:08 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    79 Fri May  1 15:19:08 2015  1381d80ad3a955adace64000c142514076de79  
+
+
+total 20
+[100m[94m./.git/objects/ca[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 23:37:11 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   148 Sun Apr 12 17:48:41 2015  84d14779f804aee5af6059ef7e09c06f1ea15b  
+-r-------- 1 masfo001 csmajs  2191 Thu Apr 30 23:37:11 2015  e57feb3b68ed545626c1c49a60ca52d7ef6434  
+
+
+total 20
+[100m[94m./.git/objects/cb[0m:
+drwx------ 2 masfo001 csmajs  4096 Wed Apr 29 18:05:18 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    80 Wed Apr 29 18:05:18 2015  b5cd915b5ed47fd6595b2bd63505dd6539f142  
+-r-------- 1 masfo001 csmajs   165 Sat Apr 11 11:42:22 2015  c4e5d545020c4a43e83f49e1d9bcd63030a4b9  
+
+
+total 16
+[100m[94m./.git/objects/cd[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 15:08:13 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   176 Fri May  1 15:08:13 2015  207b39234b2cc05dac2253c973021b52ec1720  
+
+
+total 16
+[100m[94m./.git/objects/ce[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 21:50:18 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   109 Sat Apr 18 21:50:18 2015  f8f666dfe4abe900598158a2a5cbbf36a93777  
+
+
+total 16
+[100m[94m./.git/objects/d1[0m:
+drwx------ 2 masfo001 csmajs  4096 Sat Apr 18 22:46:00 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   175 Sat Apr 18 22:46:00 2015  b8bd87efbb844b7d23a0bd6407d335736e8908  
+
+
+total 16
+[100m[94m./.git/objects/d2[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 11:34:52 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs  1735 Thu Apr 30 11:34:52 2015  3f4cbbe349b128d2cc68358cf544b3a2305810  
+
+
+total 16
+[100m[94m./.git/objects/d6[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 10:41:23 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   175 Fri May  1 10:41:23 2015  781db5a597414b0db3a766969d2a6a3e7f872e  
+
+
+total 16
+[100m[94m./.git/objects/da[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 12:39:56 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-r-------- 1 masfo001 csmajs  2624 Fri May  1 12:39:56 2015  927cb3f7370a6629c84caef28c60c6306210e7  
+
+
+total 16
+[100m[94m./.git/objects/db[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 17:15:12 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   176 Fri May  1 17:15:12 2015  c7b9df3b2c971e84d1a5fa43121af851312e07  
+
+
+total 16
+[100m[94m./.git/objects/dc[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 16 22:38:46 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   148 Thu Apr 16 22:38:46 2015  1858c8987c6b538255fdb3caf18fb48e42753b  
+
+
+total 16
+[100m[94m./.git/objects/dd[0m:
+drwx------ 2 masfo001 csmajs  4096 Thu Apr 30 22:51:45 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs    80 Thu Apr 30 22:51:45 2015  b95de05d53545d5b77db69924d0f2c8c093d58  
+
+
+total 16
+[100m[94m./.git/objects/df[0m:
+drwx------ 2 masfo001 csmajs  4096 Sun Apr 26 17:29:03 2015  [100m[94m.                                       [0m
+drwx------ 152 masfo001 csmajs  8192 Fri May  1 18:44:25 2015  [100m[94m..                                      [0m
+-r-------- 1 masfo001 csmajs   163 Sun Apr 26 17:29:03 2015  2c0519240fd407bf6309d83acb3b68b787907e  
+
+
+total 16
+[100m[94m./.git/objects/e1[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+getgrgid error: Success
+drwx------ 2 masfo001 ~/cs100/rshell
+masfo001@hammer $ #APPOLOGIES FOR LONG OUTPUTS
+~/cs100/rshell
+masfo001@hammer $ #BRIEFLY, RECURSION FINISHES ONE DIRECTORY"S DIRECTORIES BEFORE RECURSION CALL
+~/cs100/rshell
+masfo001@hammer $ #STILL IN LOGICAL ORDER
+~/cs100/rshell
+masfo001@hammer $ #TESTING WRONG FLAG INPUTS
+~/cs100/rshell
+masfo001@hammer $ bin/ls -p
+invalid flag: Success
+~/cs100/rshell
+masfo001@hammer $ bin/ls -pal
+invalid flag: Success
+~/cs100/rshell
+masfo001@hammer $ bin/ls -aaaaaaaaaaaaaaaalllllllllllllllllkkkkkkkkk
+invalid flag: Success
+~/cs100/rshell
+masfo001@hammer $ bin/ls -alRj
+invalid flag: Success
+~/cs100/rshell
+masfo001@hammer $ bin/ls -3
+invalid flag: Success
+~/cs100/rshell
+masfo001@hammer $ #TESTING SEPARATE FLAGS
+~/cs100/rshell
+masfo001@hammer $ bin/ls -a -l
+total 36
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m.          [0m
+drwx------ 6 masfo001 csmajs  4096 Mon Apr 27 15:14:53 2015  [100m[94m..         [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [94mbin        [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m.git       [0m
+-rw------- 1 masfo001 csmajs  1068 Thu Apr  9 21:24:41 2015  LICENSE    
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile   
+-rw------- 1 masfo001 csmajs  3036 Fri May  1 18:02:24 2015  README.md  
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [94msrc        [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [94mtest       [0m
+
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls -R -l
+total 24
+[100m[94m.[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [94mbin        [0m
+-rw------- 1 masfo001 csmajs  1068 Thu Apr  9 21:24:41 2015  LICENSE    
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile   
+-rw------- 1 masfo001 csmajs  3036 Fri May  1 18:02:24 2015  README.md  
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [94msrc        [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [94mtest       [0m
+
+
+total 64
+[100m[94m./bin[0m:
+-rwx------ 1 masfo001 csmajs 62032 Fri May  1 18:48:23 2015  [92mls  [0m
+
+
+total 20
+[100m[94m./src[0m:
+-rw------- 1 masfo001 csmajs  9637 Fri May  1 18:43:39 2015  ls.cpp    
+-rw------- 1 masfo001 csmajs  6089 Sun Apr 19 00:03:48 2015  main.cpp  
+
+
+total 108
+[100m[94m./test[0m:
+-rw------- 1 masfo001 csmajs  5626 Sun Apr 19 00:03:48 2015  exec.script  
+-rw------- 1 masfo001 csmajs 98304 Fri May  1 19:06:59 2015  ls.script    
+
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls -a -a -a -a -a -R[Kl -l -l -a -a 
+total 36
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m.          [0m
+drwx------ 6 masfo001 csmajs  4096 Mon Apr 27 15:14:53 2015  [100m[94m..         [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [94mbin        [0m
+drwx------ 8 masfo001 csmajs  4096 Fri May  1 18:44:25 2015  [100m[94m.git       [0m
+-rw------- 1 masfo001 csmajs  1068 Thu Apr  9 21:24:41 2015  LICENSE    
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile   
+-rw------- 1 masfo001 csmajs  3036 Fri May  1 18:02:24 2015  README.md  
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [94msrc        [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [94mtest       [0m
+
+
+~/cs100/rshell
+masfo001@hammer $ #TESTING FILE W?[K/ FLAGS
+~/cs100/rshell
+masfo001@hammer $ bin/ls -a makefile -l
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile
+~/cs100/rshell
+masfo001@hammer $ bin/ls -a makefile 
+makefile  
+~/cs100/rshell
+masfo001@hammer $ bin/ls -Rlaaaaaa LICENSE makefile 
+-rw------- 1 masfo001 csmajs  1068 Thu Apr  9 21:24:41 2015  LICENSE
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile
+~/cs100/rshell
+masfo001@hammer $ bin/ls _R[K[K-R README.md 
+README.md  
+~/cs100/rshell
+masfo001@hammer $ bin/s [K[Kls -l -l -a -a README.md 
+-rw------- 1 masfo001 csmajs  3036 Fri May  1 18:02:24 2015  README.md
+~/cs100/rshell
+masfo001@hammer $ #TESTING DIR WITH FLAGS
+~/cs100/rshell
+masfo001@hammer $ bin/ls src/-[K-[K -a
+[100m[94m.         [0m[100m[94m..        [0mls.cpp    main.cpp  
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls src/ -l
+total 20
+-rw------- 1 masfo001 csmajs  9637 Fri May  1 18:43:39 2015  ls.cpp    
+-rw------- 1 masfo001 csmajs  6089 Sun Apr 19 00:03:48 2015  main.cpp  
+
+
+~/cs100/rshell
+masfo001@hammer $ bin/ [Kls -l src/
+total 20
+-rw------- 1 masfo001 csmajs  9637 Fri May  1 18:43:39 2015  ls.cpp    
+-rw------- 1 masfo001 csmajs  6089 Sun Apr 19 00:03:48 2015  main.cpp  
+
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls -al src/
+total 28
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [100m[94m.         [0m
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m..        [0m
+-rw------- 1 masfo001 csmajs  9637 Fri May  1 18:43:39 2015  ls.cpp    
+-rw------- 1 masfo001 csmajs  6089 Sun Apr 19 00:03:48 2015  main.cpp  
+
+
+~/cs100/rshell
+masfo001@hammer $ bin-[K/ls src/ test/ bin/ -la
+total 72
+[94mbin/[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [100m[94m.   [0m
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m..  [0m
+-rwx------ 1 masfo001 csmajs 62032 Fri May  1 18:48:23 2015  [92mls  [0m
+
+
+total 28
+[94msrc/[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [100m[94m.         [0m
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m..        [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-rw------- 1 masfo001 csmajs  9637 Fri May  1 18:43:39 2015  ls.cpp    
+-rw------- 1 masfo001 csmajs  6089 Sun Apr 19 00:03:48 2015  main.cpp  
+
+
+total 116
+[94mtest/[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [100m[94m.            [0m
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [100m[94m..           [0m
+-rw------- 1 masfo001 csmajs  5626 Sun Apr 19 00:03:48 2015  exec.script  
+-rw------- 1 masfo001 csmajs 98304 Fri May  1 19:06:59 2015  ls.script    
+
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls ../../ -a
+[100m[94m.                     [0m[100m[94m..                    [0m[100m[94m.adobe                [0m
+[100m.bash_history         [0m[100m.bash_logout          [0m[100m.bashrc               [0m
+[100m[94m.cache                [0m[100m[94m.config               [0m[94mcs100                 [0m
+[100m[94m.dbus                 [0m[94mDesktop               [0m[100m[92m.dmrc                 [0m
+[94mDocuments             [0m[94mDownloads             [0m[100m[94m.eggcups              [0m
+[100m[94m.emacs.d              [0m[100m[92m.esd_auth             [0m[100m[92m.execooo2qYSbv        [0m
+[100m[92m.execooomsrEZy        [0m[100m[94m.fontconfig           [0m[100m[94m.gconf                [0m
+[100m[94m.gconfd               [0m[100m.gitconfig            [0m[100m[94m.gitlearn             [0m
+[100m[94m.gnome                [0m[100m[94m.gnome2               [0m[100m[94m.gnome2_private       [0m
+[100m[94m.gnote                [0m[100m[94m.gnupg                [0m[100m[94m.gstreamer-0.10       [0m
+[100m[92m.gtk-bookmarks        [0m[100m[92m.gtkrc-1.2-gnome2     [0m[100m[94m.gvfs                 [0m
+[94mhw0test               [0m[94mhw4datefix            [0m[100m[92m.ICEauthority         [0m
+[100m[94m.icons                [0m[100m[92m.imsettings.log       [0m[94mlab3fix               [0m
+[94mlab3fix2              [0m[94mlab3fix3              [0m[94mlab3fix4              [0m
+[94mlab3fix5              [0m[94mlab3fix6              [0m[94mlab3fix7              [0m
+[94mlab3fix8              [0m[94mlab4fix               [0m[100m.lesshst              [0m
+[100m[94m.local                [0m[100m[94m.macromedia           [0m[100m[94m.metacity             [0m
+[100m[94m.mozilla              [0m[94mMusic                 [0m[100m[94m.nautilus             [0m
+[100m[94m.nv                   [0m[94mPictures              [0m[100m[94m.pki                  [0m
+[100m[92m.procmailrc           [0m[100m.profile              [0m[94mPublic                [0m
+[100m[94m.pulse                [0m[100m[92m.pulse-cookie         [0m[100m[92m.recently-used.xbel   [0m
+[100m[94m.redhat               [0m[100m[94m.ssh                  [0m[94mTemplates             [0m
+[100m[94m.themes               [0m[100m[94m.thumbnails           [0m[100m[94m.Trash                [0m
+[94mucr-cs100             [0m[94mVideos                [0m[100m[94m.vim                  [0m
+[100m[92m.viminfo              [0m[100m.vimrc                [0m[100m[92m.xsession-errors      [0m
+[100m[92m.xsession-errors.old  [0m
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls -R src/
+[94msrc/[0m:
+ls.cpp    main.cpp  
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls -R bin/ test/ -l
+total 64
+[94mbin/[0m:
+-rwx------ 1 masfo001 csmajs 62032 Fri May  1 18:48:23 2015  [92mls  [0m
+
+
+total 108
+[94mtest/[0m:
+-rw------- 1 masfo001 csmajs  5626 Sun Apr 19 00:03:48 2015  exec.script  
+-rw------- 1 masfo001 csmajs 98304 Fri May  1 19:06:59 2015  ls.script    
+
+
+~/cs100/rshell
+masfo001@hammer $ #TESTING ARGS WITH WRONG FLAGS
+~/cs100/rshell
+masfo001@hammer $ bin/ls src/ makefile -q
+invalid flag: Success
+~/cs100/rshell
+masfo001@hammer $ bin/ls src/ test/ makefile /[K../ -w
+invalid flag: Success
+~/cs100/rshell
+masfo001@hammer $ bin/ls -5 src/ -a test/ -l
+invalid flag: Success
+~/cs100/rshell
+masfo001@hammer $ bin/ls -R 
+[100m[94m.[0m:
+[94mbin        [0mLICENSE    makefile   README.md  [94msrc        [0m[94mtest       [0m
+
+[100m[94m./bin[0m:
+[92mls  [0m
+
+[100m[94m./src[0m:
+ls.cpp    main.cpp  
+
+[100m[94m./test[0m:
+exec.script  ls.script    
+
+~/cs100/rshell
+masfo001@hammer $ #MISCELLANEOUS TESTS SO I DONT LOSE POINTS...
+~/cs100/rshell
+masfo001@hammer $ bin/ls . .. . .. . .. src/ test/ .. . /../..
+[94m/../..[0m:
+[94mbin                         [0m[94mboot                        [0m
+[94mcgroup                      [0m[94mclass                       [0m
+C:\nppdf32Log\debuglog.txt  [94mdev                         [0m
+[94metc                         [0m[94mextra                       [0m
+[94mhome                        [0m[94mlib                         [0m
+[94mlib64                       [0m[94mlost+found                  [0m
+[94mmedia                       [0m[94mmisc                        [0m
+[94mmnt                         [0m[94mnet                         [0m
+[94mopt                         [0m[94mproc                        [0m
+[94mroot                        [0m[94msbin                        [0m
+[94mselinux                     [0m[94msrv                         [0m
+[94msys                         [0m[94mtmp                         [0m
+[94musr                         [0m[94mvar                         [0m
+
+
+[100m[94m.[0m:
+[94mbin        [0mLICENSE    makefile   README.md  [94msrc        [0m[94mtest       [0m
+
+[100m[94m.[0m:
+[94mbin        [0mLICENSE    makefile   README.md  [94msrc        [0m[94mtest       [0m
+
+[100m[94m.[0m:
+[94mbin        [0mLICENSE    makefile   README.md  [94msrc        [0m[94mtest       [0m
+
+[100m[94m.[0m:
+[94mbin        [0mLICENSE    makefile   README.md  [94msrc        [0m[94mtest       [0m
+
+[100m[94m..[0m:
+[94mlab3    [0m[94mlab4    [0m[94mrshell  [0m
+
+[100m[94m..[0m:
+[94mlab3    [0m[94mlab4    [0m[94mrshell  [0m
+
+[100m[94m..[0m:
+[94mlab3    [0m[94mlab4    [0m[94mrshell  [0m
+
+[100m[94m..[0m:
+[94mlab3    [0m[94mlab4    [0m[94mrshell  [0m
+
+[94msrc/[0m:
+ls.cpp    main.cpp  
+
+[94mtest/[0m:
+exec.script  ls.script    
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls -l . ..
+total 24
+[100m[94m.[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [94mbin        [0m
+-rw------- 1 masfo001 csmajs  1068 Thu Apr  9 21:24:41 2015  LICENSE    
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile   
+-rw------- 1 masfo001 csmajs  3036 Fri May  1 18:02:24 2015  README.md  
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [94msrc        [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [94mtest       [0m
+
+
+total 12
+[100m[94m..[0m:
+drwx------ 2 masfo001 csmajs  4096 Mon Apr 20 14:05:46 2015  [94mlab3    [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 3 masfo001 csmajs  4096 Mon Apr 27 15:15:25 2015  [94mlab4    [0m
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [94mrshell  [0m
+
+
+~/cs100/rshell
+masfo001@hammer $ bin.[K/ls -a -a -a ..
+[100m[94m.       [0m[100m[94m..      [0m[100m[94m.git    [0m[94mlab3    [0m[94mlab4    [0m[94mrshell  [0m
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls
+[94mbin        [0mLICENSE    makefile   README.md  [94msrc        [0m[94mtest       [0m
+
+~/cs100/rshell
+masfo001@hammer $ bin.[K/l [Ks ../../../../../../../../
+[94mbin                         [0m[94mboot                        [0m
+[94mcgroup                      [0m[94mclass                       [0m
+C:\nppdf32Log\debuglog.txt  [94mdev                         [0m
+[94metc                         [0m[94mextra                       [0m
+[94mhome                        [0m[94mlib                         [0m
+[94mlib64                       [0m[94mlost+found                  [0m
+[94mmedia                       [0m[94mmisc                        [0m
+[94mmnt                         [0m[94mnet                         [0m
+[94mopt                         [0m[94mproc                        [0m
+[94mroot                        [0m[94msbin                        [0m
+[94mselinux                     [0m[94msrv                         [0m
+[94msys                         [0m[94mtmp                         [0m
+[94musr                         [0m[94mvar                         [0m
+
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls ..
+[94mlab3    [0m[94mlab4    [0m[94mrshell  [0m
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls ../../De[Kesktop
+[92maddons.sqlite            [0m[94massignment05             [0m[94massignment06             [0m
+[94mAssignments              [0m[92mblocklist.xml            [0m[94mbookmarkbackups          [0m
+[94mCache                    [0m[92m_CACHE_CLEAN_            [0m[92mcert8.db                 [0m
+[92mchromeappsstore.sqlite   [0m[92mcompatibility.ini        [0m[92mcontent-prefs.sqlite     [0m
+[92mcookies.sqlite           [0m[92mcookies.sqlite-shm       [0m[92mDate.cpp                 [0m
+[92mDate.h                   [0m[92mdownloads.sqlite         [0m[92mextensions.ini           [0m
+[92mextensions.sqlite        [0m[92mformhistory.sqlite       [0m[92mhangman.cpp              [0m
+[94mhealthreport             [0m[92mhealthreport.sqlite      [0m[92mhealthreport.sqlite-shm  [0m
+[94mindexedDB                [0m[92mkey3.db                  [0m[94mLabs                     [0m
+[92mlocalstore.rdf           [0m[92mmain.cpp                 [0m[92mmarionette.log           [0m
+[92mmimeTypes.rdf            [0m[92moverlap.cpp              [0m[92mpermissions.sqlite       [0m
+[92mplaces.sqlite            [0m[92mplaces.sqlite-shm        [0m[92mpluginreg.dat            [0m
+[92mprefs.js                 [0m[94msafebrowsing             [0m[92msearch.json              [0m
+[92msecmod.db                [0m[92msessionstore.bak         [0m[92msessionstore.js          [0m
+[92msignons.sqlite           [0m[94mstartupCache             [0m[94mthumbnails               [0m
+[92murlclassifierkey3.txt    [0m[94mwebapps                  [0m[92mwebappsstore.sqlite      [0m
+[92mwebappsstore.sqlite-shm  [0m[94myolo                     [0m
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls src/ -l ../.
+total 12
+[100m[94m../.[0m:
+drwx------ 2 masfo001 csmajs  4096 Mon Apr 20 14:05:46 2015  [94mlab3    [0m
+drwx------ 3 masfo001 csmajs  4096 Mon Apr 27 15:15:25 2015  [94mlab4    [0m
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [94mrshell  [0m
+
+
+total 20
+[94msrc/[0m:
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-rw------- 1 masfo001 csmajs  9637 Fri May  1 18:43:39 2015  ls.cpp    
+-rw------- 1 masfo001 csmajs  6089 Sun Apr 19 00:03:48 2015  main.cpp  
+
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls                                          -a
+[100m[94m.          [0m[100m[94m..         [0m[94mbin        [0m[100m[94m.git       [0mLICENSE    makefile   README.md  
+[94msrc        [0m[94mtest       [0m
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls                                          src/
+ls.cpp    main.cpp  
+
+~/cs100/rshell
+masfo001@hammer $ c[Kbin/ls this is it
+stat error: No such file or directory
+stat error: No such file or directory
+stat error: No such file or directory
+
+~/cs100/rshell
+masfo001@hammer $ bin/ls wow src/
+stat error: No such file or directory
+ls.cpp    main.cpp  
+
+~/cs100/rshell
+masfo001@hammer $ #I CAN'T THINK OF ANY MORE POSSIBLE CASES
+~/cs100/rshell
+masfo001@hammer $ bin/ls -Rl ..
+total 12
+[100m[94m..[0m:
+drwx------ 2 masfo001 csmajs  4096 Mon Apr 20 14:05:46 2015  [94mlab3    [0m
+drwx------ 3 masfo001 csmajs  4096 Mon Apr 27 15:15:25 2015  [94mlab4    [0m
+drwx------ 6 masfo001 csmajs  4096 Fri May  1 18:48:22 2015  [94mrshell  [0m
+
+
+total 28
+[100m[94m../lab3[0m:
+-rwx------ 1 masfo001 csmajs 23813 Mon Apr 20 14:05:46 2015  [92mex1      [0m
+-rw------- 1 masfo001 csmajs  1001 Mon Apr 20 14:05:41 2015  ex1.cpp  
+
+
+total 4
+[100m[94m../lab4[0m:
+drwx------ 6 masfo001 csmajs  4096 Mon Apr 27 17:06:26 2015  [94mrshell-1  [0m
+
+
+total 24
+[100m[94m../rshell[0m:
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:48:23 2015  [94mbin        [0m
+-rw------- 1 masfo001 csmajs  1068 Thu Apr  9 21:24:41 2015  LICENSE    
+-rw------- 1 masfo001 csmajs   578 Fri May  1 17:14:44 2015  makefile   
+-rw------- 1 masfo001 csmajs  3036 Fri May  1 18:02:24 2015  README.md  
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:43:39 2015  [94msrc        [0m
+drwx------ 2 masfo001 csmajs  4096 Fri May  1 18:47:57 2015  [94mtest       [0m
+
+
+total 4888
+[100m[94m../lab4/rshell-1[0m:
+drwx------ 2 masfo001 csmajs  4096 Mon Apr 27 17:02:51 2015  [94mbin        [0m
+-rw------- 1 masfo001 csmajs 4953699 Mon Apr 27 17:04:39 2015  file       
+-rw------- 1 masfo001 csmajs 18047 Mon Apr 27 15:15:26 2015  LICENSE    
+-rw------- 1 masfo001 csmajs   541 Mon Apr 27 17:06:26 2015  makefile   
+-rw------- 1 masfo001 csmajs  2437 Mon Apr 27 17:06:26 2015  README.md  
+drwx------ 2 masfo001 csmajs  4096 Mon Apr 27 17:06:26 2015  [94msrc        [0m
+drwx------ 2 masfo001 csmajs  4096 Mon Apr 27 15:15:26 2015  [94mtests      [0m
+
+
+total 64
+[100m[94m../rshell/bin[0m:
+-rwx------ 1 masfo001 csmajs 62032 Fri May  1 18:48:23 2015  [92mls  [0m
+
+
+total 20
+[100m[94m../rshell/src[0m:
+-rw------- 1 masfo001 csmajs  9637 Fri May  1 18:43:39 2015  ls.cpp    
+-rw------- 1 masfo001 csmajs  6089 Sun Apr 19 00:03:48 2015  main.cpp  
+
+
+total 140
+[100m[94m../rshell/test[0m:
+-rw------- 1 masfo001 csmajs  5626 Sun Apr 19 00:03:48 2015  exec.script  
+-rw------- 1 masfo001 csmajs 131072 Fri May  1 19:23:52 2015  ls.script    
+
+
+total 120
+[100m[94m../lab4/rshell-1/bin[0m:
+-rwx------ 1 masfo001 csmajs 15939 Mon Apr 27 17:02:51 2015  [92mcp      [0m
+-rwx------ 1 masfo001 csmajs 83710 Mon Apr 27 15:42:08 2015  [92mls      [0m
+-rwx------ 1 masfo001 csmajs 15603 Mon Apr 27 15:42:07 2015  [92mrshell  [0m
+
+
+total 40
+[100m[94m../lab4/rshell-1/src[0m:
+-rw------- 1 masfo001 csmajs  3374 Mon Apr 27 17:06:26 2015  cp.cpp            
+-rw------- 1 masfo001 csmajs  3476 Mon Apr 27 17:06:26 2015  ls.cpp            
+-rw------- 1 masfo001 csmajs 17113 Mon Apr 27 17:06:26 2015  ls_functions.cpp  
+-rw------- 1 masfo001 csmajs   432 Mon Apr 27 17:06:26 2015  ls.h              
+-rw------- 1 masfo001 csmajs  4046 Mon Apr 27 15:15:26 2015  rshell.cpp        
+-rw------- 1 masfo001 csmajs  2254 Mon Apr 27 17:06:26 2015  Timer.h           
+
+
+total 32
+[100m[94m../lab4/rshell-1/tests[0m:
+-rw------- 1 masfo001 csmajs 29792 Mon Apr 27 15:15:26 2015  exec.script  
+
+
+~/cs100/rshell
+masfo001@hammer $ #THAN [KK YOU
+~/cs100/rshell
+masfo001@hammer $ #ENDING TESTING-------------------------
+~/cs100/rshell
+masfo001@hammer $ exit
+exit
+
+Script done on Fri 01 May 2015 07:36:27 PM PDT
