@@ -185,6 +185,18 @@ void lsDir(deque <string> files, deque <string> directories, struct stat name, b
 			}
 		}
 
+		//for output formatting
+		unsigned int largest = 0;
+		for(unsigned int q = 0; q < files.size(); q++)
+		{
+			if(files.at(q).size() > largest)
+				largest = files.at(q).size();
+		//	cout << q << "largest: " << largest << endl;
+		}
+		largest += 2; //regular ls has two spaces after each file
+		//cout << largest << endl;
+		unsigned int cols = 80/largest; //typical terminal holds 80 char
+
 
 		if(lFlag)
 		{
@@ -212,8 +224,8 @@ void lsDir(deque <string> files, deque <string> directories, struct stat name, b
 			printme(directories.at(i), name);
 			cout << ":" << endl;
 		}	
-
-
+		
+		unsigned int currcol = 0;
 		for(unsigned int j = 0; j < files.size(); j++)
 		{
 			string path = directories.at(i) + "/" + files.at(j);
@@ -228,9 +240,18 @@ void lsDir(deque <string> files, deque <string> directories, struct stat name, b
 
 			if(stat(path.c_str(), &name) == -1) //assuming no error. just changing name
 				perror("stat error");
+		
+			cout << setw(largest) << left; //format output
 			printme(files.at(j), name);
-			cout <<  "  ";
-			
+			if(!lFlag)
+			{
+				currcol++;
+				if(currcol == cols)
+				{
+					currcol = 0;
+					cout << endl;
+				}
+			}
 			if(lFlag) 
 				cout << endl;
 		}
@@ -249,20 +270,6 @@ void lsDir(deque <string> files, deque <string> directories, struct stat name, b
 					k--;
 				}
 			}
-			//if(!aFlag) //remove hidden files
-			//{
-			//	for(unsigned int k = 0; k < recurrence.size(); k++)
-			//	{
-			//		if(recurrence.at(k).at(0) == '.')
-			//		{
-			//			recurrence.erase(recurrence.begin() + k); //erase hidden files
-			//			k--;
-			//		}
-			//	}
-			//}
-			//for(unsigned int w = 0; w < recurrence.size(); w++)
-				//cout << "r: " << recurrence.at(w) << endl;
-
 			lsDir(files, recurrence, name, otherOutput); //recurrence statement
 		}
 	}
