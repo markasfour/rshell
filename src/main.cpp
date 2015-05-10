@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 			continue;
 
 		//tokenizer init
-		char_separator<char> delim(" ;&|#",";&|#", keep_empty_tokens);
+		char_separator<char> delim(" ",";&|#");
 		tokenizer< char_separator<char> > mytok(command, delim);	
 		
 		//token check
@@ -71,16 +71,23 @@ int main(int argc, char **argv)
 		//cout << "listed the arguements" << endl;
 		
 
+		for(tokenizer<char_separator<char> >::iterator it = mytok.begin(); it != mytok.end(); it++)
+		{
+			cout << "(" << *it << ")" << " ";
+		}
+		cout << "listed the arguements" << endl;
+		
+
+
+
 		string temp;
 		//command list formatting
 		for(tokenizer<char_separator<char> >::iterator it = mytok.begin(); it != mytok.end(); it++)
 		{
 			//cout << "; = " << semicolon << ", & = " << ampersand << ", | =" << pipe << endl;
-			//cout << *it << endl;
+			//if(*it == ""); //do nothing
 			
-			if(*it == ""); //do nothing
-			
-			else if(*it == ";") //semicolon handling
+			if(*it == ";") //semicolon handling
 			{
 				semicolon++;
 				if(semicolon > 1)
@@ -147,6 +154,7 @@ int main(int argc, char **argv)
 			}
 			else if(*it == "|") //pipe handling
 			{
+				//cout << "PIPE!!!!!!!!!!!" << endl;
 				pipe++;
 				if(pipe > 2)
 				{
@@ -154,7 +162,7 @@ int main(int argc, char **argv)
 					syntaxerror = true;
 					break;
 				}
-				else if(pipe == 2)
+				else if(pipe == 1)
 				{
 					if(semicolon == 0 && ampersand == 0)
 					{
@@ -166,7 +174,21 @@ int main(int argc, char **argv)
 						}
 						commands.push_back(temp);
 						temp = "";
-						commands.push_back("||");
+						commands.push_back("|");
+					}
+					else
+					{
+						perror("Syntax error. Improper use of connectors.");
+						syntaxerror = true;
+						break;
+					}
+				
+				}
+				else if(pipe == 2)
+				{
+					if(semicolon == 0 && ampersand == 0)
+					{
+						commands.push_back("|");
 						pipe = 0;
 					}
 					else
@@ -180,7 +202,7 @@ int main(int argc, char **argv)
 			}		
 			else
 			{
-				if(semicolon != 0 || ampersand != 0 || pipe != 0)
+				if(semicolon != 0 || ampersand != 0)
 				{
 					perror("Syntax error. Improper use of connectors.");
 					//cout << semicolon << " " << ampersand << " " << pipe << endl;
@@ -188,20 +210,46 @@ int main(int argc, char **argv)
 					break;
 				}
 				if(temp != "")
+				{
 					temp += ' ';
+				}
 				temp += *it;
+				if(pipe == 1)
+					pipe = 0;
 			}
 		}
 		commands.push_back(temp.c_str());
 		temp = "";
 
 
+		//combine two pipes together
+		bool prevpipe = false;
+		for(unsigned int i = 1; i < commands.size(); i++)
+		{
+			if(commands.at(i - 1) == "|")
+				prevpipe = true;
+			else
+				prevpipe = false;
+
+			if(prevpipe)
+			{
+				if(commands.at(i) == "|")
+				{
+					commands.at(i - 1) = "||";
+					commands.erase(commands.begin() + i);
+					i--;
+				}
+			}
+		}
+
 		//check commands
-		//for(int i = 0; i < commands.size(); i++)
-		//{
-		//	cout << "(" << commands.at(i) << ") ";
-		//}
-		//cout << "combined arguements into groups" << endl;
+		for(unsigned int i = 0; i < commands.size(); i++)
+		{
+			cout << "(" << commands.at(i) << ") ";
+		}
+
+
+		cout << "combined arguements into groups" << endl;
 		if(!syntaxerror)
 		{
 			char *input[999];
