@@ -34,6 +34,7 @@ int main(int argc, char **argv)
 		int semicolon= 0;
 		int ampersand = 0;
 		int pipe = 0;
+		int right = 0;
 		string command = "";
 		vector <string> commands;
 
@@ -60,7 +61,7 @@ int main(int argc, char **argv)
 			continue;
 
 		//tokenizer init
-		char_separator<char> delim(" ",";&|#");
+		char_separator<char> delim(" ",";&|#<>");
 		tokenizer< char_separator<char> > mytok(command, delim);	
 		
 		//token check
@@ -200,6 +201,54 @@ int main(int argc, char **argv)
 				}
 				
 			}		
+			else if(*it == ">") //> handling
+			{
+				right++;
+				if(right > 2)
+				{
+					perror("Syntax error. Too many > characters.");
+					syntaxerror = true;
+					break;
+				}
+				else if(right == 1)
+				{
+					if(semicolon == 0 && ampersand == 0)
+					{
+						if(temp == "")
+						{
+							perror("No arguments before connector");
+							syntaxerror = true;
+							break;
+						}
+						commands.push_back(temp);
+						temp = "";
+						commands.push_back(">");
+					}
+					else
+					{
+						perror("Syntax error. Improper use of connectors.");
+						syntaxerror = true;
+						break;
+					}
+				
+				}
+				else if(right == 2)
+				{
+					if(semicolon == 0 && ampersand == 0)
+					{
+						commands.push_back(">");
+						right = 0;
+					}
+					else
+					{
+						perror("Syntax error. Improper use of connectors.");
+						syntaxerror = true;
+						break;
+					}
+				}
+				
+			}
+			
 			else
 			{
 				if(semicolon != 0 || ampersand != 0)
@@ -216,6 +265,8 @@ int main(int argc, char **argv)
 				temp += *it;
 				if(pipe == 1)
 					pipe = 0;
+				if(right == 1)
+					right = 0;
 			}
 		}
 		commands.push_back(temp.c_str());
@@ -224,18 +275,34 @@ int main(int argc, char **argv)
 
 		//combine two pipes together
 		bool prevpipe = false;
+		bool prevright = false;
 		for(unsigned int i = 1; i < commands.size(); i++)
 		{
 			if(commands.at(i - 1) == "|")
 				prevpipe = true;
 			else
 				prevpipe = false;
+			
+			if(commands.at(i - 1) == ">")
+				prevright = true;
+			else
+				prevright = false;
+
 
 			if(prevpipe)
 			{
 				if(commands.at(i) == "|")
 				{
 					commands.at(i - 1) = "||";
+					commands.erase(commands.begin() + i);
+					i--;
+				}
+			}
+			if(prevright)
+			{
+				if(commands.at(i) == ">")
+				{
+					commands.at(i - 1) = ">>";
 					commands.erase(commands.begin() + i);
 					i--;
 				}
