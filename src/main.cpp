@@ -35,6 +35,7 @@ int main(int argc, char **argv)
 		int ampersand = 0;
 		int pipe = 0;
 		int right = 0;
+		int left = 0;
 		string command = "";
 		vector <string> commands;
 
@@ -248,7 +249,53 @@ int main(int argc, char **argv)
 				}
 				
 			}
-			
+			else if(*it == "<") //< handling
+			{
+				left++;
+				if(left > 2)
+				{
+					perror("Syntax error. Too many < characters.");
+					syntaxerror = true;
+					break;
+				}
+				else if(left == 1)
+				{
+					if(semicolon == 0 && ampersand == 0)
+					{
+						if(temp == "")
+						{
+							perror("No arguments before connector");
+							syntaxerror = true;
+							break;
+						}
+						commands.push_back(temp);
+						temp = "";
+						commands.push_back("<");
+					}
+					else
+					{
+						perror("Syntax error. Improper use of connectors.");
+						syntaxerror = true;
+						break;
+					}
+				
+				}
+				else if(left == 2)
+				{
+					if(semicolon == 0 && ampersand == 0)
+					{
+						commands.push_back("<");
+						left = 0;
+					}
+					else
+					{
+						perror("Syntax error. Improper use of connectors.");
+						syntaxerror = true;
+						break;
+					}
+				}
+				
+			}
 			else
 			{
 				if(semicolon != 0 || ampersand != 0)
@@ -267,15 +314,23 @@ int main(int argc, char **argv)
 					pipe = 0;
 				if(right == 1)
 					right = 0;
+				if(left == 1)
+					left = 0;
 			}
 		}
 		commands.push_back(temp.c_str());
 		temp = "";
-
-
-		//combine two pipes together
+			
+		//check commands
+		for(unsigned int i = 0; i < commands.size(); i++)
+		{
+			cout << "(" << commands.at(i) << ") ";
+		}
+		cout << endl;
+		//combine two pipes, two >, and two < together
 		bool prevpipe = false;
 		bool prevright = false;
+		bool prevleft = false;
 		for(unsigned int i = 1; i < commands.size(); i++)
 		{
 			if(commands.at(i - 1) == "|")
@@ -287,7 +342,11 @@ int main(int argc, char **argv)
 				prevright = true;
 			else
 				prevright = false;
-
+			
+			if(commands.at(i - 1) == "<")
+				prevleft = true;
+			else
+				prevleft = false;
 
 			if(prevpipe)
 			{
@@ -303,6 +362,15 @@ int main(int argc, char **argv)
 				if(commands.at(i) == ">")
 				{
 					commands.at(i - 1) = ">>";
+					commands.erase(commands.begin() + i);
+					i--;
+				}
+			}
+			if(prevleft)
+			{
+				if(commands.at(i) == "<")
+				{
+					commands.at(i - 1) = "<<";
 					commands.erase(commands.begin() + i);
 					i--;
 				}
