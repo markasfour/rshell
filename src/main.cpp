@@ -450,12 +450,17 @@ int main(int argc, char **argv)
 						continue;
 					}
 				}
-				bool outputRedir = false;
+				bool outputRedir1 = false;
+				bool outputRedir2 = false;
 				if(i + 1 < commands.size())
 				{
 					if(commands.at(i + 1) == ">") //HANDLE >
 					{
-						outputRedir = true;
+						outputRedir1 = true;
+					}
+					if(commands.at(i + 1) == ">>")
+					{
+						outputRedir2 = true;
 					}
 				}
 				//execute command. based off of in-lecture notes
@@ -471,14 +476,22 @@ int main(int argc, char **argv)
 					//cout << input << endl;
 					int fd = 0;
 					//bool inputRedir = false;
-					if(outputRedir)
+					if(outputRedir1 || outputRedir2)
 					{
 						if(i + 2 < commands.size())
 						{
 							if(-1 == close(1))
 								perror("close");
-							if((fd=open(commands.at(i + 2).c_str(),O_CREAT|O_WRONLY|O_TRUNC,0666))==-1)
-								perror("open");
+							if(outputRedir1) //for >
+							{
+								if((fd=open(commands.at(i + 2).c_str(),O_CREAT|O_WRONLY|O_TRUNC,0666))==-1)
+									perror("open");
+							}
+							else if(outputRedir2) //for >>
+							{
+								if((fd=open(commands.at(i + 2).c_str(),O_CREAT|O_WRONLY|O_APPEND,0666))==-1)
+									perror("open");
+							}
 							if((dup2(fd,1))==-1)
 							    perror("dup2");
 						}
@@ -498,7 +511,7 @@ int main(int argc, char **argv)
 				{
 					if(-1 == waitpid(pid, &status, 0)) //wait for child to finish
 						perror("There was an error with wait().");
-					if(outputRedir)
+					if(outputRedir1 || outputRedir2)
 						i = i + 2;
 				}
 
