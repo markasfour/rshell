@@ -450,7 +450,14 @@ int main(int argc, char **argv)
 						continue;
 					}
 				}
-
+				bool outputRedir = false;
+				if(i + 1 < commands.size())
+				{
+					if(commands.at(i + 1) == ">") //HANDLE >
+					{
+						outputRedir = true;
+					}
+				}
 				//execute command. based off of in-lecture notes
 				int pid = fork();
 				if(pid == -1)
@@ -464,23 +471,19 @@ int main(int argc, char **argv)
 					//cout << input << endl;
 					int fd = 0;
 					//bool inputRedir = false;
-					bool outputRedir = false;
-					if(i + 1 < commands.size())
+					if(outputRedir)
 					{
-						if(commands.at(i + 1) == ">") //HANDLE >
+						if(i + 2 < commands.size())
 						{
-							outputRedir = true;
-							if(i + 2 < commands.size())
-							{
-								if(-1 == close(1))
-									perror("close");
-								if((fd=open(commands.at(i + 2).c_str(),O_CREAT|O_WRONLY|O_TRUNC,0666))==-1)
-									perror("open");
-							    if((dup2(fd,1))==-1)
-							        perror("dup2");
-							}
+							if(-1 == close(1))
+								perror("close");
+							if((fd=open(commands.at(i + 2).c_str(),O_CREAT|O_WRONLY|O_TRUNC,0666))==-1)
+								perror("open");
+							if((dup2(fd,1))==-1)
+							    perror("dup2");
 						}
-					}
+					}	
+					
 					
 					status = execvp(input[0], input);
 					if(-1 == status) 
@@ -489,15 +492,14 @@ int main(int argc, char **argv)
 						
 					}
 					
-					if(outputRedir)
-						i = i + 2;
 					exit(1);
 				}
 				else if(pid > 0) //in parent
 				{
 					if(-1 == waitpid(pid, &status, 0)) //wait for child to finish
 						perror("There was an error with wait().");
-
+					if(outputRedir)
+						i = i + 2;
 				}
 
 			}
