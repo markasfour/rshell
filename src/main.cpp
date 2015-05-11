@@ -6,6 +6,9 @@
 #include <sys/wait.h>
 #include <vector>
 #include <boost/tokenizer.hpp>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 using namespace std;
 using namespace boost;
 
@@ -426,7 +429,7 @@ int main(int argc, char **argv)
 					continue;
 				}
 
-				else if(commands.at(i) == "||") //pipe case
+				else if(commands.at(i) == "||") //double pipe case
 				{
 					if(status)
 						continue;
@@ -459,12 +462,35 @@ int main(int argc, char **argv)
 				{
 					//cout << "CHILD IS RUNNING :D" << endl;
 					//cout << input << endl;
+					int fd = 0;
+					//bool inputRedir = false;
+					bool outputRedir = false;
+					if(i + 1 < commands.size())
+					{
+						if(commands.at(i + 1) == ">") //HANDLE >
+						{
+							outputRedir = true;
+							if(i + 2 < commands.size())
+							{
+								if(-1 == close(1))
+									perror("close");
+								if((fd=open(commands.at(i + 2).c_str(),O_CREAT|O_WRONLY|O_TRUNC,0666))==-1)
+									perror("open");
+							    if((dup2(fd,1))==-1)
+							        perror("dup2");
+							}
+						}
+					}
+					
 					status = execvp(input[0], input);
 					if(-1 == status) 
 					{
 						perror("There was an error in execvp.");
 						
 					}
+					
+					if(outputRedir)
+						i = i + 2;
 					exit(1);
 				}
 				else if(pid > 0) //in parent
