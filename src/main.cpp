@@ -76,11 +76,11 @@ int main(int argc, char **argv)
 		//cout << "listed the arguements" << endl;
 		
 
-		for(tokenizer<char_separator<char> >::iterator it = mytok.begin(); it != mytok.end(); it++)
-		{
-			cout << "(" << *it << ")" << " ";
-		}
-		cout << "listed the arguements" << endl;
+		//for(tokenizer<char_separator<char> >::iterator it = mytok.begin(); it != mytok.end(); it++)
+		//{
+		//	cout << "(" << *it << ")" << " ";
+		//}
+		//cout << "listed the arguements" << endl;
 		
 
 
@@ -325,11 +325,11 @@ int main(int argc, char **argv)
 		temp = "";
 			
 		//check commands
-		for(unsigned int i = 0; i < commands.size(); i++)
-		{
-			cout << "(" << commands.at(i) << ") ";
-		}
-		cout << endl;
+		//for(unsigned int i = 0; i < commands.size(); i++)
+		//{
+		//	cout << "(" << commands.at(i) << ") ";
+		//}
+		//cout << endl;
 		//combine two pipes, two >, and two < together
 		bool prevpipe = false;
 		bool prevright = false;
@@ -381,13 +381,13 @@ int main(int argc, char **argv)
 		}
 
 		//check commands
-		for(unsigned int i = 0; i < commands.size(); i++)
-		{
-			cout << "(" << commands.at(i) << ") ";
-		}
+		//for(unsigned int i = 0; i < commands.size(); i++)
+		//{
+		//	cout << "(" << commands.at(i) << ") ";
+		//}
 
 
-		cout << "combined arguements into groups" << endl;
+		//cout << "combined arguements into groups" << endl;
 		if(!syntaxerror)
 		{
 			char *input[999];
@@ -452,6 +452,8 @@ int main(int argc, char **argv)
 				}
 				bool outputRedir1 = false;
 				bool outputRedir2 = false;
+				bool inputRedir = false;
+
 				if(i + 1 < commands.size())
 				{
 					if(commands.at(i + 1) == ">") //HANDLE >
@@ -461,6 +463,10 @@ int main(int argc, char **argv)
 					if(commands.at(i + 1) == ">>")
 					{
 						outputRedir2 = true;
+					}
+					if(commands.at(i + 1) == "<") //HANDLE <
+					{
+						inputRedir = true;
 					}
 				}
 				//execute command. based off of in-lecture notes
@@ -475,7 +481,6 @@ int main(int argc, char **argv)
 					//cout << "CHILD IS RUNNING :D" << endl;
 					//cout << input << endl;
 					int fd = 0;
-					//bool inputRedir = false;
 					if(outputRedir1 || outputRedir2)
 					{
 						if(i + 2 < commands.size())
@@ -484,20 +489,37 @@ int main(int argc, char **argv)
 								perror("close");
 							if(outputRedir1) //for >
 							{
-								if((fd=open(commands.at(i + 2).c_str(),O_CREAT|O_WRONLY|O_TRUNC,0666))==-1)
+								if((fd=open(commands.at(i + 2).c_str(),O_CREAT|O_WRONLY|O_TRUNC,0777))==-1)
 									perror("open");
 							}
 							else if(outputRedir2) //for >>
 							{
-								if((fd=open(commands.at(i + 2).c_str(),O_CREAT|O_WRONLY|O_APPEND,0666))==-1)
+								if((fd=open(commands.at(i + 2).c_str(),O_CREAT|O_WRONLY|O_APPEND,0777))==-1)
 									perror("open");
 							}
 							if((dup2(fd,1))==-1)
 							    perror("dup2");
+							//if(-1 == close(fd))
+							//	perror("close");
 						}
 					}	
 					
-					
+					if(inputRedir)
+					{
+						if(i + 2 < commands.size())
+						{
+							if(-1 == close(0))
+								perror("close");
+							if((fd=open(commands.at(i + 2).c_str(),O_RDONLY, 0777)) == -1)
+								perror("open");
+							if((dup2(fd,0))==-1)
+								perror("dup2");
+							//if(-1 == close(fd))
+							//	perror("close");
+
+						}
+
+					}
 					status = execvp(input[0], input);
 					if(-1 == status) 
 					{
@@ -511,7 +533,7 @@ int main(int argc, char **argv)
 				{
 					if(-1 == waitpid(pid, &status, 0)) //wait for child to finish
 						perror("There was an error with wait().");
-					if(outputRedir1 || outputRedir2)
+					if(outputRedir1 || outputRedir2 || inputRedir)
 						i = i + 2;
 				}
 
