@@ -400,6 +400,7 @@ int main(int argc, char **argv)
 				for(unsigned int j = 0; j < commands.at(i).size(); j++) //itterate through letters
 				{
 					current = commands.at(i);
+					cout << "current: " << current << endl;
 					if(current[j] == ' ')
 					{
 						input[k] = new char[word.size() + 1];
@@ -408,13 +409,14 @@ int main(int argc, char **argv)
 						word = "";
 					}
 					else
-						word += current[j]; //add letter		
+						word += current[j]; //add letter
+					cout << "word: " << word << endl;
 				}	
 				input[k] = new char[word.size() + 1];
 				strcpy(input[k], word.c_str());
 				k++;
 
-				input[k] = new char[1]; //add the NULL char *
+				//input[k] = new char[1]; //add the NULL char *
 				input[k] = NULL;
 		
 				if(commands.at(i) ==  "exit") //exit command
@@ -535,6 +537,10 @@ int main(int argc, char **argv)
 						perror("There was an error with wait().");
 					if(outputRedir1 || outputRedir2 || inputRedir)
 						i = i + 2;
+					for(int z = 0; z < k; z++)
+					{
+						delete[] input[z];
+					}
 				}
 
 			}
