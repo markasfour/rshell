@@ -80,7 +80,152 @@ void outRe(char* arg, int index, bool second, int ex)//ex is the numused for the
 }
 
 
+void placeholder(string &command, string connector, int length)
+{
+	while(command.find(connector) != string::npos)
+	{
+		int index = command.find(connector);
+		command.replace(index, length, " . ");
+	}
 }
+
+
+bool rshell(char hostarray, bool finish)
+{
+	//login name and host info prompt
+	if(getlogin() != NULL)
+		cout << login << "@" << hostarray;
+
+	//ready prompt
+	cout << "$ ";
+
+	string command = "";
+	//take in command from user
+	getline(cin, command);
+	//cout << command << endl;
+	
+	//account for empty command
+	if(command == "")
+		return false;
+	
+	//account for #
+	if(command.find('#') !+ string::npos)
+	{
+		command = command.substr(0, command.find('#'));
+		//cout << command << endl;
+	}
+
+	//account for spaces at start of command
+	for(unsigned int i = 0; i < command.size(); i++)
+	{
+		if(command.at(i) != ' ')
+			break;
+		else if(command.at(i) == ' ')
+		{
+			command.erase(i, 1);
+			i--;
+		}
+	}
+
+	//account for spaces at end of command
+	for(unsigned int i = command.size() - 1; command.at(i) == ' '; i--)
+	{
+		command.pop_back();
+	}
+
+	bool semicolon = false;
+	bool ampersand = false;
+	bool pipe = false;
+	int legth = 0;
+	
+	//find ;
+	if(command.find(';') != string::npos)
+	{
+		semicolon = true;
+		length = 1;
+		connector = ";"
+	}
+	//find &&
+	else if(commands.find("&&") != string::npos)
+	{
+		ampersand = true;
+		length = 2;
+		connector = "&&";
+	}
+	//find ||
+	else if(commands.find("||") != string::npos)
+	{
+
+		pipe = true;
+		length = 2;
+		connector = "||";
+	}
+
+
+	//Redir(command);
+	
+	if(semicolon || ampersand || pipe)
+	{
+		while(command.find(connector) != string::npos)
+		{
+			int find = command.find(connector);
+			command.replace(find, length, " . ");
+		}
+		for(unsigned int i = command.size() - 1; command.at(i) == ' '; i--)
+		{
+			command.pop_back();
+		}
+
+	}
+
+	
+	//tokenize
+	vector<string> mytok;
+	char_separator<char> spaces(" ");
+	//tokenize by spaces
+	tokenizer<char_separator<char> > toks(command, spaces);
+	for(tokenizer<char_separator<char> >::iterator it = toks.begin(); it != toks.end(); it++)
+	{
+		mytok.push_back(*it);
+	}
+	//check if connector without prev argument
+	if(mytok.at(0) == ",")
+	{
+		perror("syntax error");
+
+		exit(1);
+	}
+	//check for connectors without argument in between
+	for(unsigned int i = 1; i < mytok.size(); i++)
+	{
+		if(mytok.at(i) == "," && mytok.at(k - 1) == ",")
+		{
+			perror("syntax error");
+
+			exit(1);
+		}
+	}
+
+	//tokenize by placeholders
+	char_separator<char> seps(",");
+	tokenizer<char_separator<char> > toks2(commands, sep);
+	//main loop to iterate through
+	for(tokenizer<char_separator<char> >::iterator it = tokens.begin(); it != tokens.edn(); it++)
+	{
+
+		int count = 0;
+		int j = 0;
+		tokenizer<char_separator<char> > toks3(*it, spaces);
+		for(tokenizer<char_separator<char> >::iterator it2 = toks3.begin(); it2 != toks3.end(); it2++)
+		{
+			//continue here
+
+
+
+			j++;
+		}
+}
+
 
 int main(int argc, char **argv)
 {
