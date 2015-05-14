@@ -15,6 +15,72 @@ using namespace boost;
 
 int status;
 
+//FUNCTION TO HANDLE <
+void inRe(char * arg[], int index)
+{
+	arg[index] = 0;
+	int fd; 
+	if(-1 == (fd = open(arg[index + 1], O_RDONLY)))
+	{
+		perror("open failed");
+		
+		exit(1);
+	}
+	if(dup2(fd, 0) == -1)
+	{
+		perror("dup2");
+
+		exit(1);
+	}
+}
+
+//FUNCTION TO HANDLE > AND >>
+void outRe(char* arg, int index, bool second, int ex)//ex is the numused for the extra credit
+{
+	arg[index] = 0;
+	int fd;
+	if(!second)
+	{
+		if(-1 == (fd = open(arg[index + 1], O_WRONLY|O_CREAT|O_TRUNC, 0777)))
+		{
+			perror("open failed");
+
+			exit(1);
+		}
+	}
+	else //if >>
+	{
+		if(-1 == (fd = open(arg[index + 1], O_WRONLY|O_CREAT|O_APPEND, 0777)))
+		{
+			perror("open failed");
+
+			exit(1);
+		}
+	}
+
+
+	if(ex == -1)
+	{
+		if(dup2(fd,1) == -1)
+		{
+			perror("dup2");
+
+			exit(1);
+		}
+	}
+	else
+	{
+		if(dup2(fd,ex) == -1)
+		{
+			perror("dup2");
+
+			exit(1);
+		}
+	}
+}
+
+
+}
 
 int main(int argc, char **argv)
 {
@@ -63,6 +129,16 @@ int main(int argc, char **argv)
 		//account for empty command
 		if(command == "")
 			continue;
+		
+		//remove spaces
+		for(unsigned int i = 0; i < command.size(); i++)
+		{
+			if(command.at(i) == ' ')
+			{
+				command.erase(i,1);
+				i--;
+			}
+		}
 
 		//tokenizer init
 		char_separator<char> delim(" ",";&|#<>");
@@ -390,7 +466,7 @@ int main(int argc, char **argv)
 		//cout << "combined arguements into groups" << endl;
 		if(!syntaxerror)
 		{
-			char *input[999];
+			char **input = new char*[999];
 			//exec commands
 			for(unsigned int i = 0; i < commands.size(); i++)
 			{
@@ -400,7 +476,7 @@ int main(int argc, char **argv)
 				for(unsigned int j = 0; j < commands.at(i).size(); j++) //itterate through letters
 				{
 					current = commands.at(i);
-					cout << "current: " << current << endl;
+					//cout << "current: " << current << endl;
 					if(current[j] == ' ')
 					{
 						input[k] = new char[word.size() + 1];
@@ -410,7 +486,7 @@ int main(int argc, char **argv)
 					}
 					else
 						word += current[j]; //add letter
-					cout << "word: " << word << endl;
+					//cout << "word: " << word << endl;
 				}	
 				input[k] = new char[word.size() + 1];
 				strcpy(input[k], word.c_str());
@@ -526,7 +602,7 @@ int main(int argc, char **argv)
 					if(-1 == status) 
 					{
 						perror("There was an error in execvp.");
-						
+						delete[] input;	
 					}
 					
 					exit(1);
@@ -537,12 +613,13 @@ int main(int argc, char **argv)
 						perror("There was an error with wait().");
 					if(outputRedir1 || outputRedir2 || inputRedir)
 						i = i + 2;
-					for(int z = 0; z < k; z++)
-					{
-						delete[] input[z];
-					}
+					
 				}
-
+				for(int z = 0; z <= k; z++)
+				{
+					delete[] input[z];
+				}
+				delete[] input;
 			}
 
 			//shell termination
