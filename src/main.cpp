@@ -109,7 +109,7 @@ bool rshell(char hostarray, bool finish, string login)
 		return false;
 	
 	//account for #
-	if(command.find('#') !+ string::npos)
+	if(command.find('#') != string::npos)
 	{
 		command = command.substr(0, command.find('#'));
 		//cout << command << endl;
@@ -130,30 +130,31 @@ bool rshell(char hostarray, bool finish, string login)
 	//account for spaces at end of command
 	for(unsigned int i = command.size() - 1; command.at(i) == ' '; i--)
 	{
-		command.pop_back();
+		command.erase(command.size() - 1, 1);
 	}
 
 	bool semicolon = false;
 	bool ampersand = false;
 	bool pipe = false;
-	int legth = 0;
-	
+	int length = 0;
+	string connector = "";
+
 	//find ;
 	if(command.find(';') != string::npos)
 	{
 		semicolon = true;
 		length = 1;
-		connector = ";"
+		connector = ";";
 	}
 	//find &&
-	else if(commands.find("&&") != string::npos)
+	else if(command.find("&&") != string::npos)
 	{
 		ampersand = true;
 		length = 2;
 		connector = "&&";
 	}
 	//find ||
-	else if(commands.find("||") != string::npos)
+	else if(command.find("||") != string::npos)
 	{
 
 		pipe = true;
@@ -173,7 +174,7 @@ bool rshell(char hostarray, bool finish, string login)
 		}
 		for(unsigned int i = command.size() - 1; command.at(i) == ' '; i--)
 		{
-			command.pop_back();
+			command.erase(command.size() - 1, 1);
 		}
 
 	}
@@ -198,7 +199,7 @@ bool rshell(char hostarray, bool finish, string login)
 	//check for connectors without argument in between
 	for(unsigned int i = 1; i < mytok.size(); i++)
 	{
-		if(mytok.at(i) == "," && mytok.at(k - 1) == ",")
+		if(mytok.at(i) == "," && mytok.at(i - 1) == ",")
 		{
 			perror("syntax error");
 
@@ -208,9 +209,9 @@ bool rshell(char hostarray, bool finish, string login)
 
 	//tokenize by placeholders
 	char_separator<char> seps(",");
-	tokenizer<char_separator<char> > toks2(commands, sep);
+	tokenizer<char_separator<char> > toks2(command, seps);
 	//main loop to iterate through
-	for(tokenizer<char_separator<char> >::iterator it = tokens.begin(); it != tokens.edn(); it++)
+	for(tokenizer<char_separator<char> >::iterator it = toks2.begin(); it != toks2.end(); it++)
 	{
 
 		int count = 0;
@@ -223,7 +224,7 @@ bool rshell(char hostarray, bool finish, string login)
 		
 		char** input = new char*[count + 1];
 
-		for(tokenizer<char_separator<char> >::iterator it2=tokens2.begin(); it2 != toks3.end(); it2++)
+		for(tokenizer<char_separator<char> >::iterator it2=toks3.begin(); it2 != toks3.end(); it2++)
 		{
 			//add arguments one token at a time
 			string a = *it2;
@@ -272,6 +273,7 @@ bool rshell(char hostarray, bool finish, string login)
 			return false;
 		}
 	}
+	return false;
 }
 
 
