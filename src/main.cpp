@@ -148,6 +148,10 @@ void magic(char* input[], int x, int ex)
 	{
 		ExecuteCommand(input, x, ex);
 	}
+	else //piping
+	{
+
+	}
 }
 
 bool rshell(char hostarray[64], bool finish, string login)
@@ -250,8 +254,13 @@ bool rshell(char hostarray[64], bool finish, string login)
 	{
 		mytok.push_back(*it);
 	}
+	for(unsigned int i = 0; i < mytok.size(); i++)
+	{
+		cout << "(" << mytok.at(i) << ") ";
+	}
+	cout << endl;
 	//check if connector without prev argument
-	if(mytok.at(0) == ",")
+	if(mytok.at(0) == ".")
 	{
 		perror("syntax error");
 		
@@ -260,7 +269,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 	//check for connectors without argument in between
 	for(unsigned int i = 1; i < mytok.size(); i++)
 	{
-		if(mytok.at(i) == "," && mytok.at(i - 1) == ",")
+		if(mytok.at(i) == "." && mytok.at(i - 1) == ".")
 		{
 			perror("syntax error");
 
@@ -269,7 +278,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 	}
 
 	//tokenize by placeholders
-	char_separator<char> seps(",");
+	char_separator<char> seps(".");
 	tokenizer<char_separator<char> > toks2(command, seps);
 	//main loop to iterate through
 	for(tokenizer<char_separator<char> >::iterator it = toks2.begin(); it != toks2.end(); it++)
