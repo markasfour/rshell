@@ -90,7 +90,7 @@ void placeholder(string &command, string connector, int length)
 }
 
 
-bool rshell(char hostarray, bool finish, string login)
+bool rshell(char hostarray[64], bool finish, string login)
 {
 	//login name and host info prompt
 	if(getlogin() != NULL)
@@ -294,7 +294,10 @@ int main(int argc, char **argv)
 	//rshell loop
 	while(!finish)
 	{
-		bool syntaxerror = false;
+		finish = rshell(hostarray, finish, login);
+	}
+	cout << "goodbye!" << endl;
+	/*	bool syntaxerror = false;
 		int semicolon= 0;
 		int ampersand = 0;
 		int pipe = 0;
@@ -824,6 +827,6 @@ int main(int argc, char **argv)
 				break;
 			}
 		}
-	}
+	}*/
 	return 0;
 }
