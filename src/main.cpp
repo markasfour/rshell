@@ -100,7 +100,7 @@ int findIORe(char* input[], int x, string IO)
 }
 
 
-void ExecuteCommand(char* input[], int x,i int ex)
+void ExecuteCommand(char* input[], int x, int ex)
 {
 	//find all the things for HW2
 	
@@ -110,7 +110,7 @@ void ExecuteCommand(char* input[], int x,i int ex)
 		inRe(input, leftIO);	
 	}
 	int rightIO; // > case
-	if(-1 != ( -1 = findIORe(input, x, ">")))
+	if(-1 != (rightIO  = findIORe(input, x, ">")))
 	{
 		outRe(input, rightIO, false, ex);
 	}
@@ -141,9 +141,13 @@ void ExecuteCommand(char* input[], int x,i int ex)
 	
 }
 
-void magic(char* input[], int x)
+void magic(char* input[], int x, int ex)
 {
-	ExecuteCommand(input, x);
+	int piping;
+	if(-1 == (piping = findIORe(input, x, "|")))//if there is no piping, handle like HW0
+	{
+		ExecuteCommand(input, x, ex);
+	}
 }
 
 bool rshell(char hostarray[64], bool finish, string login)
@@ -194,6 +198,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 	bool pipe = false;
 	int length = 0;
 	string connector = "";
+	int ex = -1; //used for extra credit
 
 	//find ;
 	if(command.find(';') != string::npos)
@@ -305,13 +310,13 @@ bool rshell(char hostarray[64], bool finish, string login)
 		if(-1 == (pid = fork()))
 		{
 			perror("fork");
-			//FIX MEMORY LEAK!!!!!!
+			//FIXed MEMORY LEAK!!!!!!
 			delete[] input;
 			return false;
 		}
 		else if(pid == 0) //child
 		{
-			magic(input, j); //this is where the magic happens :)
+			magic(input, j, ex); //this is where the magic happens :)
 		}
 		else //parent
 		{
