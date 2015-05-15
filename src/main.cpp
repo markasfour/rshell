@@ -16,7 +16,7 @@ using namespace boost;
 int status;
 
 //FUNCTION TO HANDLE <
-void inRe(char * arg[], int index)
+void inRe(char* arg[], int index)
 {
 	arg[index] = 0;
 	int fd; 
@@ -35,7 +35,7 @@ void inRe(char * arg[], int index)
 }
 
 //FUNCTION TO HANDLE > AND >>
-void outRe(char* arg, int index, bool second, int ex)//ex is the numused for the extra credit
+void outRe(char* arg[], int index, bool second, int ex)//ex is the numused for the extra credit
 {
 	arg[index] = 0;
 	int fd;
@@ -90,7 +90,7 @@ void placeholder(string &command, string connector, int length)
 }
 
 
-bool rshell(char hostarray, bool finish)
+bool rshell(char hostarray, bool finish, string login)
 {
 	//login name and host info prompt
 	if(getlogin() != NULL)
@@ -218,12 +218,60 @@ bool rshell(char hostarray, bool finish)
 		tokenizer<char_separator<char> > toks3(*it, spaces);
 		for(tokenizer<char_separator<char> >::iterator it2 = toks3.begin(); it2 != toks3.end(); it2++)
 		{
-			//continue here
+			count++; //count = size of toks3
+		}
+		
+		char** input = new char*[count + 1];
 
-
+		for(tokenizer<char_separator<char> >::iterator it2=tokens2.begin(); it2 != toks3.end(); it2++)
+		{
+			//add arguments one token at a time
+			string a = *it2;
+			input[j] = new char[a.size()];
+			strcpy(input[j], a.c_str());
 
 			j++;
 		}
+
+
+		//check if current arg is exit
+		if(!(strcmp(input[0], "exit")))
+		{
+			cout << "Ending session ..." << endl;
+			return true;
+		}
+
+		input[j] = NULL;
+
+
+		int pid;
+		if(-1 == (pid = fork()))
+		{
+			perror("fork");
+			//FIX MEMORY LEAK!!!!!!
+			delete[] input;
+			exit(1);
+		}
+		else if(pid == 0) //child
+		{
+			//do something
+		}
+		else //parent
+		{
+			if(-1 == waitpid(pid, &status, 0)) //wait for child to finish
+				perror("There was an error with wait().");
+			
+			if(semicolon)
+				continue;
+			if((status == 0) && ampersand)
+				continue;
+			if((status > 0) && pipe)
+				continue;
+
+			delete input;
+			return false;
+		}
+	}
 }
 
 
