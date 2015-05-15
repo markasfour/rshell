@@ -100,13 +100,45 @@ int findIORe(char* input[], int x, string IO)
 }
 
 
-void ExecuteCommand(char* input[], int x)
+void ExecuteCommand(char* input[], int x,i int ex)
 {
 	//find all the things for HW2
 	
-	int leftIO = findIORe(input, x, "<");
-	int rightIO = findIORe(input, x, ">");
-	int right2IO = findIORe(input, x, ">>");
+	int leftIO; //< case
+	if(-1 != (leftIO = findIORe(input, x, "<")))
+	{
+		inRe(input, leftIO);	
+	}
+	int rightIO; // > case
+	if(-1 != ( -1 = findIORe(input, x, ">")))
+	{
+		outRe(input, rightIO, false, ex);
+	}
+	int right2IO; // >> case
+	if(-1 != (right2IO = findIORe(input, x, ">>")))
+	{
+		outRe(input, right2IO, true, ex);
+	}
+	string EX1 = ""; //first extra credit case
+	int rightEX;
+	if(-1 != (rightEX = findIORe(input, x, EX1)))
+	{	
+		outRe(input, rightEX, false, ex);
+	}
+	string EX2 = ""; //second extra credit case
+	int rightEX2;
+	if(-1 != (rightEX2 = findIORe(input, x, EX2)))
+	{
+		outRe(input, rightEX2, true, ex);
+	}
+
+	//EXECVP HERE
+	if(execvp(input[0], input) == -1)
+	{
+		perror("error in execvp");
+		return;
+	}
+	
 }
 
 void magic(char* input[], int x)
