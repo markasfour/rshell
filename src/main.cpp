@@ -89,6 +89,30 @@ void placeholder(string &command, string connector, int length)
 	}
 }
 
+int findIORe(char* input[], int x, string IO)
+{
+	for(int i = 0; i < x; i++)
+	{
+		if(0 ==(strcmp(input[i], IO.c_str())))
+			return i;
+	}
+	return -1;
+}
+
+
+void ExecuteCommand(char* input[], int x)
+{
+	//find all the things for HW2
+	
+	int leftIO = findIORe(input, x, "<");
+	int rightIO = findIORe(input, x, ">");
+	int right2IO = findIORe(input, x, ">>");
+}
+
+void magic(char* input[], int x)
+{
+	ExecuteCommand(input, x);
+}
 
 bool rshell(char hostarray[64], bool finish, string login)
 {
@@ -193,8 +217,8 @@ bool rshell(char hostarray[64], bool finish, string login)
 	if(mytok.at(0) == ",")
 	{
 		perror("syntax error");
-
-		exit(1);
+		
+		return false;
 	}
 	//check for connectors without argument in between
 	for(unsigned int i = 1; i < mytok.size(); i++)
@@ -203,7 +227,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 		{
 			perror("syntax error");
 
-			exit(1);
+			return false;
 		}
 	}
 
@@ -239,7 +263,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 		if(!(strcmp(input[0], "exit")))
 		{
 			cout << "Ending session ..." << endl;
-			return true;
+			return true; //ONLY TIME TO RETURN TRUE!!!!!!!!!!!!!!!!!!!!!!!!
 		}
 
 		input[j] = NULL;
@@ -251,11 +275,11 @@ bool rshell(char hostarray[64], bool finish, string login)
 			perror("fork");
 			//FIX MEMORY LEAK!!!!!!
 			delete[] input;
-			exit(1);
+			return false;
 		}
 		else if(pid == 0) //child
 		{
-			//do something
+			magic(input, j); //this is where the magic happens :)
 		}
 		else //parent
 		{
