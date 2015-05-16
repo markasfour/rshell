@@ -226,7 +226,7 @@ void magic(char* input[], int x, int ex)
 			}
 
 			//RECURSION FOR MULTIPLE PIPES :D
-			magic(left, afterpiping, ex);
+			magic(right, afterpiping, ex);
 
 			if(-1 == dup2(in, 0))
 			{
