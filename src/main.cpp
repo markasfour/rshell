@@ -150,7 +150,92 @@ void magic(char* input[], int x, int ex)
 	}
 	else //piping
 	{
+		//cout << "LOC OF PIPE: " << piping << endl;
+		int afterpiping = 0; //used to fill in array of right side of pipe
+		char* left[999]; //left of the pipe
+		char* right[999]; //right of the pipe;
+		
+		for(int i = 0; i < piping; i++)
+		{
+			left[i] = input[i]; //fill first half of input into left
+		}
+		left[piping] = '\0';
 
+		for(int i = piping + 1; input[i] != '\0'; i++)
+		{
+			right[afterpiping] = input[i];
+			afterpiping++;
+		}
+		right[afterpiping] = '\0';
+
+
+		//based off of Izbicki's lecture......hope this works
+		int fd[2];
+		if(pipe(fd) == -1)
+		{
+			perror("error with pipe");
+			exit(1);
+		}
+		int pid;
+		if(-1 == (pid = fork()))
+		{
+			perror("error with fork");
+			exit(1);
+		}
+		else if(pid == 0) //child
+		{
+			if(-1 == dup2(fd[1],1))
+			{
+				perror("error with dup2");
+				exit(1);
+			}
+			if(-1 == close(fd[0]))
+			{
+				perror("error with close");
+				exit(1);
+			}
+
+			ExecuteCommand(left, piping, ex); //run left of pipe
+		}
+
+		else //parent
+		{
+			int in = 0; //standard in
+
+			if(-1 == close(fd[1]))
+			{
+				perror("error with close");
+				exit(1);
+			}
+
+			if(-1 == (in = dup(0)))
+			{
+				perror("error with dup");
+				exit(1);
+			}
+			if(-1 == dup2(fd[0],0))
+			{
+				perror("error with dup2");
+				exit(1);
+			}
+			//wait for child
+			if(wait(0) == -1) //wait(0) is wait for child
+			{
+				perror("error with wait");
+				exit(1);
+			}
+
+			//RECURSION FOR MULTIPLE PIPES :D
+			magic(left, afterpiping, ex);
+
+			if(-1 == dup2(in, 0))
+			{
+				perror("error with dup2");
+				exit(1);
+			}
+
+			
+		}
 	}
 }
 
