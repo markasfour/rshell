@@ -380,7 +380,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 		if(comment == 0)
 			return false;
 		command.erase(comment, command.size() - comment);
-		cout << command << endl;
+		//cout << command << endl;
 	}
 
 	//account for spaces at start of command
@@ -494,11 +494,11 @@ bool rshell(char hostarray[64], bool finish, string login)
 	{
 		mytok.push_back(*it);
 	}
-	for(unsigned int i = 0; i < mytok.size(); i++)
-	{
-		cout << "(" << mytok.at(i) << ") ";
-	}
-	cout << endl;
+	//for(unsigned int i = 0; i < mytok.size(); i++)
+	//{
+	//	cout << "(" << mytok.at(i) << ") ";
+	//}
+	//cout << endl;
 	
 	//check if connector without prev argument
 	if(mytok.at(0) == "%")
