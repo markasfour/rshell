@@ -17,8 +17,9 @@ using namespace boost;
 void inRe(char* arg[], int index)
 {
 	arg[index] = 0;
-	int fd; 
-	if(-1 == (fd = open(arg[index + 1], O_RDONLY)))
+	int fd = open(arg[index + 1], O_RDONLY); 
+	cout << arg[index + 1] << endl;
+	if(-1 == fd)
 	{
 		perror("open failed");
 		
@@ -30,6 +31,7 @@ void inRe(char* arg[], int index)
 
 		exit(1);
 	}
+	cout << "wut" << endl;
 }
 
 //FUNCTION TO HANDLE > AND >>
@@ -118,7 +120,7 @@ bool parseIO(string & command, int & ex)
 			{
 				i--;
 				ex = command.at(i) - '0'; //char to num value
-
+				cout << ex << endl;
 				string a = " " + command.at(i);
 				a+= "> ";
 				command.replace(i,2,a);
@@ -131,9 +133,10 @@ bool parseIO(string & command, int & ex)
 			}
 		}
 		//check >>
-		else if(command.compare(i, 2, " >>") == 0)
+		else if(command.compare(i, 2, ">>") == 0)
 		{
 			out++;
+			cout << command.at(i - 1) << endl;
 			if(out > 1)
 			{
 				manyright = true;
@@ -142,7 +145,7 @@ bool parseIO(string & command, int & ex)
 			{
 				i--;
 				ex = command.at(i) - '0'; //char to num value
-
+				cout << ex << endl;
 				string a = " " + command.at(i);
 				a+= ">> ";
 				command.replace(i,3,a);
@@ -204,36 +207,43 @@ void ExecuteCommand(char* input[], int x, int ex)
 	int right2IO; // >> case
 	int rightEX; // first extra credit case
 	int rightEX2; //second extra credit case
-	string EX1;
-	string EX2;
+	string EX1 = "";
+	EX1.push_back(ex);
+	EX1 += ">";
+	string EX2 = "";
+	EX2.push_back(ex);
+	EX2 += ">>";
 	if(-1 != (leftIO = findIORe(input, x, "<")))
 	{
-		//cout << "HERE 1 " << endl;
+		cout << "HERE 1 " << endl;
 
 		inRe(input, leftIO);	
 	}
 	//int rightIO; // > case
 	if(-1 != (rightIO  = findIORe(input, x, ">")))
 	{
-		//cout << "HERE 2 " << endl;
+		cout << "HERE 2 " << endl;
 		outRe(input, rightIO, false, ex);
 	}
 	//int right2IO; // >> case
 	else if(-1 != (right2IO = findIORe(input, x, ">>")))
 	{
-		//cout << "HERE 3 " << endl;
+		cout << "HERE 3 " << endl;
 		outRe(input, right2IO, true, ex);
 	}
 	//string EX1 = ""; //first extra credit case
 	//int rightEX;
 	else if(-1 != (rightEX = findIORe(input, x, EX1)))
 	{	
+		cout << "HELLO 2" << endl;
 		outRe(input, rightEX, false, ex);
 	}
 	//string EX2 = ""; //second extra credit case
 	//int rightEX2;
 	else if(-1 != (rightEX2 = findIORe(input, x, EX2)))
 	{
+		cout << "HELLO" << endl;
+		cout << rightEX2 << endl;
 		outRe(input, rightEX2, true, ex);
 	}
 	//cout << "EXECUTING: " << endl;
