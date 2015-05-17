@@ -412,7 +412,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 		while(command.find(connector) != string::npos)
 		{
 			int find = command.find(connector);
-			command.replace(find, length, " . ");
+			command.replace(find, length, " % ");
 		}
 		for(unsigned int i = command.size() - 1; command.at(i) == ' '; i--)
 		{
@@ -434,7 +434,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 		while(command.find(connector) != string::npos)
 		{
 			int find = command.find(connector);
-			command.replace(find, length, " . ");
+			command.replace(find, length, " % ");
 		}
 		for(unsigned int i = command.size() - 1; command.at(i) == ' '; i--)
 		{
@@ -458,7 +458,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 		while(command.find(connector) != string::npos)
 		{
 			int find = command.find(connector);
-			command.replace(find, length, " . ");
+			command.replace(find, length, " % ");
 		}
 		for(unsigned int i = command.size() - 1; command.at(i) == ' '; i--)
 		{
@@ -489,7 +489,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 	//cout << endl;
 	
 	//check if connector without prev argument
-	if(mytok.at(0) == ".")
+	if(mytok.at(0) == "%")
 	{
 		perror("syntax error");
 		
@@ -498,7 +498,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 	//check for connectors without argument in between
 	for(unsigned int i = 1; i < mytok.size(); i++)
 	{
-		if(mytok.at(i) == "." && mytok.at(i - 1) == ".")
+		if(mytok.at(i) == "%" && mytok.at(i - 1) == "%")
 		{
 			perror("syntax error");
 
@@ -507,7 +507,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 	}
 
 	//tokenize by placeholders
-	char_separator<char> seps(".");
+	char_separator<char> seps("%");
 	tokenizer<char_separator<char> > toks2(command, seps);
 	//main loop to iterate through
 	for(tokenizer<char_separator<char> >::iterator it = toks2.begin(); it != toks2.end(); it++)
