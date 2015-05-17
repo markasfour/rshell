@@ -13,77 +13,12 @@ using namespace std;
 using namespace boost;
 
 
-//FUNCTION TO HANDLE <
-void inRe(char* arg[], int index)
+void placeholder(string &command, string connector, int length)
 {
-	arg[index] = 0;
-	int fd = open(arg[index + 1], O_RDONLY); 
-	//cout << arg[index + 1] << endl;
-	if(-1 == fd)
+	while(command.find(connector) != string::npos)
 	{
-		perror("open failed");
-		
-		exit(1);
-	}
-	if(dup2(fd, 0) == -1)
-	{
-		perror("dup2");
-
-		exit(1);
-	}
-	//cout << "wut" << endl;
-}
-
-//FUNCTION TO HANDLE > AND >>
-void outRe(char* arg[], int index, bool second, int ex)//ex is the numused for the extra credit
-{
-	//cout << arg[index] << endl;
-	arg[index] = NULL;
-	int fd;
-	if(!second)
-	{
-		//cout << "EXECUTING: " << endl;
-		//for(int i = 0; arg[i] != NULL; i++)
-		//	cout << arg[i] << endl;
-
-		if(-1 == (fd = open(arg[index + 1], O_WRONLY|O_CREAT|O_TRUNC, 0777)))
-		{
-			perror("open failed");
-
-			exit(1);
-		}
-		//cout << "WOW IM HERE" << endl;
-	}
-	else //if >>
-	{
-		if(-1 == (fd = open(arg[index + 1], O_WRONLY|O_CREAT|O_APPEND, 0777)))
-		{
-			perror("open failed");
-
-			exit(1);
-		}
-	}
-
-
-	if(ex == -1)
-	{
-		//cout << "IM HERE NOW" << endl;
-		if(dup2(fd,1) == -1)
-		{
-			perror("error with dup2");
-
-			exit(1);
-		}
-		//cout << "WHOA" << endl;
-	}
-	else
-	{
-		if(dup2(fd,ex) == -1)
-		{
-			perror("error with dup2");
-
-			exit(1);
-		}
+		int index = command.find(connector);
+		command.replace(index, length, " % ");
 	}
 }
 
@@ -108,9 +43,11 @@ bool parseIO(string & command, int & ex)
 			i+= 3;
 		}
 		//check >
-		else if((command.compare(i, 1, ">") == 0) && (command.compare(i - 1, 1, ">") != 0) && (command.compare(i + 1, 1, ">") != 0)) //check that it is only > and not >>
+		else if((command.compare(i, 1, ">") == 0) && (command.compare(i + 1, 1, ">") != 0) && (command.compare(i - 1, 1, ">") != 0)) //check that it is only > and not >>
 		{
+			//cout << "current: " << command.at(i) << endl;
 			out++;
+			//cout << "OUT: " << out << endl;
 			if(out > 1)
 			{
 				manyright = true;
@@ -167,8 +104,9 @@ bool parseIO(string & command, int & ex)
 
 		if(manyleft || manyright)
 		{
+			cout << "left: " << in << " right: " << out << endl;
 			perror("syntax error");
-			//cout << "SIGH 3" << endl;
+			cout << "SIGH 3" << endl;
 			return false;
 		}
 			
@@ -178,15 +116,6 @@ bool parseIO(string & command, int & ex)
 }
 
 
-void placeholder(string &command, string connector, int length)
-{
-	while(command.find(connector) != string::npos)
-	{
-		int index = command.find(connector);
-		command.replace(index, length, " . ");
-	}
-}
-
 int findIORe(char* input[], int x, string IO)
 {
 	for(int i = 0; i < x; i++)
@@ -195,6 +124,80 @@ int findIORe(char* input[], int x, string IO)
 			return i;
 	}
 	return -1;
+}
+
+//FUNCTION TO HANDLE <
+void inRe(char* arg[], int index)
+{
+	arg[index] = 0;
+	int fd = open(arg[index + 1], O_RDONLY); 
+	//cout << arg[index + 1] << endl;
+	if(-1 == fd)
+	{
+		perror("open failed");
+		
+		exit(1);
+	}
+	if(dup2(fd, 0) == -1)
+	{
+		perror("dup2");
+		cout << "" << endl;
+		exit(1);
+	}
+	//cout << "wut" << endl;
+}
+
+//FUNCTION TO HANDLE > AND >>
+void outRe(char* arg[], int index, bool second, int ex)//ex is the numused for the extra credit
+{
+	//cout << arg[index] << endl;
+	arg[index] = NULL;
+	int fd;
+	if(!second)
+	{
+		//cout << "EXECUTING: " << endl;
+		//for(int i = 0; arg[i] != NULL; i++)
+		//	cout << arg[i] << endl;
+
+		if(-1 == (fd = open(arg[index + 1], O_WRONLY|O_CREAT|O_TRUNC, 0777)))
+		{
+			perror("open failed");
+
+			exit(1);
+		}
+		//cout << "WOW IM HERE" << endl;
+	}
+	else //if >>
+	{
+		if(-1 == (fd = open(arg[index + 1], O_WRONLY|O_CREAT|O_APPEND, 0777)))
+		{
+			perror("open failed");
+
+			exit(1);
+		}
+	}
+
+
+	if(ex == -1)
+	{
+		//cout << "IM HERE NOW" << endl;
+		if(dup2(fd,1) == -1)
+		{
+			perror("error with dup2");
+
+			exit(1);
+		}
+		//cout << "WHOA" << endl;
+	}
+	else
+	{
+		if(dup2(fd,ex) == -1)
+		{
+			perror("error with dup2");
+
+			exit(1);
+		}
+	}
 }
 
 
@@ -486,7 +489,10 @@ bool rshell(char hostarray[64], bool finish, string login)
 	worked = parseIO(command, ex);
 	if(!worked)
 		return false;
-
+	//for(unsigned int i = 0; i < command.size(); i++)
+	//{
+	//	cout << command.at(i) << endl;
+	//}
 	
 	//tokenize
 	vector<string> mytok;
@@ -497,17 +503,17 @@ bool rshell(char hostarray[64], bool finish, string login)
 	{
 		mytok.push_back(*it);
 	}
-	//for(unsigned int i = 0; i < mytok.size(); i++)
-	//{
-	//	cout << "(" << mytok.at(i) << ") ";
-	//}
-	//cout << endl;
+	for(unsigned int i = 0; i < mytok.size(); i++)
+	{
+		cout << "(" << mytok.at(i) << ") ";
+	}
+	cout << endl;
 	
 	//check if connector without prev argument
 	if(mytok.at(0) == "%")
 	{
 		perror("syntax error");
-		//cout << "SIGH" << endl;	
+		cout << "" << endl; //THIS HAS TO B HERE TO WORK APPARENTLY	
 		return false;
 	}
 	//check for connectors without argument in between
@@ -516,7 +522,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 		if(mytok.at(i) == "%" && mytok.at(i - 1) == "%")
 		{
 			perror("syntax error");
-			//cout << "SIGH 2" << endl;
+			cout << "" << endl; //THIS HAS TO BE HERE TO WORK APPARENTLY...
 			return false;
 		}
 	}
