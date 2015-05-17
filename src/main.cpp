@@ -13,8 +13,6 @@ using namespace std;
 using namespace boost;
 
 
-int status;
-
 //FUNCTION TO HANDLE <
 void inRe(char* arg[], int index)
 {
@@ -333,6 +331,8 @@ void magic(char* input[], int x, int ex)
 
 bool rshell(char hostarray[64], bool finish, string login)
 {
+	int status = 0;
+	
 	//login name and host info prompt
 	if(getlogin() != NULL)
 		cout << login << "@" << hostarray;
@@ -388,28 +388,8 @@ bool rshell(char hostarray[64], bool finish, string login)
 		length = 1;
 		connector = ";";
 	}
-	//find &&
-	else if(command.find("&&") != string::npos)
-	{
-		ampersand = true;
-		length = 2;
-		connector = "&&";
-	}
-	//find ||
-	else if(command.find("||") != string::npos)
-	{
 
-		pipe = true;
-		length = 2;
-		connector = "||";
-	}
-
-	bool worked = true;
-	worked = parseIO(command, ex);
-	if(!worked)
-		return false;
-
-	if(semicolon || ampersand || pipe)
+	if(semicolon)
 	{
 		while(command.find(connector) != string::npos)
 		{
@@ -422,6 +402,57 @@ bool rshell(char hostarray[64], bool finish, string login)
 		}
 
 	}
+
+	//find &&
+	if(command.find("&&") != string::npos)
+	{
+		ampersand = true;
+		length = 2;
+		connector = "&&";
+	}
+
+	if(ampersand)
+	{
+		while(command.find(connector) != string::npos)
+		{
+			int find = command.find(connector);
+			command.replace(find, length, " . ");
+		}
+		for(unsigned int i = command.size() - 1; command.at(i) == ' '; i--)
+		{
+			command.erase(command.size() - 1, 1);
+		}
+
+	}
+
+	//find ||
+	if(command.find("||") != string::npos)
+	{
+
+		pipe = true;
+		length = 2;
+		connector = "||";
+	}
+
+
+	if(pipe)
+	{
+		while(command.find(connector) != string::npos)
+		{
+			int find = command.find(connector);
+			command.replace(find, length, " . ");
+		}
+		for(unsigned int i = command.size() - 1; command.at(i) == ' '; i--)
+		{
+			command.erase(command.size() - 1, 1);
+		}
+
+	}
+
+	bool worked = true;
+	worked = parseIO(command, ex);
+	if(!worked)
+		return false;
 
 	
 	//tokenize
