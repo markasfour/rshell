@@ -80,6 +80,94 @@ void outRe(char* arg[], int index, bool second, int ex)//ex is the numused for t
 }
 
 
+bool parseIO(string & command, int & ex)
+{
+	int in = 0;
+	int out = 0;
+	bool manyleft = false;
+	bool manyright = false;
+	for(unsigned int i = 0; i < command.size(); i++)
+	{
+		//check <
+		if(0 == command.compare(i,1,"<"))
+		{
+			in++;
+			if(in > 1)
+			{
+				manyleft = true;
+			}
+			command.replace(i,1," < ");
+			i+= 3;
+		}
+		//check >
+		else if((command.compare(i, 1, ">") == 0) && (command.compare(i - 1, 1, ">") != 0) && (command.compare(i + 1, 1, ">") != 0)) //check that it is only > and not >>
+		{
+			out++;
+			if(out > 1)
+			{
+				manyright = true;
+			}
+
+			if(isdigit(command.at(i - 1))) //EXTRA CREDIT
+			{
+				i--;
+				ex = command.at(i) - '0'; //char to num value
+
+				string a = " " + command.at(i);
+				a+= "> ";
+				command.replace(i,2,a);
+				i += 4;
+			}
+			else
+			{
+				command.replace(i, 1, " > ");
+				i += 3;
+			}
+		}
+		//check >>
+		else if(command.compare(i, 2, " >>") == 0)
+		{
+			out++;
+			if(out > 1)
+			{
+				manyright = true;
+			}
+			if(isdigit(command.at(i - 1)))
+			{
+				i--;
+				ex = command.at(i) - '0'; //char to num value
+
+				string a = " " + command.at(i);
+				a+= ">> ";
+				command.replace(i,3,a);
+				i += 5;
+			}
+			else
+			{
+				command.replace(i, 2, " >> ");
+				i += 4;
+			}
+		}
+		//check |
+		else if(command.compare(i, 1, "|") == 0)
+		{
+			command.replace(i, 1, " | ");
+			i += 3;
+		}
+
+
+		if(manyleft || manyright)
+		{
+			perror("syntax error");
+			return false;
+		}
+			
+	}
+	return true;
+
+}
+
+
 void placeholder(string &command, string connector, int length)
 {
 	while(command.find(connector) != string::npos)
@@ -131,12 +219,16 @@ void ExecuteCommand(char* input[], int x, int ex)
 	{
 		outRe(input, rightEX2, true, ex);
 	}
-
+	cout << "EXECUTING: " << endl;
+	
+	for(int i = 0; input[i] != NULL; i++)
+		cout << input[i] << endl;
+	
 	//EXECVP HERE
 	if(execvp(input[0], input) == -1)
 	{
 		perror("error in execvp");
-		return;
+		exit(1);
 	}
 	
 }
@@ -312,9 +404,11 @@ bool rshell(char hostarray[64], bool finish, string login)
 		connector = "||";
 	}
 
+	bool worked = true;
+	worked = parseIO(command, ex);
+	if(!worked)
+		return false;
 
-	//Redir(command);
-	
 	if(semicolon || ampersand || pipe)
 	{
 		while(command.find(connector) != string::npos)
@@ -344,6 +438,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 		cout << "(" << mytok.at(i) << ") ";
 	}
 	cout << endl;
+	
 	//check if connector without prev argument
 	if(mytok.at(0) == ".")
 	{
@@ -391,7 +486,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 
 
 		//check if current arg is exit
-		if(!(strcmp(input[0], "exit")))
+		if(0 == (strcmp(input[0], "exit")))
 		{
 			cout << "Ending session ..." << endl;
 			return true; //ONLY TIME TO RETURN TRUE!!!!!!!!!!!!!!!!!!!!!!!!
