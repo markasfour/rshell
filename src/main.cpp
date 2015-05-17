@@ -165,6 +165,7 @@ bool parseIO(string & command, int & ex)
 		if(manyleft || manyright)
 		{
 			perror("syntax error");
+			cout << "SIGH 3" << endl;
 			return false;
 		}
 			
@@ -495,7 +496,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 	if(mytok.at(0) == "%")
 	{
 		perror("syntax error");
-		
+		cout << "SIGH" << endl;	
 		return false;
 	}
 	//check for connectors without argument in between
@@ -504,7 +505,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 		if(mytok.at(i) == "%" && mytok.at(i - 1) == "%")
 		{
 			perror("syntax error");
-
+			cout << "SIGH 2" << endl;
 			return false;
 		}
 	}
