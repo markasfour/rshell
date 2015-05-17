@@ -325,7 +325,7 @@ void magic(char* input[], int x, int ex, char numChar)
 				exit(1);
 			}
 
-			in = dup(0);
+			//in = dup(0);
 			if(-1 == (in = dup(0)))
 			{
 				perror("error with dup");
