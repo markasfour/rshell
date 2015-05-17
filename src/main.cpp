@@ -16,103 +16,98 @@ using namespace boost;
 void placeholder(string &command, string connector, int length)
 {
 	while(command.find(connector) != string::npos)
-	{
-		int index = command.find(connector);
-		command.replace(index, length, " % ");
+    {
+		int index =command.find(connector);
+		command.replace(index, length, " , ");
 	}
 }
 
 
-bool parseIO(string & command, int & ex)
+bool parseIO(string & command, int & ex, char & numChar)
 {
-	int in = 0;
-	int out = 0;
-	bool manyleft = false;
-	bool manyright = false;
-	for(unsigned int i = 0; i < command.size(); i++)
+	bool multIn = false;
+	bool multOut = false;
+	int in=0;
+	int out=0;
+	for(int i=0;(size_t)i < command.size();i++)
 	{
-		//check <
-		if(0 == command.compare(i,1,"<"))
+		string msg;
+		if(command.compare(i,1,"<")==0)
 		{
 			in++;
 			if(in > 1)
 			{
-				manyleft = true;
+				multIn = true;
+				msg = "input";
 			}
 			command.replace(i,1," < ");
-			i+= 3;
+			i = i+3;
 		}
-		//check >
-		else if((command.compare(i, 1, ">") == 0) && (command.compare(i + 1, 1, ">") != 0) && (command.compare(i - 1, 1, ">") != 0)) //check that it is only > and not >>
+		else if((command.compare(i,1,">")==0)&& (command.compare(i+1,1,">")!=0) && (command.compare(i-1,1,">")!=0)) 
 		{
-			//cout << "current: " << command.at(i) << endl;
 			out++;
-			//cout << "OUT: " << out << endl;
 			if(out > 1)
 			{
-				manyright = true;
+				multOut = true;
+				msg = "output";
 			}
-
-			if(isdigit(command.at(i - 1))) //EXTRA CREDIT
+			if(isdigit(command[i-1]))
 			{
 				i--;
-				ex = command.at(i) - '0'; //char to num value
-				//cout << ex << endl;
-				string a = " " + command.at(i);
-				a+= "> ";
-				command.replace(i,2,a);
-				i += 4;
+				ex = command.at(i) - '0';
+				numChar = command.at(i);
+				string temp="";
+				temp.append(" ");
+				temp.push_back(numChar);
+				temp.append("> ");
+				command.replace(i,2,temp);
+				i=i+4;
 			}
 			else
 			{
-				command.replace(i, 1, " > ");
-				i += 3;
+				command.replace (i, 1, " > ");
+				i = i+3;
 			}
 		}
-		//check >>
-		else if(command.compare(i, 2, ">>") == 0)
+		else if(command.compare(i,2,">>")==0)
 		{
 			out++;
-			//cout << command.at(i - 1) << endl;
 			if(out > 1)
 			{
-				manyright = true;
+				multOut = true;
+				msg = "output";
 			}
-			if(isdigit(command.at(i - 1)))
+			if(isdigit(command[i-1]))
 			{
 				i--;
-				ex = command.at(i) - '0'; //char to num value
-				//cout << ex << endl;
-				string a = " " + command.at(i);
-				a+= ">> ";
-				command.replace(i,3,a);
-				i += 5;
+				ex = command.at(i) - '0';
+				numChar = command.at(i);
+				string temp="";
+				temp.append(" ");
+				temp.push_back(numChar);
+				temp.append(">> ");
+				command.replace(i,3,temp);
+				i=i+5;
 			}
 			else
 			{
-				command.replace(i, 2, " >> ");
-				i += 4;
+				command.replace (i, 2, " >> ");
+				i = i+4;
 			}
 		}
-		//check |
-		else if(command.compare(i, 1, "|") == 0)
+		else if(command.compare(i,1,"|") ==0)
 		{
-			command.replace(i, 1, " | ");
-			i += 3;
+			command.replace(i,1," | ");
+			i = i+3;
 		}
-
-
-		if(manyleft || manyright)
+		if(multIn || multOut)
 		{
-			cout << "left: " << in << " right: " << out << endl;
-			perror("syntax error");
-			cout << "SIGH 3" << endl;
+			cout << "Error: This program only supports one instance of " << msg << " redirection." << endl;
+			
 			return false;
 		}
-			
 	}
 	return true;
-
 }
 
 
@@ -201,7 +196,7 @@ void outRe(char* arg[], int index, bool second, int ex)//ex is the numused for t
 }
 
 
-void ExecuteCommand(char* input[], int x, int ex)
+void ExecuteCommand(char* input[], int x, int ex, char numChar)
 {
 	//find all the things for HW2
 	
@@ -211,10 +206,10 @@ void ExecuteCommand(char* input[], int x, int ex)
 	int rightEX; // first extra credit case
 	int rightEX2; //second extra credit case
 	string EX1 = "";
-	EX1.push_back(ex);
+	EX1.push_back(numChar);
 	EX1 += ">";
 	string EX2 = "";
-	EX2.push_back(ex);
+	EX2.push_back(numChar);
 	EX2 += ">>";
 	if(-1 != (leftIO = findIORe(input, x, "<")))
 	{
@@ -263,12 +258,12 @@ void ExecuteCommand(char* input[], int x, int ex)
 	
 }
 
-void magic(char* input[], int x, int ex)
+void magic(char* input[], int x, int ex, char numChar)
 {
 	int piping;
 	if(-1 == (piping = findIORe(input, x, "|")))//if there is no piping, handle like HW0
 	{
-		ExecuteCommand(input, x, ex);
+		ExecuteCommand(input, x, ex, numChar);
 	}
 	else //piping
 	{
@@ -317,7 +312,7 @@ void magic(char* input[], int x, int ex)
 				exit(1);
 			}
 
-			ExecuteCommand(left, piping, ex); //run left of pipe
+			ExecuteCommand(left, piping, ex, numChar); //run left of pipe
 		}
 
 		else //parent
@@ -349,7 +344,7 @@ void magic(char* input[], int x, int ex)
 			}
 
 			//RECURSION FOR MULTIPLE PIPES :D
-			magic(right, afterpiping, ex);
+			magic(right, afterpiping, ex, numChar);
 
 			if(-1 == dup2(in, 0))
 			{
@@ -365,7 +360,7 @@ void magic(char* input[], int x, int ex)
 bool rshell(char hostarray[64], bool finish, string login)
 {
 	int status = 0;
-	
+	char numChar = '\0';
 	//login name and host info prompt
 	if(getlogin() != NULL)
 		cout << login << "@" << hostarray;
@@ -486,7 +481,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 	}
 
 	bool worked = true;
-	worked = parseIO(command, ex);
+	worked = parseIO(command, ex, numChar);
 	if(!worked)
 		return false;
 	//for(unsigned int i = 0; i < command.size(); i++)
@@ -580,7 +575,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 			//	cout << input[i] << endl;
 	
 
-			magic(input, j, ex); //this is where the magic happens :)
+			magic(input, j, ex, numChar); //this is where the magic happens :)
 		}
 		else //parent
 		{
