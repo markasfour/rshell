@@ -35,16 +35,22 @@ void inRe(char* arg[], int index)
 //FUNCTION TO HANDLE > AND >>
 void outRe(char* arg[], int index, bool second, int ex)//ex is the numused for the extra credit
 {
-	arg[index] = 0;
+	//cout << arg[index] << endl;
+	arg[index] = NULL;
 	int fd;
 	if(!second)
 	{
+		//cout << "EXECUTING: " << endl;
+		//for(int i = 0; arg[i] != NULL; i++)
+		//	cout << arg[i] << endl;
+
 		if(-1 == (fd = open(arg[index + 1], O_WRONLY|O_CREAT|O_TRUNC, 0777)))
 		{
 			perror("open failed");
 
 			exit(1);
 		}
+		//cout << "WOW IM HERE" << endl;
 	}
 	else //if >>
 	{
@@ -59,18 +65,20 @@ void outRe(char* arg[], int index, bool second, int ex)//ex is the numused for t
 
 	if(ex == -1)
 	{
+		//cout << "IM HERE NOW" << endl;
 		if(dup2(fd,1) == -1)
 		{
-			perror("dup2");
+			perror("error with dup2");
 
 			exit(1);
 		}
+		//cout << "WHOA" << endl;
 	}
 	else
 	{
 		if(dup2(fd,ex) == -1)
 		{
-			perror("dup2");
+			perror("error with dup2");
 
 			exit(1);
 		}
@@ -191,36 +199,46 @@ void ExecuteCommand(char* input[], int x, int ex)
 	//find all the things for HW2
 	
 	int leftIO; //< case
+	int rightIO; // > case
+	int right2IO; // >> case
+	int rightEX; // first extra credit case
+	int rightEX2; //second extra credit case
+	string EX1;
+	string EX2;
 	if(-1 != (leftIO = findIORe(input, x, "<")))
 	{
+		//cout << "HERE 1 " << endl;
+
 		inRe(input, leftIO);	
 	}
-	int rightIO; // > case
+	//int rightIO; // > case
 	if(-1 != (rightIO  = findIORe(input, x, ">")))
 	{
+		//cout << "HERE 2 " << endl;
 		outRe(input, rightIO, false, ex);
 	}
-	int right2IO; // >> case
-	if(-1 != (right2IO = findIORe(input, x, ">>")))
+	//int right2IO; // >> case
+	else if(-1 != (right2IO = findIORe(input, x, ">>")))
 	{
+		//cout << "HERE 3 " << endl;
 		outRe(input, right2IO, true, ex);
 	}
-	string EX1 = ""; //first extra credit case
-	int rightEX;
-	if(-1 != (rightEX = findIORe(input, x, EX1)))
+	//string EX1 = ""; //first extra credit case
+	//int rightEX;
+	else if(-1 != (rightEX = findIORe(input, x, EX1)))
 	{	
 		outRe(input, rightEX, false, ex);
 	}
-	string EX2 = ""; //second extra credit case
-	int rightEX2;
-	if(-1 != (rightEX2 = findIORe(input, x, EX2)))
+	//string EX2 = ""; //second extra credit case
+	//int rightEX2;
+	else if(-1 != (rightEX2 = findIORe(input, x, EX2)))
 	{
 		outRe(input, rightEX2, true, ex);
 	}
-	cout << "EXECUTING: " << endl;
+	//cout << "EXECUTING: " << endl;
 	
-	for(int i = 0; input[i] != NULL; i++)
-		cout << input[i] << endl;
+	//for(int i = 0; input[i] != NULL; i++)
+	//	cout << input[i] << endl;
 	
 	//EXECVP HERE
 	if(execvp(input[0], input) == -1)
@@ -464,11 +482,11 @@ bool rshell(char hostarray[64], bool finish, string login)
 	{
 		mytok.push_back(*it);
 	}
-	for(unsigned int i = 0; i < mytok.size(); i++)
-	{
-		cout << "(" << mytok.at(i) << ") ";
-	}
-	cout << endl;
+	//for(unsigned int i = 0; i < mytok.size(); i++)
+	//{
+	//	cout << "(" << mytok.at(i) << ") ";
+	//}
+	//cout << endl;
 	
 	//check if connector without prev argument
 	if(mytok.at(0) == ".")
@@ -536,6 +554,11 @@ bool rshell(char hostarray[64], bool finish, string login)
 		}
 		else if(pid == 0) //child
 		{
+			//cout << "EXECUTING: " << endl;
+			//for(int i = 0; input[i] != NULL; i++)
+			//	cout << input[i] << endl;
+	
+
 			magic(input, j, ex); //this is where the magic happens :)
 		}
 		else //parent
