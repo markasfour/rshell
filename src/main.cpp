@@ -370,8 +370,11 @@ bool rshell(char hostarray[64], bool finish, string login)
 	//account for #
 	if(command.find('#') != string::npos)
 	{
-		command = command.substr(0, command.find('#'));
-		//cout << command << endl;
+		int comment = command.find("#");
+		if(comment == 0)
+			return false;
+		command.erase(comment, command.size() - comment);
+		cout << command << endl;
 	}
 
 	//account for spaces at start of command
