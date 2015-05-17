@@ -25,20 +25,20 @@ void placeholder(string &command, string connector, int length)
 
 bool parseIO(string & command, int & ex, char & numChar)
 {
-	bool multIn = false;
-	bool multOut = false;
-	int in=0;
-	int out=0;
+	int in = 0;
+	bool manyleft = false;
+	
+	int out = 0;
+	bool manyright = false;
 	for(int i=0;(size_t)i < command.size();i++)
 	{
-		string msg;
+		//cout << "HERE WE HAVE: " << command.at(i) << endl;
 		if(command.compare(i,1,"<")==0)
 		{
 			in++;
 			if(in > 1)
 			{
-				multIn = true;
-				msg = "input";
+				manyleft = true;
 			}
 			command.replace(i,1," < ");
 			i = i+3;
@@ -48,20 +48,19 @@ bool parseIO(string & command, int & ex, char & numChar)
 			out++;
 			if(out > 1)
 			{
-				multOut = true;
-				msg = "output";
+				manyright = true;
 			}
-			if(isdigit(command[i-1]))
+			if(isdigit(command.at(i-1)))
 			{
-				i--;
-				ex = command.at(i) - '0';
-				numChar = command.at(i);
+				//cout << command.at(i-1) << endl;
+				ex = command.at(i-1) - '0';//convert char to num value
+				numChar = command.at(i-1);
 				string temp="";
 				temp.append(" ");
 				temp.push_back(numChar);
 				temp.append("> ");
-				command.replace(i,2,temp);
-				i=i+4;
+				command.replace(i-1,2,temp);
+				i=i+3;
 			}
 			else
 			{
@@ -74,20 +73,19 @@ bool parseIO(string & command, int & ex, char & numChar)
 			out++;
 			if(out > 1)
 			{
-				multOut = true;
-				msg = "output";
+				manyright = true;
 			}
-			if(isdigit(command[i-1]))
+			if(isdigit(command.at(i-1)))
 			{
-				i--;
-				ex = command.at(i) - '0';
-				numChar = command.at(i);
+				//cout << command.at(i-1) << endl;
+				ex = command.at(i-1) - '0'; //convert chart to num value
+				numChar = command.at(i-1);
 				string temp="";
 				temp.append(" ");
 				temp.push_back(numChar);
 				temp.append(">> ");
-				command.replace(i,3,temp);
-				i=i+5;
+				command.replace(i-1,3,temp);
+				i=i+4;
 			}
 			else
 			{
@@ -100,9 +98,10 @@ bool parseIO(string & command, int & ex, char & numChar)
 			command.replace(i,1," | ");
 			i = i+3;
 		}
-		if(multIn || multOut)
+		if(manyleft || manyright)
 		{
-			cout << "Error: This program only supports one instance of " << msg << " redirection." << endl;
+			//cout << "in:" << in << "out:" << out << endl;
+			cout << "Error: Too many instances of redirection." << endl;
 			
 			return false;
 		}
@@ -111,7 +110,7 @@ bool parseIO(string & command, int & ex, char & numChar)
 }
 
 
-int findIORe(char* input[], int x, string IO)
+int findIORe(char* input[], int x, string IO) //returns index of > >> < or |
 {
 	for(int i = 0; i < x; i++)
 	{
@@ -196,64 +195,61 @@ void outRe(char* arg[], int index, bool second, int ex)//ex is the numused for t
 }
 
 
-void ExecuteCommand(char* input[], int x, int ex, char numChar)
+void ExecuteCommand(char* Arg[], int size, int num, char numChar)
 {
 	//find all the things for HW2
 	
-	int leftIO; //< case
-	int rightIO; // > case
-	int right2IO; // >> case
-	int rightEX; // first extra credit case
-	int rightEX2; //second extra credit case
-	string EX1 = "";
-	EX1.push_back(numChar);
-	EX1 += ">";
-	string EX2 = "";
-	EX2.push_back(numChar);
-	EX2 += ">>";
-	if(-1 != (leftIO = findIORe(input, x, "<")))
+	string numOut = "";
+	numOut.push_back(numChar);
+	numOut.append(">");
+	//cout << numOut << endl;
+	string numOut2 = "";
+	numOut2.push_back(numChar);
+	numOut2.append(">>");
+	//cout << numOut2 << endl;
+	int in = findIORe(Arg,size,"<");
+	int out = findIORe(Arg,size,">");
+	int out2 = findIORe(Arg,size,">>");
+	int out3 = findIORe(Arg,size,numOut);
+	int out4 = findIORe(Arg,size,numOut2);
+	
+	//RUN LIKE HW0
+	if(-1 == in && -1 == out && -1 == out2 && -1 == out3 && -1 == out4)
 	{
-		//cout << "HERE 1 " << endl;
+		if(execvp(Arg[0],Arg) == -1)
+		{
+			perror("execvp");
+			exit(0);
+		}
+		return;
+	}
 
-		inRe(input, leftIO);	
-	}
-	//int rightIO; // > case
-	if(-1 != (rightIO  = findIORe(input, x, ">")))
+	//HW2 stuff
+	if(in != -1)
 	{
-		//cout << "HERE 2 " << endl;
-		outRe(input, rightIO, false, ex);
+		inRe(Arg,in);
 	}
-	//int right2IO; // >> case
-	else if(-1 != (right2IO = findIORe(input, x, ">>")))
+	if(out != -1)
 	{
-		//cout << "HERE 3 " << endl;
-		outRe(input, right2IO, true, ex);
+		outRe(Arg,out,false,num);
 	}
-	//string EX1 = ""; //first extra credit case
-	//int rightEX;
-	else if(-1 != (rightEX = findIORe(input, x, EX1)))
-	{	
-		//cout << "HELLO 2" << endl;
-		outRe(input, rightEX, false, ex);
-	}
-	//string EX2 = ""; //second extra credit case
-	//int rightEX2;
-	else if(-1 != (rightEX2 = findIORe(input, x, EX2)))
+	else if(out2 != -1)
 	{
-		//cout << "HELLO" << endl;
-		//cout << rightEX2 << endl;
-		outRe(input, rightEX2, true, ex);
+		outRe(Arg,out2,true,num);
 	}
-	//cout << "EXECUTING: " << endl;
-	
-	//for(int i = 0; input[i] != NULL; i++)
-	//	cout << input[i] << endl;
-	
-	//EXECVP HERE
-	if(execvp(input[0], input) == -1)
+	else if(out3 != -1)
 	{
-		perror("error in execvp");
-		exit(1);
+		outRe(Arg,out3,false,num);
+	}
+	else if(out4 != -1)
+	{
+		outRe(Arg,out4,true,num);
+	}
+	//EXECUTE
+	if(execvp(Arg[0],Arg) == -1)
+	{
+		perror("execvp");
+		exit(0);
 	}
 	
 }
