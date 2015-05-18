@@ -1,0 +1,347 @@
+Script started on Sun 17 May 2015 06:11:48 PM PDT
+~
+masfo001@hammer $ cs100
+[0;91m
+===============================================================================
+|                                                                             |
+| You have enabled settings specific for cs100.  Everything you do is being   |
+| recorded to measure your progress in the class.                             |
+|                                                                             |
+| Important commands for the class:                                           |
+|   * calcgrade.sh          displays a detailed breakdown of your grade       |
+|   * checksyscalls.sh      is your cpp file doing proper error checking?     |
+|   * typespeed             practice typing unix commands                     |
+|                                                                             |
+| Important commands for general C++ programming:                             |
+|   * make                  don't call g++ manually; let make do the work!    |
+|   * gdb                   the GNU debugger                                  |
+|   * valgrind              get rid of your memory leaks                      |
+|   * cppcheck              static analysis tool                              |
+|   * man                   find help about any syscall / terminal command    |
+|                                                                             |
+===============================================================================
+[0m
+[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~[0;95m [0;36m$[0m cd cs100
+[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~/cs100[0;95m (master) [0;36m$[0m cd rshell/
+[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~/cs100/rshell[0;95m (redirect) [0;36m$[0m make
+if [ ! -d "./bin" ];\
+	then mkdir bin;\
+	fi
+g++ -Wall -Werror -ansi -pedantic src/main.cpp -o bin/rshell
+g++ -Wall -Werror -ansi -pedantic src/ls.cpp -o bin/ls
+g++ -Wall -Werror -ansi -pedantic src/cp.cpp -o bin/cp
+[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~/cs100/rshell[0;95m (redirect) [0;36m$[0m bin/rshell
+masfo001@hammer.cs.ucr.edu$ #START TESTING HERE
+masfo001@hammer.cs.ucr.edu$ 
+masfo001@hammer.cs.ucr.edu$ #testing output redir
+masfo001@hammer.cs.ucr.edu$ ls
+bin  LICENSE  makefile	README.md  src	test
+masfo001@hammer.cs.ucr.edu$ echo test > t
+masfo001@hammer.cs.ucr.edu$ cat t
+test
+masfo001@hammer.cs.ucr.edu$ echo tate > t
+masfo001@hammer.cs.ucr.edu$ cat t
+tate
+masfo001@hammer.cs.ucr.edu$ echo test2 >> t
+masfo001@hammer.cs.ucr.edu$ cat t
+tate
+test2
+masfo001@hammer.cs.ucr.edu$ echo testtwo >>             t
+masfo001@hammer.cs.ucr.edu$ a cat t
+tate
+test2
+testtwo
+masfo001@hammer.cs.ucr.edu$ echo testthree         >>    t
+masfo001@hammer.cs.ucr.edu$ cat t
+tate
+test2
+testtwo
+testthree
+masfo001@hammer.cs.ucr.edu$ #testing extra credit output redir
+masfo001@hammer.cs.ucr.edu$ g++ fakefile 2> error
+masfo001@hammer.cs.ucr.edu$ cat error
+g++: error: fakefile: No such file or directory
+g++: fatal error: no input files
+compilation terminated.
+masfo001@hammer.cs.ucr.edu$ g++ notreal 2>> error
+masfo001@hammer.cs.ucr.edu$ cat error
+g++: error: fakefile: No such file or directory
+g++: fatal error: no input files
+compilation terminated.
+g++: error: notreal: No such file or directory
+g++: fatal error: no input files
+compilation terminated.
+masfo001@hammer.cs.ucr.edu$ g++ doesntexist    2>    error
+masfo001@hammer.cs.ucr.edu$ cat error
+g++: error: doesntexist: No such file or directory
+g++: fatal error: no input files
+compilation terminated.
+masfo001@hammer.cs.ucr.edu$ g++ anotherfake 2>>error
+masfo001@hammer.cs.ucr.edu$ cat error
+g++: error: doesntexist: No such file or directory
+g++: fatal error: no input files
+compilation terminated.
+g++: error: anotherfake: No such file or directory
+g++: fatal error: no input files
+compilation terminated.
+masfo001@hammer.cs.ucr.edu$ echo wow 1> file
+masfo001@hammer.cs.ucr.edu$ cat file
+wow
+masfo001@hammer.cs.ucr.edu$ echo extra credit    1>>   file
+masfo001@hammer.cs.ucr.edu$ cat file
+wow
+extra credit
+masfo001@hammer.cs.ucr.edu$ #testing input redir
+masfo001@hammer.cs.ucr.edu$ 
+masfo001@hammer.cs.ucr.edu$ ls
+bin  error  file  LICENSE  makefile  README.md	src  t	test
+masfo001@hammer.cs.ucr.edu$ cat < t
+tate
+test2
+testtwo
+testthree
+masfo001@hammer.cs.ucr.edu$ cat < file
+wow
+extra credit
+masfo001@hammer.cs.ucr.edu$ wc < t
+ 4  4 29
+masfo001@hammer.cs.ucr.edu$ wc   -l          < t
+4
+masfo001@hammer.cs.ucr.edu$ wc -l    <      file
+2
+masfo001@hammer.cs.ucr.edu$ #testing input and output redir together
+masfo001@hammer.cs.ucr.edu$ cat < t > t2
+masfo001@hammer.cs.ucr.edu$ cat t2
+tate
+test2
+testtwo
+testthree
+masfo001@hammer.cs.ucr.edu$ cat <  t2 >     t3
+masfo001@hammer.cs.ucr.edu$ cat t3
+tate
+test2
+testtwo
+testthree
+masfo001@hammer.cs.ucr.edu$ cat   <  t  >> t2
+masfo001@hammer.cs.ucr.edu$ cat t2
+tate
+test2
+testtwo
+testthree
+tate
+test2
+testtwo
+testthree
+masfo001@hammer.cs.ucr.edu$ cat < t 2>> t2
+tate
+test2
+testtwo
+testthree
+masfo001@hammer.cs.ucr.edu$ cat t2
+tate
+test2
+testtwo
+testthree
+tate
+test2
+testtwo
+testthree
+masfo001@hammer.cs.ucr.edu$ #Piping testing
+masfo001@hammer.cs.ucr.edu$ cat t | cat | cat | grep test | grep 2
+test2
+masfo001@hammer.cs.ucr.edu$ cat    < t | cat | cat | grep test | grep 2
+test2
+masfo001@hammer.cs.ucr.edu$ cat < t | grep test | cat | grep two
+testtwo
+masfo001@hammer.cs.ucr.edu$ cat t | grep test | wc > t2
+masfo001@hammer.cs.ucr.edu$ cat t2
+      3       3      24
+masfo001@hammer.cs.ucr.edu$ cat t | grep two | wc >> t2
+masfo001@hammer.cs.ucr.edu$ cat t2
+      3       3      24
+      1       1       8
+masfo001@hammer.cs.ucr.edu$ #TEsting the example in the README
+masfo001@hammer.cs.ucr.edu$ cat < makefile |tr A-z a-z | tee lower.txt | tr a-z A-z Z > upper.txt
+masfo001@hammer.cs.ucr.edu$ cat lower.txt
+zzz: 
+	zz z ! -z "./zzz" z;z
+	zzzz zzzzz zzz;z
+	zz
+	z++ -wzzz -wzzzzz -zzzz -zzzzzzzz zzz/zzzz.zzz -z zzz/zzzzzz
+	z++ -wzzz -wzzzzz -zzzz -zzzzzzzz zzz/zz.zzz -z zzz/zz
+	z++ -wzzz -wzzzzz -zzzz -zzzzzzzz zzz/zz.zzz -z zzz/zz
+
+zzzzzz:
+	zz z ! -z "./zzz" z;z
+	zzzz zzzzz zzz;z
+	zz
+	z++ -wzzz -wzzzzz -zzzz -zzzzzzzz zzz/zzzz.zzz -z zzz/zzzzzz
+
+zz:
+	zz z ! -z "./zzz" z;z
+	zzzz zzzzz zzz;z
+	zz
+	z++ -wzzz -wzzzzz -zzzz -zzzzzzzz zzz/zz.zzz -z zzz/zz   
+
+zz: 
+	zz z ! -z "./zzz" z;z
+	zzzz zzzzz zzz;z
+	zz
+	z++ -wzzz -wzzzzz -zzzz -zzzzzzzz zzz/zz.zzz -z zzz/zz
+
+zzzzz:
+	zz -zz zzz
+masfo001@hammer.cs.ucr.edu$ #MISTAKE TYPING THE COMMAND ABOVE
+masfo001@hammer.cs.ucr.edu$ #FORGOT CAPITAL Z IN FIRST TR
+masfo001@hammer.cs.ucr.edu$ cat upper.txt
+ZZZ: 
+	ZZ Z ! -Z "./ZZZ" Z;Z
+	ZZZZ ZZZZZ ZZZ;Z
+	ZZ
+	Z++ -WZZZ -WZZZZZ -ZZZZ -ZZZZZZZZ ZZZ/ZZZZ.ZZZ -Z ZZZ/ZZZZZZ
+	Z++ -WZZZ -WZZZZZ -ZZZZ -ZZZZZZZZ ZZZ/ZZ.ZZZ -Z ZZZ/ZZ
+	Z++ -WZZZ -WZZZZZ -ZZZZ -ZZZZZZZZ ZZZ/ZZ.ZZZ -Z ZZZ/ZZ
+
+ZZZZZZ:
+	ZZ Z ! -Z "./ZZZ" Z;Z
+	ZZZZ ZZZZZ ZZZ;Z
+	ZZ
+	Z++ -WZZZ -WZZZZZ -ZZZZ -ZZZZZZZZ ZZZ/ZZZZ.ZZZ -Z ZZZ/ZZZZZZ
+
+ZZ:
+	ZZ Z ! -Z "./ZZZ" Z;Z
+	ZZZZ ZZZZZ ZZZ;Z
+	ZZ
+	Z++ -WZZZ -WZZZZZ -ZZZZ -ZZZZZZZZ ZZZ/ZZ.ZZZ -Z ZZZ/ZZ   
+
+ZZ: 
+	ZZ Z ! -Z "./ZZZ" Z;Z
+	ZZZZ ZZZZZ ZZZ;Z
+	ZZ
+	Z++ -WZZZ -WZZZZZ -ZZZZ -ZZZZZZZZ ZZZ/ZZ.ZZZ -Z ZZZ/ZZ
+
+ZZZZZ:
+	ZZ -ZZ ZZZ
+masfo001@hammer.cs.ucr.edu$ cat < makefile | tr A-Z a-z | tee lower.txt | tr a-z A-Z > upper.txt
+masfo001@hammer.cs.ucr.edu$ cat lower.txt
+all: 
+	if [ ! -d "./bin" ];\
+	then mkdir bin;\
+	fi
+	g++ -wall -werror -ansi -pedantic src/main.cpp -o bin/rshell
+	g++ -wall -werror -ansi -pedantic src/ls.cpp -o bin/ls
+	g++ -wall -werror -ansi -pedantic src/cp.cpp -o bin/cp
+
+rshell:
+	if [ ! -d "./bin" ];\
+	then mkdir bin;\
+	fi
+	g++ -wall -werror -ansi -pedantic src/main.cpp -o bin/rshell
+
+ls:
+	if [ ! -d "./bin" ];\
+	then mkdir bin;\
+	fi
+	g++ -wall -werror -ansi -pedantic src/ls.cpp -o bin/ls   
+
+cp: 
+	if [ ! -d "./bin" ];\
+	then mkdir bin;\
+	fi
+	g++ -wall -werror -ansi -pedantic src/cs.cpp -o bin/cp
+
+clean:
+	rm -rf bin
+masfo001@hammer.cs.ucr.edu$ #THERE WER GO
+masfo001@hammer.cs.ucr.edu$ cat upper.txt
+ALL: 
+	IF [ ! -D "./BIN" ];\
+	THEN MKDIR BIN;\
+	FI
+	G++ -WALL -WERROR -ANSI -PEDANTIC SRC/MAIN.CPP -O BIN/RSHELL
+	G++ -WALL -WERROR -ANSI -PEDANTIC SRC/LS.CPP -O BIN/LS
+	G++ -WALL -WERROR -ANSI -PEDANTIC SRC/CP.CPP -O BIN/CP
+
+RSHELL:
+	IF [ ! -D "./BIN" ];\
+	THEN MKDIR BIN;\
+	FI
+	G++ -WALL -WERROR -ANSI -PEDANTIC SRC/MAIN.CPP -O BIN/RSHELL
+
+LS:
+	IF [ ! -D "./BIN" ];\
+	THEN MKDIR BIN;\
+	FI
+	G++ -WALL -WERROR -ANSI -PEDANTIC SRC/LS.CPP -O BIN/LS   
+
+CP: 
+	IF [ ! -D "./BIN" ];\
+	THEN MKDIR BIN;\
+	FI
+	G++ -WALL -WERROR -ANSI -PEDANTIC SRC/CS.CPP -O BIN/CP
+
+CLEAN:
+	RM -RF BIN
+masfo001@hammer.cs.ucr.edu$ ls
+bin  error  file  LICENSE  lower.txt  makefile	README.md  src	t  t2  t3  test  upper.txt
+masfo001@hammer.cs.ucr.edu$ #testing improper use age
+masfo001@hammer.cs.ucr.edu$ 
+masfo001@hammer.cs.ucr.edu$ #multiple instances of input and output redir
+masfo001@hammer.cs.ucr.edu$ echo cat > t1 >> t2
+Error: Too many instances of redirection.
+masfo001@hammer.cs.ucr.edu$ echo cat > t2 >> t1 > t3
+Error: Too many instances of redirection.
+masfo001@hammer.cs.ucr.edu$ #testing piping before input
+masfo001@hammer.cs.ucr.edu$ ls
+bin  error  file  LICENSE  lower.txt  makefile	README.md  src	t  t2  t3  test  upper.txt
+masfo001@hammer.cs.ucr.edu$ cat t1 | grep two < t2 > t3
+cat: t1: No such file or directory
+masfo001@hammer.cs.ucr.edu$ #c input wrong files
+masfo001@hammer.cs.ucr.edu$ ls
+bin  error  file  LICENSE  lower.txt  makefile	README.md  src	t  t2  t3  test  upper.txt
+masfo001@hammer.cs.ucr.edu$ cat < fake
+open failed: No such file or directory
+masfo001@hammer.cs.ucr.edu$ cat src
+cat: src: Is a directory
+masfo001@hammer.cs.ucr.edu$ cat < scr  rc
+cat: -: Is a directory
+masfo001@hammer.cs.ucr.edu$ #MISCELLANEOUS tests
+masfo001@hammer.cs.ucr.edu$ ls > file
+masfo001@hammer.cs.ucr.edu$ cat file
+bin
+error
+file
+LICENSE
+lower.txt
+makefile
+README.md
+src
+t
+t2
+t3
+test
+upper.txt
+masfo001@hammer.cs.ucr.edu$ ls   2> file
+bin  error  file  LICENSE  lower.txt  makefile	README.md  src	t  t2  t3  test  upper.txt
+masfo001@hammer.cs.ucr.edu$ ls | grep error | tr a-z A-Z |   > error
+masfo001@hammer.cs.ucr.edu$ cat error
+ERROR
+masfo001@hammer.cs.ucr.edu$ echo hello world > file ; echo nice >> file
+Error: Too many instances of redirection.
+masfo001@hammer.cs.ucr.edu$ #Does not support use of connectors ^
+masfo001@hammer.cs.ucr.edu$ echo helo world > file
+masfo001@hammer.cs.ucr.edu$ cat < file
+helo world
+masfo001@hammer.cs.ucr.edu$ #condlues 
+masfo001@hammer.cs.ucr.edu$ #cond cludes testing
+masfo001@hammer.cs.ucr.edu$ #thank you
+masfo001@hammer.cs.ucr.edu$ exit
+Ending session ...
+goodbye!
+[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~/cs100/rshell[0;95m (redirect) [0;36m$[0m exit
+exit
+~
+masfo001@hammer $ exit
+exit
+
+Script done on Sun 17 May 2015 06:36:36 PM PDT
