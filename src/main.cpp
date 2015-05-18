@@ -545,7 +545,6 @@ bool rshell(char hostarray[64], bool finish, string login)
 			j++;
 		}
 
-
 		//check if current arg is exit
 		if(0 == (strcmp(input[0], "exit")))
 		{
@@ -561,7 +560,7 @@ bool rshell(char hostarray[64], bool finish, string login)
 		{
 			perror("fork");
 			//FIXed MEMORY LEAK!!!!!!
-			delete[] input;
+			delete[] input[j];
 			return false;
 		}
 		else if(pid == 0) //child
