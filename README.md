@@ -43,8 +43,6 @@ Rshell supports piping with the `|` symbol
 
 Rshell supports linkages of input and output redirection with piping
 
-Rshell supports the combination of command connectors and redirection symbols
-
 
 ##Dependencies
 The ```boost``` library is required to run the tokenizing method in Rshell
