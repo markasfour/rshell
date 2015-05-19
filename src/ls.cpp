@@ -165,7 +165,12 @@ void lsDir(deque <string> files, deque <string> directories, struct stat name, b
 					recurrence.push_back(directories.at(i) + "/" + direntp->d_name);
 			}
 		}
-		closedir(dp);
+		if(-1 == closedir(dp))
+		{
+			perror("closedir");
+			exit(1);
+		}
+
 		//for(unsigned int w = 0; w < recurrence.size(); w++)
 		//	cout << "r: " << recurrence.at(w) << endl;
 
