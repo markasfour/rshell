@@ -595,14 +595,18 @@ bool rshell(char hostarray[64], bool finish, string login)
 int main(int argc, char **argv)
 {
 	bool finish = false;
-	string login = getlogin();
+	string login;// = getlogin();
 	if(getlogin() == NULL)
 	{
 		login = "";
 		perror("get login failed");
 	}
+	else
+	{
+		login = getlogin();
+	}
 	char hostarray[64];
-	gethostname(hostarray, 64);
+	//gethostname(hostarray, 64);
 	if(gethostname(hostarray, 64) == -1)
 		perror("get host name failed");
 	
