@@ -9,8 +9,26 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <signal.h>
 using namespace std;
 using namespace boost;
+
+
+void handle(int x)
+{
+	if(x == SIGINT)
+	{
+	}
+	if(x == SIGTSTP)
+	{
+        int y = 0;
+		if(-1 == (y = kill(getpid(), SIGSTOP)))
+		{
+			perror("kill");
+			exit(1);
+		}
+	}
+}
 
 
 void placeholder(string &command, string connector, int length)
@@ -610,9 +628,32 @@ int main(int argc, char **argv)
 	if(gethostname(hostarray, 64) == -1)
 		perror("get host name failed");
 	
+	
+    //signals	
+	struct sigaction a;
+	a.sa_handler = &handle;
+	int b;
+	if(-1 == (b = sigaction(SIGINT, &a , NULL)))
+	{
+		perror("sigaction");
+		exit(1);
+	}
+	if(-1 == (b = sigaction(SIGQUIT, &a , NULL)))
+	{
+		perror("sigaction");
+		exit(1);
+	}
+	if(-1 == (b = sigaction(SIGTSTP, &a , NULL)))
+	{
+		perror("sigaction");
+		exit(1);
+	}
+	
+	
 	//rshell loop
 	while(!finish)
 	{
+		cin.clear();
 		finish = rshell(hostarray, finish, login);
 	}
 	cout << "goodbye!" << endl;
