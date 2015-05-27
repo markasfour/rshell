@@ -18,15 +18,11 @@ void handle(int x)
 {
 	if(x == SIGINT)
 	{
+		return;
 	}
-	if(x == SIGTSTP)
+	else if(x == SIGTSTP)
 	{
-        int y = 0;
-		if(-1 == (y = kill(getpid(), SIGSTOP)))
-		{
-			perror("kill");
-			exit(1);
-		}
+		raise(SIGSTOP);
 	}
 }
 
@@ -592,8 +588,19 @@ bool rshell(char hostarray[64], bool finish, string login)
 		}
 		else //parent
 		{
-			if(-1 == waitpid(pid, &status, 0)) //wait for child to finish
+			int wpid;
+			do
+			{
+				wpid = wait(&status);
+			}
+			while(wpid == -1 && errno == EINTR);
+
+			if(wpid == -1)
+			{
 				perror("There was an error with wait().");
+			}
+			//if(-1 == waitpid(pid, &status, 0)) //wait for child to finish
+			//	perror("There was an error with wait().");
 			
 			if(semicolon)
 				continue;
