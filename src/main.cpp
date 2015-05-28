@@ -14,16 +14,30 @@ using namespace std;
 using namespace boost;
 
 
+int current = 0;
+
 void handle(int x)
 {
 	if(x == SIGINT)
 	{
-		return;
+		kill(current, SIGKILL);	
 	}
-	else if(x == SIGTSTP)
-	{
-		raise(SIGSTOP);
-	}
+	//else if(x == SIGTSTP)
+	//{
+		//cout << "^Z" << endl;
+		//int y;
+		//cout << current << endl;
+		//if(current != 0)
+		//{
+			//if(-1 == (y = kill(current, SIGSTOP)))
+			//{
+			//	perror("kill");
+			//	exit(1);
+			//}
+			//kill(current, SIGSTOP);
+			//cout << "background" << endl;
+		//}
+	//}
 }
 
 
@@ -569,8 +583,9 @@ bool rshell(char hostarray[64], bool finish, string login)
 		input[j] = NULL;
 
 
-		int pid;
-		if(-1 == (pid = fork()))
+		int pid = fork();
+		current = pid;
+		if(-1 == pid )
 		{
 			perror("fork");
 			//FIXed MEMORY LEAK!!!!!!
@@ -583,7 +598,6 @@ bool rshell(char hostarray[64], bool finish, string login)
 			//for(int i = 0; input[i] != NULL; i++)
 			//	cout << input[i] << endl;
 	
-
 			magic(input, j, ex, numChar); //this is where the magic happens :)
 		}
 		else //parent
