@@ -381,13 +381,31 @@ void magic(char* input[], int x, int ex, char numChar)
 	}
 }
 
-bool rshell(char hostarray[64], bool finish, string login)
+bool rshell(char hostarray[64], bool finish, string login, char *homedir)
 {
+	//current working directory
+	char workingdir[BUFSIZ];
+	if(getcwd(workingdir, BUFSIZ) == NULL)
+	{
+		perror("error with getcwd");
+		exit(1);
+	}
+	
+	string cwd = workingdir;
+	string homecheck = homedir;
+
+	//find home in cwd
+	if(cwd.find(homecheck) != string::npos)
+	{
+		cwd.replace(cwd.find(homecheck), homecheck.size(), "~");
+		//cout << cwd << endl;
+	}
+	
 	int status = 0;
 	char numChar = '\0';
 	//login name and host info prompt
 	if(getlogin() != NULL)
-		cout << login << "@" << hostarray;
+		cout << login << "@" << hostarray << ":" << cwd;
 
 	//ready prompt
 	cout << "$ ";
@@ -649,6 +667,15 @@ int main(int argc, char **argv)
 	if(gethostname(hostarray, 64) == -1)
 		perror("get host name failed");
 	
+
+	//get home directory
+	char *homedir;
+	homedir = getenv("HOME");
+	if(homedir == NULL)
+	{
+		perror("error with getenv");
+		exit(1);
+	}
 	
     //signals	
 	struct sigaction a;
@@ -675,7 +702,7 @@ int main(int argc, char **argv)
 	while(!finish)
 	{
 		cin.clear();
-		finish = rshell(hostarray, finish, login);
+		finish = rshell(hostarray, finish, login, homedir);
 	}
 	cout << "goodbye!" << endl;
 	
