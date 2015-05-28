@@ -600,6 +600,34 @@ bool rshell(char hostarray[64], bool finish, string login, char *homedir)
 
 		input[j] = NULL;
 
+		if(0 == (strcmp(input[0], "cd")))
+		{
+			//change cwd here
+			if(j >= 3)
+			{
+				perror("syntax error");
+				return false;
+			}
+			else if(j == 1)
+			{
+				//cout << "HERE" << endl;
+				if(-1 == chdir(homedir))
+				{
+					perror("error with chdir1");
+					return false;
+				}
+				return false;
+			}
+			else
+			{
+				if(-1 == chdir(input[1]))
+				{
+					perror("error with chdir2");
+					return false;
+				}
+				return false;
+			}
+		}
 
 		int pid = fork();
 		current = pid;
