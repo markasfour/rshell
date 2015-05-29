@@ -620,7 +620,37 @@ bool rshell(char hostarray[64], bool finish, string login, char *homedir)
 			}
 			else
 			{
-				if(-1 == chdir(input[1]))
+				if(0 == (strcmp(input[1], "-")))
+				{
+					char *tempwd;
+					char *prevwd;
+					if(NULL == (tempwd = getenv("PWD")))
+					{
+						perror("error with getenv");
+						exit(1);
+					}
+					if(NULL == (prevwd = getenv("OLDPWD")))
+					{
+						perror("error with getenv");
+						exit(1);
+					}
+					if(-1 == setenv("PWD",prevwd, 1))
+					{
+						perror("error with setenv");
+						exit(1);
+					}
+					if(-1 == chdir(prevwd))
+					{
+						perror("error with chdir");
+						exit(1);
+					}
+					if(-1 == setenv("OLDPWD", tempwd, 1))
+					{
+						perror("error with setenv");
+						exit(1);
+					}
+				}
+				else if(-1 == chdir(input[1]))
 				{
 					perror("error with chdir2");
 					return false;
