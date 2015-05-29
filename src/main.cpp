@@ -20,6 +20,7 @@ void handle(int x)
 {
 	if(x == SIGINT)
 	{
+		cout << endl;
 		kill(current, SIGKILL);	
 	}
 	//else if(x == SIGTSTP)
@@ -605,7 +606,7 @@ bool rshell(char hostarray[64], bool finish, string login, char *homedir)
 			//change cwd here
 			if(j >= 3)
 			{
-				perror("syntax error");
+				perror("syntax error. cd only accepts one param");
 				return false;
 			}
 			else if(j == 1)
