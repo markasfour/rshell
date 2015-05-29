@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <limits.h>
 using namespace std;
 using namespace boost;
 
@@ -600,9 +601,19 @@ bool rshell(char hostarray[64], bool finish, string login, char *homedir)
 		}
 
 		input[j] = NULL;
+		
 
+		//CD STUFF HERE
 		if(0 == (strcmp(input[0], "cd")))
 		{
+			char cwd[1024];
+			string path;
+			if("" == (path = getcwd(cwd, sizeof(cwd))))
+			{
+				perror("error with getcwd");
+				exit(1);
+			}
+			cout << "current path: " << path << endl;
 			//change cwd here
 			if(j >= 3)
 			{
@@ -612,6 +623,28 @@ bool rshell(char hostarray[64], bool finish, string login, char *homedir)
 			else if(j == 1)
 			{
 				//cout << "HERE" << endl;
+				char *tempwd;
+
+				if(NULL == (tempwd = getenv("PWD")))
+				{
+					perror("error with getenv");
+					exit(1);
+				}
+				if(-1 == setenv("OLDPWD", tempwd, 1))
+				{
+					perror("error with setenv");
+					exit(1);
+				}
+				if(NULL == (tempwd = getenv("HOME")))
+				{
+					perror("error with getenv");
+					exit(1);
+				}
+				if(-1 == (setenv("PWD", tempwd, 1)))
+				{
+					perror("error with setenv");
+					exit(1);
+				}
 				if(-1 == chdir(homedir))
 				{
 					perror("error with chdir1");
@@ -651,10 +684,62 @@ bool rshell(char hostarray[64], bool finish, string login, char *homedir)
 						exit(1);
 					}
 				}
-				else if(-1 == chdir(input[1]))
+				else 
 				{
-					perror("error with chdir2");
-					return false;
+					char *tempwd;
+					if(NULL == (tempwd = getenv("PWD")))
+					{
+						perror("error with getenv");
+						exit(1);
+					}
+					string path2 = tempwd;
+					cout << "path2: " << path2 << endl;
+					cout << "path1: " << path << endl;
+					string addDir = input[1];
+
+					if(addDir.at(0) != '/')
+					{
+						addDir = '/' + addDir;
+					}
+					if(addDir.at(addDir.size() - 1) == '/')
+					{
+						addDir = addDir.substr(0, addDir.size() - 1);
+					}
+					if(addDir.size() == 0) //if / passed in
+						return false;
+
+					if(addDir.at(1) == '.')
+					{
+						if(addDir.size() == 2) // if .
+						{
+							path2 = path2; //do nothing
+						}
+						else if(addDir.at(2) == '.') // if ..
+						{
+							if(path2.find_last_of("/") == string::npos) //already farthest back
+								return false;
+							path2 = path2.substr(0, path2.find_last_of("/")); // take out last dir
+						}
+					}
+					else
+						path2 = path2 + addDir;
+					
+
+					if(-1 == (setenv("OLDPWD", path.c_str(), 1)))
+					{
+						perror("error with setenv");
+						exit(1);
+					}
+					if(-1 == setenv("PWD", path2.c_str(), 1))
+					{
+						perror("error with setenv");
+						exit(1);
+					}
+					if(-1 == chdir(input[1]))
+					{
+						perror("error with chdir2");
+						return false;
+					}
 				}
 				return false;
 			}
@@ -741,11 +826,6 @@ int main(int argc, char **argv)
 	a.sa_handler = &handle;
 	int b;
 	if(-1 == (b = sigaction(SIGINT, &a , NULL)))
-	{
-		perror("sigaction");
-		exit(1);
-	}
-	if(-1 == (b = sigaction(SIGQUIT, &a , NULL)))
 	{
 		perror("sigaction");
 		exit(1);
