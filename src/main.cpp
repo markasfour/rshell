@@ -613,7 +613,7 @@ bool rshell(char hostarray[64], bool finish, string login, char *homedir)
 				perror("error with getcwd");
 				exit(1);
 			}
-			cout << "current path: " << path << endl;
+			//cout << "current path: " << path << endl;
 			//change cwd here
 			if(j >= 3)
 			{
@@ -693,8 +693,8 @@ bool rshell(char hostarray[64], bool finish, string login, char *homedir)
 						exit(1);
 					}
 					string path2 = tempwd;
-					cout << "path2: " << path2 << endl;
-					cout << "path1: " << path << endl;
+					//cout << "path2: " << path2 << endl;
+					//cout << "path1: " << path << endl;
 					string addDir = input[1];
 
 					if(addDir.at(0) != '/')
