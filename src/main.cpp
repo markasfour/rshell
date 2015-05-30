@@ -689,34 +689,35 @@ bool rshell(char hostarray[64], bool finish, string login, char *homedir)
 					//cout << "path2: " << path2 << endl;
 					//cout << "path1: " << path << endl;
 					string addDir = input[1];
-
-					if(addDir.at(0) != '/')
+					if(addDir != "/")
 					{
-						addDir = '/' + addDir;
-					}
-					if(addDir.at(addDir.size() - 1) == '/')
-					{
-						addDir = addDir.substr(0, addDir.size() - 1);
-					}
-					if(addDir.size() == 0) //if / passed in
-						return false;
-
-					if(addDir.at(1) == '.')
-					{
-						if(addDir.size() == 2) // if .
+						if(addDir.at(0) != '/')
 						{
-							path2 = path2; //do nothing
+							addDir = '/' + addDir;
 						}
-						else if(addDir.at(2) == '.') // if ..
+						if(addDir.at(addDir.size() - 1) == '/')
 						{
-							if(path2.find_last_of("/") == string::npos) //already farthest back
-								return false;
-							path2 = path2.substr(0, path2.find_last_of("/")); // take out last dir
+							addDir = addDir.substr(0, addDir.size() - 1);
 						}
+						//if(addDir.size() == 0) //if / passed in
+						//	return false;
+
+						if(addDir.at(1) == '.')
+						{
+							if(addDir.size() == 2) // if .
+							{
+								path2 = path2; //do nothing
+							}
+							else if(addDir.at(2) == '.') // if ..
+							{
+								if(path2.find_last_of("/") == string::npos) //already farthest back
+									return false;
+								path2 = path2.substr(0, path2.find_last_of("/")); // take out last dir
+							}
+						}
+						else
+							path2 = path2 + addDir;
 					}
-					else
-						path2 = path2 + addDir;
-					
 
 					if(-1 == (setenv("OLDPWD", path.c_str(), 1)))
 					{
