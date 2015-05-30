@@ -24,22 +24,15 @@ void handle(int x)
 		cout << endl;
 		kill(current, SIGKILL);	
 	}
-	//else if(x == SIGTSTP)
-	//{
-		//cout << "^Z" << endl;
-		//int y;
-		//cout << current << endl;
-		//if(current != 0)
-		//{
-			//if(-1 == (y = kill(current, SIGSTOP)))
-			//{
-			//	perror("kill");
-			//	exit(1);
-			//}
-			//kill(current, SIGSTOP);
-			//cout << "background" << endl;
-		//}
-	//}
+	else if(x == SIGTSTP)
+	{
+		cout << current << endl;
+		if(current != 0)
+		{
+			kill(current, SIGSTOP);
+			//kill(current, SIGCONT);
+		}
+	}
 }
 
 
@@ -744,6 +737,30 @@ bool rshell(char hostarray[64], bool finish, string login, char *homedir)
 				return false;
 			}
 		}
+		
+		else
+		{
+			string fgbg = input[0];
+			if(fgbg == "bg")
+			{
+				if(current != 0)
+				{
+					kill(current,SIGCONT);
+					current = 0;
+				}
+				else
+					cout << "No process in bg" << endl;
+			}
+			else if(fgbg == "fg")
+			{
+				if(current != 0)
+				{
+					kill(current, SIGCONT);
+				}
+				else
+					cout << "No process in fg" << endl;
+			}
+		}
 
 		int pid = fork();
 		current = pid;
@@ -759,7 +776,7 @@ bool rshell(char hostarray[64], bool finish, string login, char *homedir)
 			//cout << "EXECUTING: " << endl;
 			//for(int i = 0; input[i] != NULL; i++)
 			//	cout << input[i] << endl;
-	
+			current = pid;	
 			magic(input, j, ex, numChar); //this is where the magic happens :)
 		}
 		else //parent
@@ -822,20 +839,34 @@ int main(int argc, char **argv)
 	}
 	
     //signals	
-	struct sigaction a;
+	struct sigaction a, a2;
 	a.sa_handler = &handle;
+	sigemptyset(&a.sa_mask);
+
 	int b;
+	if(-1 == (b = sigaction(SIGINT, &a2 , NULL)))
+	{
+		perror("sigaction");
+		exit(1);
+	}
+	if(a2.sa_handler!= SIG_IGN)
 	if(-1 == (b = sigaction(SIGINT, &a , NULL)))
 	{
 		perror("sigaction");
 		exit(1);
 	}
+
+	if(-1 == (b = sigaction(SIGTSTP, &a2 , NULL)))
+	{
+		perror("sigaction");
+		exit(1);
+	}
+	if(a2.sa_handler!= SIG_IGN)
 	if(-1 == (b = sigaction(SIGTSTP, &a , NULL)))
 	{
 		perror("sigaction");
 		exit(1);
 	}
-	
 	
 	//rshell loop
 	while(!finish)
