@@ -11,7 +11,7 @@ To install and run the most current version of rshell, enter the following into 
 
 2. cd rshell
 
-3. git checkout hw2
+3. git checkout hw3
 
 4. make
 
@@ -43,6 +43,13 @@ Rshell supports piping with the `|` symbol
 
 Rshell supports linkages of input and output redirection with piping
 
+Rshell supports the `cd` command
+
+Rshell prints out the current working directory in the ready prompt (`~` is short for the `home` folder)
+
+Rshell supports the `^C` signal to terminate a process without exiting Rshell
+
+Rshell can run all commands given a path
 
 ##Dependencies
 The ```boost``` library is required to run the tokenizing method in Rshell
@@ -66,6 +73,8 @@ String literal arguments are not supported by input redirection
 Instances of when input or output redirection symbols are used before a filename or cammand is not supported
 
 Rshell will terminate in instances of failed system calls
+
+`cd` commands must come after all connectors in a command line or with no connectors at all
 
 
 #LS
