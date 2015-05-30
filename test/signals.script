@@ -1,0 +1,225 @@
+Script started on Fri 29 May 2015 07:47:17 PM PDT
+~
+masfo001@hammer $ cs100
+[0;91m
+===============================================================================
+|                                                                             |
+| You have enabled settings specific for cs100.  Everything you do is being   |
+| recorded to measure your progress in the class.                             |
+|                                                                             |
+| Important commands for the class:                                           |
+|   * calcgrade.sh          displays a detailed breakdown of your grade       |
+|   * checksyscalls.sh      is your cpp file doing proper error checking?     |
+|   * typespeed             practice typing unix commands                     |
+|                                                                             |
+| Important commands for general C++ programming:                             |
+|   * make                  don't call g++ manually; let make do the work!    |
+|   * gdb                   the GNU debugger                                  |
+|   * valgrind              get rid of your memory leaks                      |
+|   * cppcheck              static analysis tool                              |
+|   * man                   find help about any syscall / terminal command    |
+|                                                                             |
+===============================================================================
+[0m
+[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~[0;95m [0;36m$[0m cd cs100
+[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~/cs100[0;95m (master) [0;36m$[0m cd cs[K[Krshell
+[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~/cs100/rshell[0;95m (signals) [0;36m$[0m bin/rshell
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ clear
+[H[2Jmasfo001@hammer.cs.ucr.edu:~/cs100/rshell$ #START TESTING
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ #Testing cd with no params
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ cd
+masfo001@hammer.cs.ucr.edu:~$ 
+masfo001@hammer.cs.ucr.edu:~$ #we are at home dir
+masfo001@hammer.cs.ucr.edu:~$ #testing cd -
+masfo001@hammer.cs.ucr.edu:~$ cd -
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ #we are back we here we were
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ cd -
+masfo001@hammer.cs.ucr.edu:~$ 
+masfo001@hammer.cs.ucr.edu:~$ #we are back at home
+masfo001@hammer.cs.ucr.edu:~$ #testing cd . and cd ..
+masfo001@hammer.cs.ucr.edu:~$ cd .
+masfo001@hammer.cs.ucr.edu:~$ cd ..
+masfo001@hammer.cs.ucr.edu:/home/csmajs$ cd -
+masfo001@hammer.cs.ucr.edu:~$ cd .
+masfo001@hammer.cs.ucr.edu:~$ cd -
+masfo001@hammer.cs.ucr.edu:~$ cd ././././
+masfo001@hammer.cs.ucr.edu:~$ #testing cd with params
+masfo001@hammer.cs.ucr.edu:~$ cd cs100
+masfo001@hammer.cs.ucr.edu:~/cs100$ cd rshell
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ cd src
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell/src$ cd
+masfo001@hammer.cs.ucr.edu:~$ cd -
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell/src$ cd ..
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ cd src/../src
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell/src$ cd ../../rshell
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ 
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ #testing absolute path
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ cd /
+masfo001@hammer.cs.ucr.edu:/$ cd /home
+masfo001@hammer.cs.ucr.edu:/home$ cd /home/csmajs/masfo001
+masfo001@hammer.cs.ucr.edu:~$ #notice the ~
+masfo001@hammer.cs.ucr.edu:~$ #we are at HOME
+masfo001@hammer.cs.ucr.edu:~$ 
+masfo001@hammer.cs.ucr.edu:~$ cd /home/csmajs/masfo001/cs100/rshell
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ #testing nonexisting paths
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ cd nope
+error with chdir2: No such file or directory
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ cd fake
+error with chdir2: No such file or directory
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ cd ../fake
+error with chdir2: No such file or directory
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ cd /nothere
+error with chdir2: No such file or directory
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ #testing ctrl C c
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ #testing ctrl c
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ 
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ cat
+hello
+hello
+world
+world
+^C
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ ps
+  PID TTY          TIME CMD
+35774 pts/77   00:00:00 bash
+35891 pts/77   00:00:00 rshell
+36869 pts/77   00:00:00 ps
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ cat a.cpp
+#include <iostream>
+#include <unistd.h>
+using namespace std;
+
+int main()
+{
+	while(1)
+	{
+		cout << "a" << endl;
+		sleep(1);
+	}
+	return 0;
+}
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ #this is a simple infinite loop
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ ./a.out
+a
+a
+a
+a
+^C
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ ps
+  PID TTY          TIME CMD
+35774 pts/77   00:00:00 bash
+35891 pts/77   00:00:00 rshell
+36939 pts/77   00:00:00 ps
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ ^C
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ ^C
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ ^C
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ ^C
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ ^C
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ ^C
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ ps
+  PID TTY          TIME CMD
+35774 pts/77   00:00:00 bash
+35891 pts/77   00:00:00 rshell
+36953 pts/77   00:00:00 ps
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ #execute program in working dir
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ cd bin
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell/bin$ ls
+cp  ls	mv  rm	rshell
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell/bin$ ./ls
+[92mcp      [0m[92mls      [0m[92mmv      [0m[92mrm      [0m[92mrshell  [0m
+
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell/bin$ cd ..
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ ./a.out
+a
+a
+a
+a
+^C
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ #execute program not in working dir
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ bin/ls
+a.cpp      [92ma.out      [0m[94mbin        [0mLICENSE    makefile   README.md  [94msrc        [0m
+[94mtest       [0m
+
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ /bin/ls
+a.cpp  a.out  bin  LICENSE  makefile  README.md  src  test
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ #execute program using absolute path
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ /bin/ls
+a.cpp  a.out  bin  LICENSE  makefile  README.md  src  test
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ /bin/;s
+execvp: Permission denied
+execvp: No such file or directory
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ /bin/ps
+  PID TTY          TIME CMD
+35774 pts/77   00:00:00 bash
+35891 pts/77   00:00:00 rshell
+37872 pts/77   00:00:00 ps
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ /bin/pwd
+/home/csmajs/masfo001/cs100/rshell
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ /home/csmajs/masfo001/cs100/rshell/bin/ls
+a.cpp      [92ma.out      [0m[94mbin        [0mLICENSE    makefile   README.md  [94msrc        [0m
+[94mtest       [0m
+
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ #execute non existing programs
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ #expecting errors
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ ./b.out
+execvp: No such file or directory
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ /bin/fkae
+execvp: No such file or directory
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ /bin/fakeprogram
+execvp: No such file or directory
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ #miscellaneous
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ ls
+a.cpp  a.out  bin  LICENSE  makefile  README.md  src  test
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ ./a.out
+a
+a
+a
+nopea
+a
+a
+^C
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ ./a.out
+a
+a
+a
+a
+a
+^Z
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ ps
+  PID TTY          TIME CMD
+35774 pts/77   00:00:00 bash
+35891 pts/77   00:00:00 rshell
+38810 pts/77   00:00:00 a.out
+38854 pts/77   00:00:00 ps
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ cd ../../..
+masfo001@hammer.cs.ucr.edu:/home/csmajs$ cd masfo001
+masfo001@hammer.cs.ucr.edu:~$ cd 
+masfo001@hammer.cs.ucr.edu:~$ cd         .
+masfo001@hammer.cs.ucr.edu:~$ cd ..
+masfo001@hammer.cs.ucr.edu:/home/csmajs$ cd masfo001/cs100
+masfo001@hammer.cs.ucr.edu:~/cs100$ cd
+masfo001@hammer.cs.ucr.edu:~$ cd -
+masfo001@hammer.cs.ucr.edu:~/cs100$  cd .
+masfo001@hammer.cs.ucr.edu:~/cs100$ cd ././rshell/.././rshell
+masfo001@hammer.cs.ucr.edu:~/cs100/rshell$ cd -
+masfo001@hammer.cs.ucr.edu:~/cs100$ cd -
+masfo001@hammer.cs.ucr.edu:~/cs100$ ^C
+masfo001@hammer.cs.ucr.edu:~/cs100$ ^C
+masfo001@hammer.cs.ucr.edu:~/cs100$ ^C
+masfo001@hammer.cs.ucr.edu:~/cs100$ ^C
+masfo001@hammer.cs.ucr.edu:~/cs100$ cd /home/csmajs/masfo001
+masfo001@hammer.cs.ucr.edu:~$ #END OF TESTING
+masfo001@hammer.cs.ucr.edu:~$ #THANK YOU
+masfo001@hammer.cs.ucr.edu:~$ exit
+Ending session ...
+goodbye!
+[s%%%%%%%%%%[u[0;32mmasfo001[0;36m@[0;32mcs100[0;36m:[0;32m~/cs100/rshell[0;95m (signals) [0;36m$[0m exit
+exit
+~
+masfo001@hammer $ exit
+exit
+
+Script done on Fri 29 May 2015 08:09:07 PM PDT
