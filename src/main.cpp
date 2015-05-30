@@ -16,6 +16,8 @@ using namespace boost;
 
 
 int current = 0;
+//vector <int> prc;
+
 
 void handle(int x)
 {
@@ -26,9 +28,10 @@ void handle(int x)
 	}
 	else if(x == SIGTSTP)
 	{
-		cout << current << endl;
+		cout << endl;
 		if(current != 0)
 		{
+			//prc.push_back(current);
 			kill(current, SIGSTOP);
 			//kill(current, SIGCONT);
 		}
@@ -751,15 +754,21 @@ bool rshell(char hostarray[64], bool finish, string login, char *homedir)
 				}
 				else
 					cout << "No process in bg" << endl;
+
+				return false;
 			}
 			else if(fgbg == "fg")
 			{
+				//cout << "here" << endl;
+				//cout << current << endl;
 				if(current != 0)
 				{
 					kill(current, SIGCONT);
 				}
 				else
 					cout << "No process in fg" << endl;
+
+				return false;
 			}
 		}
 
@@ -785,7 +794,7 @@ bool rshell(char hostarray[64], bool finish, string login, char *homedir)
 			int wpid;
 			do
 			{
-				wpid = wait(&status);
+				wpid = waitpid(pid, &status, WUNTRACED);
 			}
 			while(wpid == -1 && errno == EINTR);
 
